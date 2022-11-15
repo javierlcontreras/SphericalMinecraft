@@ -4,7 +4,6 @@ using UnityEngine;
 
 using static PlanetGenerator;
 
-[ExecuteInEditMode]
 public class TerrainManager : MonoBehaviour
 {
     public int meshSize;
@@ -33,5 +32,9 @@ public class TerrainManager : MonoBehaviour
         { 
             instance = this; 
         } 
+    }
+
+    private void Start() {
+        GeneratePlanet();
     }
 }
