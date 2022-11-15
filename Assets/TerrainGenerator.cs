@@ -7,6 +7,7 @@ public class TerrainGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameObject
         
     }
 
