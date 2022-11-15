@@ -1,4 +1,4 @@
-**/Library
-**/Logs
-**/Packages
-**/Temp
+Library/
+Logs/
+Packages/
+Temp/
