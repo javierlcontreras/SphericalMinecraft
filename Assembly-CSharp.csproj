@@ -37,8 +37,13 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets/Scripts/TerrainManager.cs" />
-     <Compile Include="Assets/Scripts/PlanetGenerator.cs" />
      <Compile Include="Assets/Scripts/NoiseGenerator.cs" />
+     <Compile Include="Assets/Scripts/Chunk.cs" />
+     <Compile Include="Assets/Scripts/Block.cs" />
+     <Compile Include="Assets/Scripts/PlanetDataGenerator.cs" />
+     <Compile Include="Assets/Scripts/Planet.cs" />
+     <Compile Include="Assets/Scripts/PlanetMeshGenerator.cs" />
+     <Compile Include="Assets/Scripts/BlockType.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/home/jlcontreras/Unity/Hub/Editor/2021.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
