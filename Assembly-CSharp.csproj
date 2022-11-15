@@ -36,7 +36,10 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets/TerrainGenerator.cs" />
+     <Compile Include="Assets/Scripts/TerrainManager.cs" />
+     <Compile Include="Assets/Scripts/PlanetGenerator.cs" />
+     <Compile Include="Assets/Scripts/NoiseGenerator.cs" />
+     <Compile Include="Assets/Scripts/TerrainManagerEditor.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/home/jlcontreras/Unity/Hub/Editor/2021.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
