@@ -36,17 +36,18 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets/Scripts/TerrainManager.cs" />
-     <Compile Include="Assets/Scripts/NoiseGenerator.cs" />
-     <Compile Include="Assets/Scripts/Chunk.cs" />
-     <Compile Include="Assets/Scripts/Block.cs" />
-     <Compile Include="Assets/Scripts/PlanetDataGenerator.cs" />
-     <Compile Include="Assets/Scripts/Planet.cs" />
-     <Compile Include="Assets/Scripts/PlanetMeshGenerator.cs" />
-     <Compile Include="Assets/Scripts/BlockType.cs" />
-     <Compile Include="Assets/Scripts/BlockSide.cs" />
-     <Compile Include="Assets/Scripts/BlockSideTriangle.cs" />
-     <Compile Include="Assets/Scripts/ChunkAdjancenyCalculator.cs" />
+     <Compile Include="Assets/Scripts/Terrain/TerrainManager.cs" />
+     <Compile Include="Assets/Scripts/Terrain/NoiseGenerator.cs" />
+     <Compile Include="Assets/Scripts/Terrain/Chunk.cs" />
+     <Compile Include="Assets/Scripts/Terrain/Block.cs" />
+     <Compile Include="Assets/Scripts/Terrain/PlanetDataGenerator.cs" />
+     <Compile Include="Assets/Scripts/Terrain/Planet.cs" />
+     <Compile Include="Assets/Scripts/Terrain/PlanetMeshGenerator.cs" />
+     <Compile Include="Assets/Scripts/Terrain/BlockType.cs" />
+     <Compile Include="Assets/Scripts/Terrain/BlockSide.cs" />
+     <Compile Include="Assets/Scripts/Terrain/BlockSideTriangle.cs" />
+     <Compile Include="Assets/Scripts/Terrain/ChunkAdjancenyCalculator.cs" />
+     <Compile Include="Assets/Scripts/Character/CharacterContoller.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/home/jlcontreras/Unity/Hub/Editor/2021.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

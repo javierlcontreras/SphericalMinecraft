@@ -12,7 +12,7 @@ public class PlanetMeshGenerator {
     private int chunkSize;
     private int chunkHeight;
     private float blockLength;
-    private Vector3[,,] baseVectors;
+    public Vector3[,,] baseVectors;
 
     private Vector3[] sideNormalList = new Vector3[]{
         Vector3.up,
@@ -88,7 +88,7 @@ public class PlanetMeshGenerator {
                         Vector3 nextPos = pos + pointingTo;
                         Vector3 pointingToGlobal = chunkToGlobal*pointingTo;
 
-                        Block nextBlock = chunkAdjCalculator.BlockNextToMe(sideCoord, xCoord, yCoord, i, j, h, pointingTo, sideImPointing(pointingToGlobal));
+                        Block nextBlock = chunkAdjCalculator.BlockNextToMe(sideCoord, xCoord, yCoord, i, j, h, pointingTo, pointingToGlobal);
                         if (nextBlock.type.GetName() == "air") continue;
                         
                         // in chunk coordinate system
@@ -115,13 +115,6 @@ public class PlanetMeshGenerator {
         }
 
         return quads;
-    }
-
-    private int sideImPointing(Vector3 pointingTo) {
-        for (int side=0; side<6; side++) {
-            if (sideNormalList[side] == pointingTo) return side;
-        }
-        return -1;
     }
 
     private Vector3 blockIndexToPointInChunkCoords(Vector3 pos, int chunkI, int chunkJ, int sideCoord) {
