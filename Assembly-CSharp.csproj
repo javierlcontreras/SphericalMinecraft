@@ -48,6 +48,7 @@
      <Compile Include="Assets/Scripts/Terrain/BlockSideTriangle.cs" />
      <Compile Include="Assets/Scripts/Terrain/ChunkAdjancenyCalculator.cs" />
      <Compile Include="Assets/Scripts/Character/CharacterContoller.cs" />
+     <Compile Include="Assets/Scripts/Terrain/PerlinNoise.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/home/jlcontreras/Unity/Hub/Editor/2021.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

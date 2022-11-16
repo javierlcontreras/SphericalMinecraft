@@ -12,28 +12,18 @@ public class PlanetMeshGenerator {
     private int chunkSize;
     private int chunkHeight;
     private float blockLength;
-    public Vector3[,,] baseVectors;
 
-    private Vector3[] sideNormalList = new Vector3[]{
-        Vector3.up,
-        Vector3.down,
-        Vector3.right,
-        Vector3.left,
-        Vector3.forward,
-        Vector3.back
-    };
-    private Vector3[] sideTangentList = new Vector3[]{
-        Vector3.forward,
-        Vector3.back,
-        Vector3.up,
-        Vector3.down,
-        Vector3.right,
-        Vector3.left
-    };
+    private Vector3[] sideNormalList;
+    private Vector3[] sideTangentList;
+    private Vector3[,,] baseVectors;
 
     public PlanetMeshGenerator(Planet _planet, float _planetRadius) {
         planet = _planet;
         planetRadius = _planetRadius;
+        
+        sideNormalList = TerrainManager.instance.sideNormalList;
+        sideTangentList = TerrainManager.instance.sideTangentList;
+        baseVectors = TerrainManager.instance.baseVectors;
         
         chunkSize = planet.GetChunkSize();
         chunksPerSide = planet.GetChunksPerSide();
@@ -41,31 +31,7 @@ public class PlanetMeshGenerator {
         blockLength = planetRadius*2.0f/chunksPerSide/chunkSize;
 
         chunkAdjCalculator = new ChunkAdjacencyCalculator(planet, sideNormalList, sideTangentList);
-
-        baseVectors = ComputeBaseVectors();
     }
-
-    public Vector3[,,] ComputeBaseVectors() {
-        int numBlocks = chunkSize*chunksPerSide;
-        Vector3[,,] baseVectors = new Vector3[6,numBlocks+1, numBlocks+1];
-        for (int side=0; side<6; side++) {
-            Vector3 normal = sideNormalList[side];
-            Vector3 xAxis = sideTangentList[side];
-            Vector3 yAxis = Vector3.Cross(normal, xAxis);
-
-            for (int i=0; i<=numBlocks; i++) {
-                for (int j=0; j<=numBlocks; j++) {
-                    float x = numBlocks/2f - i;
-                    float y = numBlocks/2f - j;
-                    Vector3 radius = normal*planetRadius + x*xAxis*blockLength + y*yAxis*blockLength;
-                    baseVectors[side, i, j] = Vector3.Normalize(radius);
-                    //spawnDebugBall(baseVectors[side, i, j], 0.2f);
-                }    
-            }
-        }
-        return baseVectors;
-    }
-
 
     private List<BlockSide> GenerateListOfQuads(int sideCoord, int xCoord, int yCoord, Chunk chunk) {
         Vector3 sideNormal = sideNormalList[sideCoord];

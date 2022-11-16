@@ -48,4 +48,29 @@ public class Chunk {
             }    
         }
     }
+
+    public void FromNoise() {
+        for (int x = 0; x < chunkSize; x++) {
+            for (int y = 0; y < chunkSize; y++) {
+                Vector3 samplingDirection = TerrainManager.instance.baseVectors[sideCoord, xCoord*chunkSize + x, yCoord*chunkSize + y];
+                
+                float terrainHeight = PerlinNoise.get3DPerlinNoise(samplingDirection, 2);
+                terrainHeight = 0.5f + terrainHeight/2f;
+                terrainHeight *= 30f;
+                terrainHeight += 1f; 
+                Debug.Log(terrainHeight);
+
+                for (int h=0; h<chunkHeight; h++) {
+                    BlockType type;
+                    if (h <= terrainHeight) {
+                        type = BlockTypeEnum.GetBlockTypeByName("dirt");
+                    }
+                    else {
+                        type = BlockTypeEnum.GetBlockTypeByName("air");
+                    }
+                    blocks[x, y, h] = new Block(x, y, h, type);
+                }
+            }    
+        }        
+    }
 }

@@ -34,7 +34,8 @@ public class PlanetDataGenerator {
     public Chunk GenerateChunk(int sideCoord, int xCoord, int yCoord) {
         Chunk chunk = new Chunk(chunkSize, chunkHeight, sideCoord, xCoord, yCoord);
         //chunk.Flatten(2);
-        chunk.DebugPattern();
+        //chunk.DebugPattern();
+        chunk.FromNoise();
         return chunk;
     }
 } 
