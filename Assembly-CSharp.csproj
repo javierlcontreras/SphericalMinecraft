@@ -44,6 +44,9 @@
      <Compile Include="Assets/Scripts/Planet.cs" />
      <Compile Include="Assets/Scripts/PlanetMeshGenerator.cs" />
      <Compile Include="Assets/Scripts/BlockType.cs" />
+     <Compile Include="Assets/Scripts/BlockSide.cs" />
+     <Compile Include="Assets/Scripts/BlockSideTriangle.cs" />
+     <Compile Include="Assets/Scripts/ChunkAdjancenyCalculator.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/home/jlcontreras/Unity/Hub/Editor/2021.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

@@ -3,23 +3,23 @@ using UnityEngine;
 
 public interface BlockType {
     string GetName();
-    Vector2 GetUV();
+    //Vector2 GetUV();
 }
 
 class Dirt : BlockType {
     string name = "dirt";
-    Vector2 uv = Vector2.zero;
+    //Vector2 uv = Vector2.zero;
 
     public string GetName() { return name; }
-    public Vector2 GetUV() { return uv; }
+    //public Vector2 GetUV() { return uv; }
 }
 
 class Air : BlockType {
     string name = "air";
-    Vector2 uv = Vector2.zero;
+    //Vector2 uv = Vector2.zero;
 
     public string GetName() { return name; }
-    public Vector2 GetUV() { return uv; }
+    //public Vector2 GetUV() { return uv; }
 }
 
 public static class BlockTypeEnum {

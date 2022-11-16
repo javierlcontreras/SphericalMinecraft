@@ -15,7 +15,7 @@ public class PlanetDataGenerator {
     }
 
     public Planet Generate() {
-        Planet planet = new Planet(chunksPerSide, chunkSize);
+        Planet planet = new Planet(chunksPerSide, chunkSize, chunkHeight);
 
         for (int side = 0; side < 6; side++) {
             for (int chunkX = 0; chunkX < chunksPerSide; chunkX++) {
@@ -33,7 +33,8 @@ public class PlanetDataGenerator {
 
     public Chunk GenerateChunk(int sideCoord, int xCoord, int yCoord) {
         Chunk chunk = new Chunk(chunkSize, chunkHeight, sideCoord, xCoord, yCoord);
-        chunk.Flatten(chunkHeight/2);
+        //chunk.Flatten(2);
+        chunk.DebugPattern();
         return chunk;
     }
 } 

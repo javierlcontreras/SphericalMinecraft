@@ -5,14 +5,28 @@ using System.Text;
 using UnityEngine;
 
 public class Planet {
-    int chunksPerSide;
-    int chunkSize;
-    Chunk[,,] chunks;
+    private int chunksPerSide;
+    private int chunkSize;
+    private int chunkHeight;
+    public Chunk[,,] chunks;
     
-    public Planet(int _chunksPerSide, int _chunkSize) {
+    public Planet(int _chunksPerSide, int _chunkSize, int _chunkHeight) {
         chunksPerSide = _chunksPerSide;
+        chunkHeight = _chunkHeight;
         chunkSize = _chunkSize;
         chunks = new Chunk[6, chunksPerSide, chunksPerSide];
+    }
+
+    public int GetChunksPerSide() {
+        return chunksPerSide;
+    }
+    
+    public int GetChunkSize() {
+        return chunkSize;
+    }
+    
+    public int GetChunkHeight() {
+        return chunkHeight;
     }
 
     public void SetChunk(int sideCoord, int xCoord, int yCoord, Chunk chunk) {
@@ -30,4 +44,5 @@ public class Planet {
         }
         Debug.Log(builder.ToString());
     }
+
 }

@@ -152,9 +152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca700d6af8bb5ac8797f8cd8ff0d073b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshSize: 10
-  planetRadius: 10
-  surfaceMaterial: {fileID: 2100000, guid: 3d843c94aecc6b602a96dbfa936c791c, type: 2}
+  chunkSize: 4
+  chunkHeight: 4
+  chunksPerSide: 4
+  planetRadius: 20
+  textureMaterial: {fileID: 2100000, guid: 3d843c94aecc6b602a96dbfa936c791c, type: 2}
 --- !u!4 &324329103
 Transform:
   m_ObjectHideFlags: 0
