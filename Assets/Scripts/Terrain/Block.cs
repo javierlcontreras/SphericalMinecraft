@@ -8,5 +8,4 @@ public class Block {
         height = _height;
         type = _type;
     }
-
 }

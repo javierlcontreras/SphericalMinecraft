@@ -58,7 +58,7 @@ public class Chunk {
                 terrainHeight = 0.5f + terrainHeight/2f;
                 terrainHeight *= 30f;
                 terrainHeight += 1f; 
-                Debug.Log(terrainHeight);
+                //Debug.Log(terrainHeight);
 
                 for (int h=0; h<chunkHeight; h++) {
                     BlockType type;

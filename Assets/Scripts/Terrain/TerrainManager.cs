@@ -6,15 +6,15 @@ using static PlanetDataGenerator;
 
 public class TerrainManager : MonoBehaviour
 {
-    public float EPS = 0.05f;
+    public int chunksPerSide = 4;
     
     private const int chunkSize = 16;
     private const int chunkHeight = 64;
-    public int chunksPerSide = 4;
-    public float planetRadius = 10; // base radius
+    private const float blockLength = 1f;
+    private float planetRadius; // base radius
     public Material textureMaterial;
 
-    public Vector3 currentPosition;
+    public Transform currentPosition;
     public float radiusOfLoad;
 
     public Vector3[,,] baseVectors;
@@ -44,6 +44,10 @@ public class TerrainManager : MonoBehaviour
     public static TerrainManager instance = null; //{ get; private set; }
     private void Awake() 
     { 
+        planetRadius =  chunksPerSide*chunkSize/2f;
+        baseVectors = ComputeBaseVectors();
+        currentChunksLoaded = new GameObject[6,chunkSize,chunkSize];
+
         if (instance != null && instance != this) 
         { 
             Destroy(this); 
@@ -80,7 +84,8 @@ public class TerrainManager : MonoBehaviour
     public bool closeEnough(int side, int centerX, int centerY) {
         //Debug.Log(baseVectors.GetLength(1));
         //Debug.Log(centerX);
-        return (baseVectors[side, centerX, centerY] - Vector3.Normalize(currentPosition)).magnitude < radiusOfLoad;
+        float height = currentPosition.position.magnitude;
+        return (baseVectors[side, centerX, centerY]*height - currentPosition.position).magnitude < radiusOfLoad;
     }
 
     public void GeneratePlanet()
@@ -111,7 +116,7 @@ public class TerrainManager : MonoBehaviour
     public GameObject GenerateChunk(Planet planet, PlanetMeshGenerator planetMeshGenerator, int sideCoord, int xCoord, int yCoord) {
         Mesh mesh = planetMeshGenerator.GenerateChunk(sideCoord, xCoord, yCoord);
         
-        GameObject world = new GameObject("Chunk", typeof(MeshFilter), typeof(MeshRenderer));
+        GameObject world = new GameObject("Chunk", typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
         world.GetComponent<MeshFilter>().mesh = mesh;
         world.GetComponent<MeshRenderer>().material = textureMaterial;
 
@@ -119,15 +124,10 @@ public class TerrainManager : MonoBehaviour
     }
 
     private void Start() {
-        baseVectors = ComputeBaseVectors();
-        
         planetDataGenerator = new PlanetDataGenerator(chunkSize, chunkHeight, chunksPerSide);
         planet = planetDataGenerator.Generate();
         
         planetMeshGenerator = new PlanetMeshGenerator(planet, planetRadius);
-
-        currentChunksLoaded = new GameObject[6,chunkSize,chunkSize];
-        
     }
 
     private void Update() {
