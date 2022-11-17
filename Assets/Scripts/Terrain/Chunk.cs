@@ -54,9 +54,11 @@ public class Chunk {
             for (int y = 0; y < chunkSize; y++) {
                 Vector3 samplingDirection = TerrainManager.instance.baseVectors[sideCoord, xCoord*chunkSize + x, yCoord*chunkSize + y];
                 
-                float terrainHeight = PerlinNoise.get3DPerlinNoise(samplingDirection, 2);
-                terrainHeight = 0.5f + terrainHeight/2f;
-                terrainHeight *= 30f;
+                float terrainHeight = PerlinNoise.get3DPerlinNoise(samplingDirection, 1);
+                terrainHeight += 0.5f*PerlinNoise.get3DPerlinNoise(samplingDirection, 2);
+                terrainHeight += 0.25f*PerlinNoise.get3DPerlinNoise(samplingDirection, 4);
+                terrainHeight /= 1.75f;
+                terrainHeight *= (TerrainManager.instance.GetChunkHeight() - 2);
                 terrainHeight += 1f; 
                 //Debug.Log(terrainHeight);
 

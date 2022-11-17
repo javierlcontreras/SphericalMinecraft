@@ -37,8 +37,12 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets/Scripts/Terrain/Block.cs" />
+     <Compile Include="Assets/Scripts/Character/GravityAttractor.cs" />
+     <Compile Include="Assets/Scripts/Character/PhysicsBasedCharacterController.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockSide.cs" />
      <Compile Include="Assets/Scripts/Terrain/TerrainManager.cs" />
+     <Compile Include="Assets/Scripts/Character/GravityBody.cs" />
+     <Compile Include="Assets/Scripts/Sky/InvertNormals.cs" />
      <Compile Include="Assets/Scripts/Terrain/NoiseGenerator.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockType.cs" />
      <Compile Include="Assets/Scripts/Terrain/ChunkAdjancenyCalculator.cs" />
@@ -47,13 +51,9 @@
      <Compile Include="Assets/Scripts/Terrain/PerlinNoise.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockSideTriangle.cs" />
      <Compile Include="Assets/Scripts/Terrain/Planet.cs" />
+     <Compile Include="Assets/Scripts/Character/FirstPersonController.cs" />
      <Compile Include="Assets/Scripts/Terrain/PlanetMeshGenerator.cs" />
      <Compile Include="Assets/Scripts/Terrain/Chunk.cs" />
-     <Compile Include="Assets/Scripts/Character/PhysicsBasedCharacterController.cs" />
-     <Compile Include="Assets/Scripts/Character/GravityAttractor.cs" />
-     <Compile Include="Assets/Scripts/Character/GravityBody.cs" />
-     <Compile Include="Assets/Scripts/Character/FirstPersonController.cs" />
-     <Compile Include="Assets/Scripts/Sky/InvertNormals.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/home/jlcontreras/Unity/Hub/Editor/2021.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

@@ -8,13 +8,13 @@ public class TerrainManager : MonoBehaviour
 {
     public int chunksPerSide = 4;
     
-    private const int chunkSize = 16;
-    private const int chunkHeight = 64;
+    private const int chunkSize = 8;
+    public const int chunkHeight = 16;
     private const float blockLength = 1f;
     private float planetRadius; // base radius
     public Material textureMaterial;
     public int textureBlockSize = 16;
-    public int textureAtlasSize = 32;
+    public int textureAtlasSize = 128;
 
     public Transform currentPosition;
     public float radiusOfLoad;
@@ -69,7 +69,6 @@ public class TerrainManager : MonoBehaviour
     }
 
     public Vector3[,,] ComputeBaseVectors() {
-        float blockLength = planetRadius*2.0f/chunksPerSide/chunkSize;
         int numBlocks = chunkSize*chunksPerSide;
         Vector3[,,] baseVectors = new Vector3[6,numBlocks+1, numBlocks+1];
         for (int side=0; side<6; side++) {
@@ -145,6 +144,11 @@ public class TerrainManager : MonoBehaviour
     }
 
     private void Update() {
-        if (baseVectors != null) GeneratePlanet();
+
+        GeneratePlanet();
+    }
+
+    public int GetChunkHeight() {
+        return chunkHeight;
     }
 }

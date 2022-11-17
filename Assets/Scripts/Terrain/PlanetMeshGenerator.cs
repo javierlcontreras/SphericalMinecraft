@@ -31,6 +31,7 @@ public class PlanetMeshGenerator {
         chunksPerSide = planet.GetChunksPerSide();
         chunkHeight = planet.GetChunkHeight();
         blockLength = planetRadius*2.0f/chunksPerSide/chunkSize;
+        Debug.Log(blockLength);
 
         chunkAdjCalculator = new ChunkAdjacencyCalculator(planet, sideNormalList, sideTangentList);
     }
@@ -77,7 +78,7 @@ public class PlanetMeshGenerator {
                         Vector3 BGlobal = chunkToGlobal * B;
                         Vector3 normalGlobal = chunkToGlobal * normal;
 
-                        BlockSide side = new BlockSide(vertices, nextBlock.type.GetAtlasCoord(faceDrawn));
+                        BlockSide side = new BlockSide(vertices, nextBlock.type.GetAtlasCoord(faceDrawn), sideNameList[sideCoord], faceDrawn);
                         quads.Add(side);
                     }
                 }

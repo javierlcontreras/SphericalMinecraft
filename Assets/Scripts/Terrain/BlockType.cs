@@ -21,7 +21,7 @@ class Dirt : BlockType {
             y = 1;
         }
         else {
-            x = 1;
+            x = 0;
             y = 1;
         }
 
@@ -34,14 +34,34 @@ class Air : BlockType {
 
     public string GetName() { return name; }
     public Vector2 GetAtlasCoord(string side) {
-        return new Vector2(1, 0);
+        return new Vector2(-1, -1);
+    }
+}
+
+class Wood : BlockType {
+    string name = "wood";
+
+    public string GetName() { return name; }
+    public Vector2 GetAtlasCoord(string side) {
+        int x, y; 
+        if (side == "up" || side == "down") {
+            x = 1;
+            y = 2;
+        }
+        else {
+            x = 0;
+            y = 2;
+        }
+
+        return new Vector2(x,y);
     }
 }
 
 public static class BlockTypeEnum {
     static Dictionary<string, BlockType> dict = new Dictionary<string, BlockType> () {
         ["dirt"] = new Dirt(),
-        ["air"] = new Air()
+        ["air"] = new Air(),
+        ["wood"] = new Wood()
     };
 
     public static BlockType GetBlockTypeByName(string name) {

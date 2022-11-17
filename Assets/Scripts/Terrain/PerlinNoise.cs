@@ -147,7 +147,7 @@ public class PerlinNoise
         float smoothDistanceY = smoothDistance(distanceY0);
         float smoothDistanceZ = smoothDistance(distanceZ0);
 
-        return Mathf.Lerp(
+        return 0.5f + 0.5f*Mathf.Lerp(
             Mathf.Lerp(Mathf.Lerp(value000, value100, smoothDistanceX), Mathf.Lerp(value010, value110, smoothDistanceX), smoothDistanceY),
             Mathf.Lerp(Mathf.Lerp(value001, value101, smoothDistanceX), Mathf.Lerp(value011, value111, smoothDistanceX), smoothDistanceY),
             smoothDistanceZ);
