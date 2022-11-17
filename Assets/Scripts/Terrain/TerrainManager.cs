@@ -13,11 +13,21 @@ public class TerrainManager : MonoBehaviour
     private const float blockLength = 1f;
     private float planetRadius; // base radius
     public Material textureMaterial;
+    public int textureBlockSize = 16;
+    public int textureAtlasSize = 32;
 
     public Transform currentPosition;
     public float radiusOfLoad;
 
     public Vector3[,,] baseVectors;
+    public string[] sideNameList = new string[] {
+        "up",
+        "down",
+        "right",
+        "left",
+        "forward",
+        "back"
+    };
     public Vector3[] sideNormalList = new Vector3[]{
         Vector3.up,
         Vector3.down,
@@ -119,6 +129,10 @@ public class TerrainManager : MonoBehaviour
         GameObject world = new GameObject("Chunk", typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
         world.GetComponent<MeshFilter>().mesh = mesh;
         world.GetComponent<MeshRenderer>().material = textureMaterial;
+        world.GetComponent<MeshCollider>().sharedMesh = mesh;
+        //world.GetComponent<MeshCollider>().attachedRigidbody
+        // = world.GetComponent<Rigidbody>();
+        //world.GetComponent<Rigidbody>().useGravity = false;
 
         return world;
     }

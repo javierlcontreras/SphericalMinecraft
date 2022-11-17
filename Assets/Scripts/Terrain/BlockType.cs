@@ -3,23 +3,39 @@ using UnityEngine;
 
 public interface BlockType {
     string GetName();
-    //Vector2 GetUV();
+    Vector2 GetAtlasCoord(string side);
 }
 
 class Dirt : BlockType {
     string name = "dirt";
-    //Vector2 uv = Vector2.zero;
 
     public string GetName() { return name; }
-    //public Vector2 GetUV() { return uv; }
+    public Vector2 GetAtlasCoord(string side) {
+        int x, y; 
+        if (side == "up") {
+            x = 0;
+            y = 0;
+        }
+        else if (side == "down") {
+            x = 1;
+            y = 1;
+        }
+        else {
+            x = 1;
+            y = 1;
+        }
+
+        return new Vector2(x,y);
+    }
 }
 
 class Air : BlockType {
     string name = "air";
-    //Vector2 uv = Vector2.zero;
 
     public string GetName() { return name; }
-    //public Vector2 GetUV() { return uv; }
+    public Vector2 GetAtlasCoord(string side) {
+        return new Vector2(1, 0);
+    }
 }
 
 public static class BlockTypeEnum {

@@ -15,6 +15,7 @@ public class PlanetMeshGenerator {
 
     private Vector3[] sideNormalList;
     private Vector3[] sideTangentList;
+    private string[] sideNameList;
     private Vector3[,,] baseVectors;
 
     public PlanetMeshGenerator(Planet _planet, float _planetRadius) {
@@ -23,6 +24,7 @@ public class PlanetMeshGenerator {
         
         sideNormalList = TerrainManager.instance.sideNormalList;
         sideTangentList = TerrainManager.instance.sideTangentList;
+        sideNameList = TerrainManager.instance.sideNameList;
         baseVectors = TerrainManager.instance.baseVectors;
         
         chunkSize = planet.GetChunkSize();
@@ -49,6 +51,8 @@ public class PlanetMeshGenerator {
                     for (int nextTo=0; nextTo < 6; nextTo++) {
                         Vector3 pointingTo = sideNormalList[nextTo];
                         Vector3 orientedTo = sideTangentList[nextTo];
+                        int oppositeNextTo = 2*(nextTo/2) + (nextTo+1)%2;
+                        string faceDrawn = sideNameList[oppositeNextTo];
                         
                         Vector3 pos = new Vector3(i, h, j);
                         Vector3 nextPos = pos + pointingTo;
@@ -73,7 +77,7 @@ public class PlanetMeshGenerator {
                         Vector3 BGlobal = chunkToGlobal * B;
                         Vector3 normalGlobal = chunkToGlobal * normal;
 
-                        BlockSide side = new BlockSide(vertices, false);
+                        BlockSide side = new BlockSide(vertices, nextBlock.type.GetAtlasCoord(faceDrawn));
                         quads.Add(side);
                     }
                 }
@@ -104,6 +108,7 @@ public class PlanetMeshGenerator {
         
         List<Vector3> vertices = new List<Vector3>();
         List<Vector3> normals = new List<Vector3>();
+        List<Vector2> uvs = new List<Vector2>();
         List<int> triangles = new List<int>();
         int vertexCount = 0;
         foreach (BlockSide quad in quads) {
@@ -113,6 +118,9 @@ public class PlanetMeshGenerator {
                 }
                 foreach (Vector3 normal in triang.normals) {
                     normals.Add(normal);    
+                }
+                foreach (Vector2 uv in triang.uvs) {
+                    uvs.Add(uv);    
                 }
                 triangles.Add(vertexCount);
                 triangles.Add(vertexCount+1);
@@ -125,6 +133,7 @@ public class PlanetMeshGenerator {
         mesh.vertices = vertices.ToArray();
         mesh.normals = normals.ToArray();
         mesh.triangles = triangles.ToArray();
+        mesh.uv = uvs.ToArray();
 
         return mesh;
     }
