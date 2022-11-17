@@ -13,8 +13,9 @@ public class PlanetMeshGenerator {
     private int chunkHeight;
     private float blockLength;
 
-    private Vector3[] sideNormalList;
-    private Vector3[] sideTangentList;
+    private Vector3[] sideYaxisList;
+    private Vector3[] sideXaxisList;
+    private Vector3[] sideZaxisList;
     private string[] sideNameList;
     private Vector3[,,] baseVectors;
 
@@ -22,8 +23,9 @@ public class PlanetMeshGenerator {
         planet = _planet;
         planetRadius = _planetRadius;
         
-        sideNormalList = TerrainManager.instance.sideNormalList;
-        sideTangentList = TerrainManager.instance.sideTangentList;
+        sideYaxisList = TerrainManager.instance.sideYaxisList;
+        sideXaxisList = TerrainManager.instance.sideXaxisList;
+        sideZaxisList = TerrainManager.instance.sideZaxisList;
         sideNameList = TerrainManager.instance.sideNameList;
         baseVectors = TerrainManager.instance.baseVectors;
         
@@ -31,16 +33,23 @@ public class PlanetMeshGenerator {
         chunksPerSide = planet.GetChunksPerSide();
         chunkHeight = planet.GetChunkHeight();
         blockLength = planetRadius*2.0f/chunksPerSide/chunkSize;
-        Debug.Log(blockLength);
+        //Debug.Log(blockLength);
 
-        chunkAdjCalculator = new ChunkAdjacencyCalculator(planet, sideNormalList, sideTangentList);
+        chunkAdjCalculator = new ChunkAdjacencyCalculator(planet, sideXaxisList, sideYaxisList, sideZaxisList, sideNameList);
+        //spawnCoreBall();
     }
 
-    private List<BlockSide> GenerateListOfQuads(int sideCoord, int xCoord, int yCoord, Chunk chunk) {
-        Vector3 sideNormal = sideNormalList[sideCoord];
-        Vector3 sideXaxis = sideTangentList[sideCoord];
+    private List<BlockSide> GenerateListOfQuads(Chunk chunk) {
+        int sideCoord = chunk.sideCoord; 
+        int xCoord = chunk.xCoord;
+        int yCoord = chunk.yCoord;
+        Vector3 sideNormal = sideYaxisList[sideCoord];
+        Vector3 sideXaxis = sideXaxisList[sideCoord];
+        Vector3 sideZaxis = sideZaxisList[sideCoord];
 
-        Quaternion chunkToGlobal = Quaternion.LookRotation(sideXaxis, sideNormal); 
+        //Debug.Log(sideNormal + " " + sideXaxis + " " + sideZaxis);
+
+        Quaternion chunkToGlobal = Quaternion.LookRotation(sideZaxis, sideNormal); 
         Quaternion globalToChunk = Quaternion.Inverse(chunkToGlobal); 
 
         List<BlockSide> quads = new List<BlockSide>();
@@ -50,8 +59,10 @@ public class PlanetMeshGenerator {
                 for (int h=0; h<chunkHeight; h++) {
                     if (chunk.blocks[i,j,h].type.GetName() != "air") continue;
                     for (int nextTo=0; nextTo < 6; nextTo++) {
-                        Vector3 pointingTo = sideNormalList[nextTo];
-                        Vector3 orientedTo = sideTangentList[nextTo];
+                        Vector3 pointingTo = sideYaxisList[nextTo];
+                        Vector3 orientedToX = sideXaxisList[nextTo];
+                        Vector3 orientedToZ = sideZaxisList[nextTo];
+
                         int oppositeNextTo = 2*(nextTo/2) + (nextTo+1)%2;
                         string faceDrawn = sideNameList[oppositeNextTo];
                         
@@ -59,20 +70,20 @@ public class PlanetMeshGenerator {
                         Vector3 nextPos = pos + pointingTo;
                         Vector3 pointingToGlobal = chunkToGlobal*pointingTo;
 
-                        Block nextBlock = chunkAdjCalculator.BlockNextToMe(sideCoord, xCoord, yCoord, i, j, h, pointingTo, pointingToGlobal);
+                        Block nextBlock = chunkAdjCalculator.BlockNextToMe(chunk, i, j, h, pointingTo, pointingToGlobal);
                         if (nextBlock.type.GetName() == "air") continue;
                         
                         // in chunk coordinate system
                         Vector3 normal = -pointingTo;
-                        Vector3 A = orientedTo;
-                        Vector3 B = Vector3.Cross(normal, A);
+                        Vector3 A = orientedToX;
+                        Vector3 B = orientedToZ;
                         Vector3 mid = (pos + nextPos)/2f;
                         // to global
                         Vector3[] vertices = new Vector3[4] {
                             blockIndexToPointInChunkCoords(mid - A/2f - B/2f, xCoord, yCoord, sideCoord),
-                            blockIndexToPointInChunkCoords(mid - A/2f + B/2f, xCoord, yCoord, sideCoord),
+                            blockIndexToPointInChunkCoords(mid + A/2f - B/2f, xCoord, yCoord, sideCoord),
                             blockIndexToPointInChunkCoords(mid + A/2f + B/2f, xCoord, yCoord, sideCoord),
-                            blockIndexToPointInChunkCoords(mid + A/2f - B/2f, xCoord, yCoord, sideCoord)
+                            blockIndexToPointInChunkCoords(mid - A/2f + B/2f, xCoord, yCoord, sideCoord)
                         };
                         Vector3 AGlobal = chunkToGlobal * A;
                         Vector3 BGlobal = chunkToGlobal * B;
@@ -90,8 +101,8 @@ public class PlanetMeshGenerator {
 
     private Vector3 blockIndexToPointInChunkCoords(Vector3 pos, int chunkI, int chunkJ, int sideCoord) {
         int i = (int)(pos.x + 0.5);
-        int j = (int)(pos.z + 0.5);
         int h = (int)(pos.y + 0.5);
+        int j = (int)(pos.z + 0.5);
 
         return baseVectors[sideCoord, chunkI*chunkSize + i, chunkJ*chunkSize + j] * (planetRadius + (h-1)*blockLength);
     }
@@ -102,10 +113,15 @@ public class PlanetMeshGenerator {
         ball.transform.localScale *= size;           
     }
 
-    public Mesh GenerateChunk(int sideCoord, int xCoord, int yCoord) {
+    private void spawnCoreBall() {
+        Debug.Log(planetRadius + " " + blockLength);
+        spawnDebugBall(Vector3.zero, 2f*planetRadius);
+    }
+
+    public Mesh GenerateChunkMesh(int sideCoord, int xCoord, int yCoord) {
         Chunk chunk = planet.chunks[sideCoord, xCoord, yCoord];
         
-        List<BlockSide> quads = GenerateListOfQuads(sideCoord, xCoord, yCoord, chunk);
+        List<BlockSide> quads = GenerateListOfQuads(chunk);
         
         List<Vector3> vertices = new List<Vector3>();
         List<Vector3> normals = new List<Vector3>();

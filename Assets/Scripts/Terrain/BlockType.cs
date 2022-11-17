@@ -57,11 +57,21 @@ class Wood : BlockType {
     }
 }
 
+class Leaves : BlockType {
+    string name = "wood";
+
+    public string GetName() { return name; }
+    public Vector2 GetAtlasCoord(string side) {
+        return new Vector2(2,2);
+    }
+}
+
 public static class BlockTypeEnum {
     static Dictionary<string, BlockType> dict = new Dictionary<string, BlockType> () {
         ["dirt"] = new Dirt(),
         ["air"] = new Air(),
-        ["wood"] = new Wood()
+        ["wood"] = new Wood(),
+        ["leaves"] = new Leaves()
     };
 
     public static BlockType GetBlockTypeByName(string name) {

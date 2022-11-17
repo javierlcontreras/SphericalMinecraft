@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class Chunk {
     int chunkSize, chunkHeight;
-    int sideCoord, xCoord, yCoord; // relative to the planet
-
+    public int sideCoord {get;}
+    public int xCoord {get;}
+    public int yCoord {get;}
+    
     public Block[,,] blocks;
     
     public Chunk(int _chunkSize, int _chunkHeight, int _sideCoord, int _xCoord, int _yCoord) {
@@ -16,12 +18,27 @@ public class Chunk {
         blocks = new Block[chunkSize, chunkSize, chunkHeight];
     }
 
+    public float DistanceToChunk(Chunk nextChunk) {
+        int sideNext = nextChunk.sideCoord; 
+        int nextChunkX = nextChunk.xCoord; 
+        int nextChunkY = nextChunk.yCoord;
+
+        int x1 = xCoord * chunkSize + chunkSize/2;
+        int y1 = yCoord * chunkSize + chunkSize/2;
+        int x2 = nextChunkX * chunkSize + chunkSize/2;
+        int y2 = nextChunkY * chunkSize + chunkSize/2;
+        Vector3 base1 = TerrainManager.instance.baseVectors[sideCoord, x1, y1];
+        Vector3 base2 = TerrainManager.instance.baseVectors[sideNext, x2, y2];
+
+        return (base1 - base2).magnitude;
+    }
+
     public void Flatten(int height) {
         for (int x = 0; x < chunkSize; x++) {
             for (int y = 0; y < chunkSize; y++) {
                 for (int h=0; h<chunkHeight; h++) {
                     BlockType type;
-                    if (h <= height) {
+                    if (h < height) {
                         type = BlockTypeEnum.GetBlockTypeByName("dirt");
                     }
                     else {
@@ -58,7 +75,7 @@ public class Chunk {
                 terrainHeight += 0.5f*PerlinNoise.get3DPerlinNoise(samplingDirection, 2);
                 terrainHeight += 0.25f*PerlinNoise.get3DPerlinNoise(samplingDirection, 4);
                 terrainHeight /= 1.75f;
-                terrainHeight *= (TerrainManager.instance.GetChunkHeight() - 2);
+                terrainHeight *= (TerrainManager.instance.ChunkHeight - 2)/3f;
                 terrainHeight += 1f; 
                 //Debug.Log(terrainHeight);
 

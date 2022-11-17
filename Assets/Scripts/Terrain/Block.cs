@@ -1,5 +1,7 @@
 public class Block {
-    int xInChunk, yInChunk, height; // relative to chunk
+    public int xInChunk {get;}
+    public int yInChunk {get;}
+    public int height {get;}  // relative to chunk
     public BlockType type;
 
     public Block(int _xInChunk, int _yInChunk, int _height, BlockType _type) {

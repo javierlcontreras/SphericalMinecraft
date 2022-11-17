@@ -24,9 +24,9 @@ public class BlockSide {
     }
 
     private Vector2[] computeUVsFromAtlas(Vector2 atlasCoord) {
-        float s = 1f*TerrainManager.instance.textureBlockSize/TerrainManager.instance.textureAtlasSize;
+        float s = 1f*TerrainManager.instance.TextureBlockSize/TerrainManager.instance.TextureAtlasSize;
         float x = (int)atlasCoord.x*s;
-        float y = 1 - s - (int)atlasCoord.y*s;
+        float y = 1 - (int)atlasCoord.y*s;
         return new Vector2[] {
             new Vector2(x, y-s),
             new Vector2(x+s, y-s),
@@ -43,10 +43,10 @@ public class BlockSide {
     }
 
     private int NumRotations(string side, string pointing) {
-        if (pointing == "right")           return 2;
-        if (pointing == "left")            return 0;
-        if (pointing == "forward")         return 1;
-        if (pointing == "back")            return 1;
+        if (pointing == "right")           return 1;
+        if (pointing == "left")            return 3;
+        if (pointing == "forward")         return 2;
+        if (pointing == "back")            return 2;
         return 0;
     }
 }

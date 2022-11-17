@@ -6,15 +6,23 @@ using static PlanetDataGenerator;
 
 public class TerrainManager : MonoBehaviour
 {
-    public int chunksPerSide = 4;
-    
+    private const int chunksPerSide = 1;
+    public int ChunksPerSide => chunksPerSide;
     private const int chunkSize = 8;
-    public const int chunkHeight = 16;
+    public int ChunkSize => chunkSize;
+    private const int chunkHeight = 16;
+    public int ChunkHeight => chunkHeight;
     private const float blockLength = 1f;
-    private float planetRadius; // base radius
+    public float BlockLength => blockLength;
+    private const int textureBlockSize = 16;
+    public int TextureBlockSize => textureBlockSize;
+    private const int textureAtlasSize = 128;
+    public int TextureAtlasSize => textureAtlasSize;
+    private float planetRadius;
+    public float PlanetRadius => planetRadius;
+
+    
     public Material textureMaterial;
-    public int textureBlockSize = 16;
-    public int textureAtlasSize = 128;
 
     public Transform currentPosition;
     public float radiusOfLoad;
@@ -28,7 +36,7 @@ public class TerrainManager : MonoBehaviour
         "forward",
         "back"
     };
-    public Vector3[] sideNormalList = new Vector3[]{
+    public Vector3[] sideYaxisList = new Vector3[]{
         Vector3.up,
         Vector3.down,
         Vector3.right,
@@ -36,13 +44,21 @@ public class TerrainManager : MonoBehaviour
         Vector3.forward,
         Vector3.back
     };
-    public Vector3[] sideTangentList = new Vector3[]{
+    public Vector3[] sideXaxisList = new Vector3[]{
         Vector3.forward,
         Vector3.back,
         Vector3.up,
         Vector3.down,
         Vector3.right,
         Vector3.left
+    };
+    public Vector3[] sideZaxisList = new Vector3[]{
+        Vector3.left,
+        Vector3.left,
+        Vector3.back,
+        Vector3.back,
+        Vector3.down,
+        Vector3.down
     };
     
     private Planet planet;
@@ -72,16 +88,21 @@ public class TerrainManager : MonoBehaviour
         int numBlocks = chunkSize*chunksPerSide;
         Vector3[,,] baseVectors = new Vector3[6,numBlocks+1, numBlocks+1];
         for (int side=0; side<6; side++) {
-            Vector3 normal = sideNormalList[side];
-            Vector3 xAxis = sideTangentList[side];
-            Vector3 yAxis = Vector3.Cross(normal, xAxis);
+            Vector3 normal = sideYaxisList[side];
+            Vector3 xAxis = sideXaxisList[side];
+            Vector3 zAxis = sideZaxisList[side];
 
             for (int i=0; i<=numBlocks; i++) {
                 for (int j=0; j<=numBlocks; j++) {
-                    float x = numBlocks/2f - i;
-                    float y = numBlocks/2f - j;
-                    Vector3 radius = normal*planetRadius + x*xAxis*blockLength + y*yAxis*blockLength;
+                    float x = i - numBlocks/2f;
+                    float z = j - numBlocks/2f;
+                    Vector3 radius = normal*planetRadius + x*xAxis*blockLength + z*zAxis*blockLength;
                     baseVectors[side, i, j] = Vector3.Normalize(radius);
+                    /*if (side == 0 && i == 0 && j == 3) {
+                        Debug.Log(normal + " " + xAxis + " " + zAxis);
+                        Debug.Log(i + " " + j + " " + x + " " + z + " " + numBlocks);
+                        Debug.Log(baseVectors[side, i, j]);
+                    }*/
                     //spawnDebugBall(baseVectors[side, i, j], 0.2f);
                 }    
             }
@@ -123,7 +144,7 @@ public class TerrainManager : MonoBehaviour
     }
 
     public GameObject GenerateChunk(Planet planet, PlanetMeshGenerator planetMeshGenerator, int sideCoord, int xCoord, int yCoord) {
-        Mesh mesh = planetMeshGenerator.GenerateChunk(sideCoord, xCoord, yCoord);
+        Mesh mesh = planetMeshGenerator.GenerateChunkMesh(sideCoord, xCoord, yCoord);
         
         GameObject world = new GameObject("Chunk", typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
         world.GetComponent<MeshFilter>().mesh = mesh;
@@ -146,9 +167,5 @@ public class TerrainManager : MonoBehaviour
     private void Update() {
 
         GeneratePlanet();
-    }
-
-    public int GetChunkHeight() {
-        return chunkHeight;
     }
 }
