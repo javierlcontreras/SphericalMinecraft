@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof (GravityBody))]
 public class FirstPersonController : MonoBehaviour {
 	
 	// public vars
@@ -13,6 +12,7 @@ public class FirstPersonController : MonoBehaviour {
 	
 	// System vars
 	bool grounded;
+	bool jumping;
 	Vector3 moveAmount;
 	Vector3 smoothMoveVelocity;
 	float verticalLookRotation;
@@ -20,12 +20,15 @@ public class FirstPersonController : MonoBehaviour {
 	Rigidbody playerRigidbody;
 	
     private Vector3 radialDirection;
-	
+	float verticalVelocity;
 	void Awake() {
+		verticalVelocity = 0;
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
 		cameraTransform = Camera.main.transform;
 		playerRigidbody = GetComponent<Rigidbody> ();
+		playerRigidbody.useGravity = false;
+		playerRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 	}
 	
 	void Update() {
@@ -44,27 +47,21 @@ public class FirstPersonController : MonoBehaviour {
 		Vector3 moveDir = new Vector3(inputX,0, inputY).normalized;
 		Vector3 targetMoveAmount = moveDir * walkSpeed;
 		moveAmount = Vector3.SmoothDamp(moveAmount,targetMoveAmount,ref smoothMoveVelocity,.15f);
-
 	}
 
 	bool jumpHalted() {
-		float verticalVel = Vector3.Dot(playerRigidbody.velocity, radialDirection);
-		//Debug.Log(verticalVel);
-		return verticalVel < 0.000001f;
+		if (verticalVelocity < 0.000001f) {
+			jumping = false;
+			return true;
+		}
+		return false;
 	}
 	
-	void FixSlopeSpeeding() {
+	void ClampYVelocity() {
 		// TODO: fix this idea to fix slope shooting up. Basically steal control from physics engine
-		float vx = playerRigidbody.velocity.x;
-		float currentVerticalSpeed = playerRigidbody.velocity.y;
-		float vz = playerRigidbody.velocity.z;
-	
-		if(grounded)
-		{
-			if(currentVerticalSpeed < 0f)
-				currentVerticalSpeed = 0f;
-		}
-		playerRigidbody.velocity = new Vector3(vx, currentVerticalSpeed, vz);
+		float currentVerticalSpeed = Vector3.Dot(playerRigidbody.velocity, radialDirection);	
+		playerRigidbody.velocity -= currentVerticalSpeed*radialDirection;
+		playerRigidbody.velocity += verticalVelocity*radialDirection;
 	}
 
 	void FixedUpdate() {
@@ -73,6 +70,7 @@ public class FirstPersonController : MonoBehaviour {
 		if (Input.GetButton("Jump")) {
 			if (grounded && jumpHalted()) {
 				playerRigidbody.AddForce(transform.up * jumpForce);
+				jumping = true;
 			}
 		}
 
@@ -90,11 +88,19 @@ public class FirstPersonController : MonoBehaviour {
 
 			if (Physics.Raycast(rayDown, out hit, 1 + .5f, groundedMask)) grounded = true;
 		}
+		if (grounded == false) {
+			verticalVelocity -= 9.8f*Time.fixedDeltaTime;
+		}
+		else {
+			if (jumping == false) verticalVelocity = 0;
+		}
 		
 
 		// Apply movement to playerRigidbody
 		Vector3 localMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
 		playerRigidbody.MovePosition(playerRigidbody.position + localMove);
+
+		ClampYVelocity();
 	}
 
     Quaternion RadialCharacterOrientation() {

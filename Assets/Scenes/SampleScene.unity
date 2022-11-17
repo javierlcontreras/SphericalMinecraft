@@ -135,7 +135,6 @@ GameObject:
   - component: {fileID: 166101068}
   - component: {fileID: 166101067}
   - component: {fileID: 166101065}
-  - component: {fileID: 166101064}
   - component: {fileID: 166101063}
   - component: {fileID: 166101070}
   m_Layer: 0
@@ -164,19 +163,6 @@ MonoBehaviour:
   groundedMask:
     serializedVersion: 2
     m_Bits: 2147483647
---- !u!114 &166101064
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 166101062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dee9a83e644347473901912f59a5beba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  planet: {fileID: 1601492033}
 --- !u!54 &166101065
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -251,7 +237,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166101062}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 100, z: 0}
+  m_LocalPosition: {x: 0, y: 20, z: 0}
   m_LocalScale: {x: 0.6, y: 1.8, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -496,10 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca700d6af8bb5ac8797f8cd8ff0d073b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunksPerSide: 1
   textureMaterial: {fileID: 2100000, guid: 3d843c94aecc6b602a96dbfa936c791c, type: 2}
-  textureBlockSize: 16
-  textureAtlasSize: 16
   currentPosition: {fileID: 166101069}
   radiusOfLoad: 30
   sideNameList:
@@ -509,20 +492,27 @@ MonoBehaviour:
   - left
   - forward
   - back
-  sideNormalList:
+  sideYaxisList:
   - {x: 0, y: 1, z: 0}
   - {x: 0, y: -1, z: 0}
   - {x: 1, y: 0, z: 0}
   - {x: -1, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
   - {x: 0, y: 0, z: -1}
-  sideTangentList:
+  sideXaxisList:
   - {x: 0, y: 0, z: 1}
   - {x: 0, y: 0, z: -1}
   - {x: 0, y: 1, z: 0}
   - {x: 0, y: -1, z: 0}
   - {x: 1, y: 0, z: 0}
   - {x: -1, y: 0, z: 0}
+  sideZaxisList:
+  - {x: -1, y: 0, z: 0}
+  - {x: -1, y: 0, z: 0}
+  - {x: 0, y: 0, z: -1}
+  - {x: 0, y: 0, z: -1}
+  - {x: 0, y: -1, z: 0}
+  - {x: 0, y: -1, z: 0}
 --- !u!4 &324329103
 Transform:
   m_ObjectHideFlags: 0
