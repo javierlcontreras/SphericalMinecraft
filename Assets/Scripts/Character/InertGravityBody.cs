@@ -4,7 +4,7 @@ using System.Collections;
 [RequireComponent (typeof (Rigidbody))]
 public class GravityBody : MonoBehaviour {
 	
-	public GravityAttractor planet;
+	public GravityAttractor attractor;
 	Rigidbody objectRigidbody;
 	
 	void Awake () {
@@ -18,6 +18,6 @@ public class GravityBody : MonoBehaviour {
 	
 	void FixedUpdate () {
 		// Allow this body to be influenced by planet's gravity
-		planet.Attract(objectRigidbody);
+		attractor.AttractInertBody(objectRigidbody);
 	}
 }

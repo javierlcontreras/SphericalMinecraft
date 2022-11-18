@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent (typeof(CharacterController))]
 public class FirstPersonController : MonoBehaviour {
 	
 	// public vars
@@ -10,102 +11,56 @@ public class FirstPersonController : MonoBehaviour {
 	public float jumpForce = 220;
 	public LayerMask groundedMask;
 	
-	// System vars
-	bool grounded;
-	bool jumping;
-	Vector3 moveAmount;
-	Vector3 smoothMoveVelocity;
-	float verticalLookRotation;
 	Transform cameraTransform;
-	Rigidbody playerRigidbody;
+	CharacterController characterController;
 	
-    private Vector3 radialDirection;
-	float verticalVelocity;
+	private TangencialMovementController tangencialController;
+	private NormalMovementController normalController;
+	private CameraController cameraController;
+
 	void Awake() {
-		verticalVelocity = 0;
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
+		
 		cameraTransform = Camera.main.transform;
-		playerRigidbody = GetComponent<Rigidbody> ();
-		playerRigidbody.useGravity = false;
-		playerRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+		
+
+		characterController = GetComponent<CharacterController> ();
+
+		tangencialController = new TangencialMovementController(walkSpeed);
+		float initYPosition = characterController.transform.position.magnitude;
+		normalController = new NormalMovementController(initYPosition, characterController, groundedMask);
+		cameraController = new CameraController(cameraTransform);
 	}
 	
-	void Update() {
-		radialDirection = Vector3.Normalize(transform.position);
-
-        transform.rotation = RadialCharacterOrientation();
-		transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * mouseSensitivityX);
-		verticalLookRotation += Input.GetAxis("Mouse Y") * mouseSensitivityY;
-		verticalLookRotation = Mathf.Clamp(verticalLookRotation,-80,80);
-		cameraTransform.localEulerAngles = Vector3.left * verticalLookRotation;
+	void FixedUpdate() {
+        characterController.transform.rotation = RadialCharacterOrientation();
 		
-		// Calculate movement:
+		float mouseX = Input.GetAxis("Mouse X");
+		float mouseY = Input.GetAxis("Mouse Y");
 		float inputX = Input.GetAxisRaw("Horizontal");
 		float inputY = Input.GetAxisRaw("Vertical");
+		bool wantToJump = Input.GetButton("Jump");
+
+		// Set character radially
+		characterController.transform.Rotate(Vector3.up * mouseX * mouseSensitivityX);
+		// Move camera by input
+		cameraController.MoveCamera(mouseY * mouseSensitivityY);
 		
-		Vector3 moveDir = new Vector3(inputX,0, inputY).normalized;
-		Vector3 targetMoveAmount = moveDir * walkSpeed;
-		moveAmount = Vector3.SmoothDamp(moveAmount,targetMoveAmount,ref smoothMoveVelocity,.15f);
-	}
+		// Calculate movement Tangencial
+		Vector3 moveAmount = tangencialController.AmountToMoveWithTarget(inputX, inputY);
+		Vector3 move = characterController.transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
+		// Calculate movement Vertical
+		Vector3 radialDirection = transform.position.normalized;
+		float verticalVelocity = normalController.VerticalVelocity()*Time.fixedDeltaTime;
 
-	bool jumpHalted() {
-		if (verticalVelocity < 0.000001f) {
-			jumping = false;
-			return true;
-		}
-		return false;
-	}
-	
-	void ClampYVelocity() {
-		// TODO: fix this idea to fix slope shooting up. Basically steal control from physics engine
-		float currentVerticalSpeed = Vector3.Dot(playerRigidbody.velocity, radialDirection);	
-		playerRigidbody.velocity -= currentVerticalSpeed*radialDirection;
-		playerRigidbody.velocity += verticalVelocity*radialDirection;
-	}
-
-	void FixedUpdate() {
-		// FixSlopeSpeeding();
-		// Jump
-		if (Input.GetButton("Jump")) {
-			if (grounded && jumpHalted()) {
-				playerRigidbody.AddForce(transform.up * jumpForce);
-				jumping = true;
-			}
-		}
-
-		grounded = false;
-		Vector3[] adds = new Vector3[] {
-			transform.right + transform.forward,
-			-transform.right + transform.forward,
-			transform.right - transform.forward,
-			-transform.right - transform.forward
-		};
-		for (int ray = 0; ray < 4; ray++) {
-			Vector3 add = adds[ray] * 0.1f; 
-			Ray rayDown = new Ray(transform.position + add, -transform.up);
-			RaycastHit hit;
-
-			if (Physics.Raycast(rayDown, out hit, 1 + .5f, groundedMask)) grounded = true;
-		}
-		if (grounded == false) {
-			verticalVelocity -= 9.8f*Time.fixedDeltaTime;
-		}
-		else {
-			if (jumping == false) verticalVelocity = 0;
-		}
-		
-
-		// Apply movement to playerRigidbody
-		Vector3 localMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
-		playerRigidbody.MovePosition(playerRigidbody.position + localMove);
-
-		ClampYVelocity();
+		Debug.Log(verticalVelocity + " " + move);
+		characterController.Move(move + radialDirection*verticalVelocity);
 	}
 
     Quaternion RadialCharacterOrientation() {
-        Vector3 globalForward = transform.TransformDirection(Vector3.forward);
-        Vector3 properUp = radialDirection;
+        Vector3 globalForward = characterController.transform.TransformDirection(Vector3.forward);
+        Vector3 properUp = characterController.transform.position.normalized;
         Vector3 properForward = Vector3.Cross(Vector3.Cross(properUp, globalForward), properUp);
         Quaternion playerOrientation = Quaternion.LookRotation(properForward, properUp);
         
