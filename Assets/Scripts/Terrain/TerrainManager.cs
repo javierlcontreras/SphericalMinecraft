@@ -145,8 +145,9 @@ public class TerrainManager : MonoBehaviour
 
     public GameObject GenerateChunk(Planet planet, PlanetMeshGenerator planetMeshGenerator, int sideCoord, int xCoord, int yCoord) {
         Mesh mesh = planetMeshGenerator.GenerateChunkMesh(sideCoord, xCoord, yCoord);
-        
         GameObject world = new GameObject("Chunk", typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
+        int TerrainLayer = LayerMask.NameToLayer("Terrain");
+        world.layer = TerrainLayer;
         world.GetComponent<MeshFilter>().mesh = mesh;
         world.GetComponent<MeshRenderer>().material = textureMaterial;
         world.GetComponent<MeshCollider>().sharedMesh = mesh;

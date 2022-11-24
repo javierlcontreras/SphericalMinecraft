@@ -5,7 +5,8 @@ class NormalMovementController {
 	//bool jumping;
 	//float verticalPosition;
 	float verticalVelocity;
-    CharacterController body;
+	float shiftAndJumpVelocities = 6f;
+    Transform character;
 	/*
     void Jump() {
         if (Input.GetButton("Jump")) {
@@ -17,27 +18,33 @@ class NormalMovementController {
     }
     */
     private LayerMask groundedMask;
-    public NormalMovementController(float initVerticalPosition, CharacterController _body, LayerMask _groundedMask) {
+    public NormalMovementController(float initVerticalPosition, Transform _character, LayerMask _groundedMask) {
         //verticalPosition = initVerticalPosition;
         verticalVelocity = 0;
         groundedMask = _groundedMask;
-        body = _body;
+        character = _character;
     }
 
-    public float VerticalVelocity() {
+    public float VerticalVelocity(bool wantToJump, bool wantToShift) {
+		float addedVel = 0;
+		if (wantToJump) addedVel += shiftAndJumpVelocities;
+		if (wantToShift) addedVel -= shiftAndJumpVelocities;
+		
         if (!Grounded()) {
             verticalVelocity -= 9.8f*Time.fixedDeltaTime;
         } 
         else {
             verticalVelocity = 0;
         }
-        return verticalVelocity;
+        return verticalVelocity + addedVel;
     }
 
-    bool Grounded() {
-        bool grounded = false;
-        Transform transform = body.transform;
-		Vector3[] adds = new Vector3[] {
+    public bool Grounded() {
+		Ray rayDown = new Ray(character.position, -character.up);
+		RaycastHit hit;
+		if (Physics.Raycast(rayDown, out hit, 1 + .05f, groundedMask)) return true;
+		return false;
+		/*Vector3[] adds = new Vector3[] {
 			transform.right + transform.forward,
 			-transform.right + transform.forward,
 			transform.right - transform.forward,
@@ -46,11 +53,10 @@ class NormalMovementController {
 		for (int ray = 0; ray < 4; ray++) {
 			Vector3 add = adds[ray] * 0.1f; 
 			Ray rayDown = new Ray(transform.position + add, -transform.up);
-			RaycastHit hit;
 
-			if (Physics.Raycast(rayDown, out hit, 1 + .5f, groundedMask)) grounded = true;
 		}
         return grounded;
+		*/
     }
 
    /* bool jumpHalted() {
