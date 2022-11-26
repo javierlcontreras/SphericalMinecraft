@@ -6,11 +6,11 @@ using static PlanetDataGenerator;
 
 public class TerrainManager : MonoBehaviour
 {
-    private const int chunksPerSide = 1;
+    private const int chunksPerSide = 4;
     public int ChunksPerSide => chunksPerSide;
     private const int chunkSize = 8;
     public int ChunkSize => chunkSize;
-    private const int chunkHeight = 16;
+    private const int chunkHeight = 64;
     public int ChunkHeight => chunkHeight;
     private const float blockLength = 1f;
     public float BlockLength => blockLength;
@@ -115,7 +115,7 @@ public class TerrainManager : MonoBehaviour
         //Debug.Log(baseVectors.GetLength(1));
         //Debug.Log(centerX);
         float height = currentPosition.position.magnitude;
-        return (baseVectors[side, centerX, centerY]*height - currentPosition.position).magnitude < radiusOfLoad;
+        return (baseVectors[side, centerX, centerY] - currentPosition.position.normalized).magnitude < radiusOfLoad;
     }
 
     public void GeneratePlanet()

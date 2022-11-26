@@ -57,6 +57,9 @@
      <Compile Include="Assets/Scripts/Terrain/PlanetMeshGenerator.cs" />
      <Compile Include="Assets/Scripts/Terrain/Chunk.cs" />
      <Compile Include="Assets/Scripts/Character/InertGravityBody.cs" />
+     <Compile Include="Assets/DebugDrawingExtension/DebugExtension.cs" />
+     <Compile Include="Assets/DebugDrawingExtension/Example/Example.cs" />
+     <None Include="Assets/DebugDrawingExtension/readme.txt" />
     <Reference Include="UnityEngine">
         <HintPath>/home/jlcontreras/Unity/Hub/Editor/2021.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

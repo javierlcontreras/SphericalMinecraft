@@ -7,16 +7,9 @@ class NormalMovementController {
 	float verticalVelocity;
 	float shiftAndJumpVelocities = 6f;
     Transform character;
-	/*
-    void Jump() {
-        if (Input.GetButton("Jump")) {
-			if (grounded && jumpHalted()) {
-				playerRigidbody.AddForce(transform.up * jumpForce);
-				jumping = true;
-			}
-		}
-    }
-    */
+	private float feetSkinWidth = 0.5f;
+	private Vector3 feetPoint = new Vector3(0, -0.25f, 0);
+
     private LayerMask groundedMask;
     public NormalMovementController(float initVerticalPosition, Transform _character, LayerMask _groundedMask) {
         //verticalPosition = initVerticalPosition;
@@ -40,9 +33,9 @@ class NormalMovementController {
     }
 
     public bool Grounded() {
-		Ray rayDown = new Ray(character.position, -character.up);
+		Ray rayDown = new Ray(character.TransformPoint(feetPoint), -character.up);
 		RaycastHit hit;
-		if (Physics.Raycast(rayDown, out hit, 1 + .05f, groundedMask)) return true;
+		if (Physics.Raycast(rayDown, out hit, feetSkinWidth, groundedMask)) return true;
 		return false;
 		/*Vector3[] adds = new Vector3[] {
 			transform.right + transform.forward,
