@@ -85,14 +85,10 @@ public class ChunkAdjacencyCalculator {
     }
     private float distanceBlockToBlock(Chunk chunk, int x, int y, Chunk nextChunk, int nextX, int nextY) {
         int sideCoord1 = chunk.sideCoord;
-        int bx1 = chunk.xCoord * chunkSize + x;
-        int by1 = chunk.yCoord * chunkSize + y;
-        Vector3 base1 = TerrainManager.instance.baseVectors[sideCoord1, bx1, by1];
+        Vector3 base1 = TerrainManager.instance.BaseVector(sideCoord1, chunk.xCoord, chunk.yCoord, x, y);
 
         int sideCoord2 = nextChunk.sideCoord;
-        int bx2 = nextChunk.xCoord * chunkSize + nextX;
-        int by2 = nextChunk.yCoord * chunkSize + nextY;
-        Vector3 base2 = TerrainManager.instance.baseVectors[sideCoord2, bx2, by2];
+        Vector3 base2 = TerrainManager.instance.BaseVector(sideCoord2, nextChunk.xCoord, nextChunk.yCoord, nextX, nextY);
 
         return (base1 - base2).magnitude;
     }

@@ -27,8 +27,8 @@ public class Chunk {
         int y1 = yCoord * chunkSize + chunkSize/2;
         int x2 = nextChunkX * chunkSize + chunkSize/2;
         int y2 = nextChunkY * chunkSize + chunkSize/2;
-        Vector3 base1 = TerrainManager.instance.baseVectors[sideCoord, x1, y1];
-        Vector3 base2 = TerrainManager.instance.baseVectors[sideNext, x2, y2];
+        Vector3 base1 = TerrainManager.instance.BaseVectorAtCenter(sideCoord, xCoord, yCoord);
+        Vector3 base2 = TerrainManager.instance.BaseVectorAtCenter(sideNext, nextChunkX, nextChunkY);
 
         return (base1 - base2).magnitude;
     }
@@ -69,7 +69,7 @@ public class Chunk {
     public void FromNoise() {
         for (int x = 0; x < chunkSize; x++) {
             for (int y = 0; y < chunkSize; y++) {
-                Vector3 samplingDirection = TerrainManager.instance.baseVectors[sideCoord, xCoord*chunkSize + x, yCoord*chunkSize + y];
+                Vector3 samplingDirection = TerrainManager.instance.BaseVector(sideCoord, xCoord, yCoord, x, y);
                 
                 float terrainHeight = PerlinNoise.get3DPerlinNoise(samplingDirection, 1);
                 terrainHeight += 0.5f*PerlinNoise.get3DPerlinNoise(samplingDirection, 2);

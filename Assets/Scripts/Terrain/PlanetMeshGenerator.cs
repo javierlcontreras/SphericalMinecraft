@@ -11,13 +11,12 @@ public class PlanetMeshGenerator {
     private int chunksPerSide;
     private int chunkSize;
     private int chunkHeight;
-    private float blockLength;
+    private float[] blockHeightToHeight;
 
     private Vector3[] sideYaxisList;
     private Vector3[] sideXaxisList;
     private Vector3[] sideZaxisList;
     private string[] sideNameList;
-    private Vector3[,,] baseVectors;
 
     public PlanetMeshGenerator(Planet _planet, float _planetRadius) {
         planet = _planet;
@@ -27,12 +26,23 @@ public class PlanetMeshGenerator {
         sideXaxisList = TerrainManager.instance.sideXaxisList;
         sideZaxisList = TerrainManager.instance.sideZaxisList;
         sideNameList = TerrainManager.instance.sideNameList;
-        baseVectors = TerrainManager.instance.baseVectors;
         
         chunkSize = planet.GetChunkSize();
         chunksPerSide = planet.GetChunksPerSide();
         chunkHeight = planet.GetChunkHeight();
-        blockLength = planetRadius*2.0f/chunksPerSide/chunkSize;
+        blockHeightToHeight = new float[chunkHeight+1];
+        float lastRadius = planetRadius;
+        for (int h=0; h<=chunkHeight; h++) {
+            blockHeightToHeight[h] = lastRadius;
+            float blockSizeAtPreviousHeight = (2f*lastRadius*Mathf.PI)/(chunksPerSide*chunkSize*4f);
+            lastRadius += blockSizeAtPreviousHeight;
+        }
+        Debug.Log(blockHeightToHeight[0]);
+        Debug.Log(blockHeightToHeight[1]);
+        Debug.Log(blockHeightToHeight[2]);
+        Debug.Log(blockHeightToHeight[3]);
+        Debug.Log(blockHeightToHeight[4]);
+        //blockLength = planetRadius*2.0f/chunksPerSide/chunkSize;
         //Debug.Log(blockLength);
 
         chunkAdjCalculator = new ChunkAdjacencyCalculator(planet, sideXaxisList, sideYaxisList, sideZaxisList, sideNameList);
@@ -104,7 +114,7 @@ public class PlanetMeshGenerator {
         int h = (int)(pos.y + 0.5);
         int j = (int)(pos.z + 0.5);
 
-        return baseVectors[sideCoord, chunkI*chunkSize + i, chunkJ*chunkSize + j] * (planetRadius + (h-1)*blockLength);
+        return TerrainManager.instance.BaseVector(sideCoord, chunkI, chunkJ, i, j) * (blockHeightToHeight[h-1]);
     }
 
     private void spawnDebugBall(Vector3 vertexPosition, float size) {
@@ -114,7 +124,7 @@ public class PlanetMeshGenerator {
     }
 
     private void spawnCoreBall() {
-        Debug.Log(planetRadius + " " + blockLength);
+        //Debug.Log(planetRadius + " " + blockLength);
         spawnDebugBall(Vector3.zero, 2f*planetRadius);
     }
 

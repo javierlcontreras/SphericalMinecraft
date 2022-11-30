@@ -6,11 +6,11 @@ using static PlanetDataGenerator;
 
 public class TerrainManager : MonoBehaviour
 {
-    private const int chunksPerSide = 4;
+    private const int chunksPerSide = 1;
     public int ChunksPerSide => chunksPerSide;
     private const int chunkSize = 8;
     public int ChunkSize => chunkSize;
-    private const int chunkHeight = 64;
+    private const int chunkHeight = 16;
     public int ChunkHeight => chunkHeight;
     private const float blockLength = 1f;
     public float BlockLength => blockLength;
@@ -27,7 +27,6 @@ public class TerrainManager : MonoBehaviour
     public Transform currentPosition;
     public float radiusOfLoad;
 
-    public Vector3[,,] baseVectors;
     public string[] sideNameList = new string[] {
         "up",
         "down",
@@ -60,7 +59,22 @@ public class TerrainManager : MonoBehaviour
         Vector3.down,
         Vector3.down
     };
-    
+    public Vector3 BaseVector(int side, int chunkX, int chunkZ, int blockX, int blockZ) {
+        Vector3 normal = sideYaxisList[side];
+        Vector3 xAxis = sideXaxisList[side];
+        Vector3 zAxis = sideZaxisList[side];
+        int numBlocks = chunksPerSide*chunkSize;
+        float x = chunkX*chunkSize + blockX - numBlocks/2f;
+        float z = chunkZ*chunkSize + blockZ - numBlocks/2f;
+        Vector3 radius = normal*planetRadius + x*xAxis*blockLength + z*zAxis*blockLength;
+        return radius.normalized;
+    }
+
+    public Vector3 BaseVectorAtCenter(int side, int chunkX, int chunkZ) {
+        int center = chunkSize/2;
+        return BaseVector(side, chunkX, chunkZ, center, center);
+    }
+
     private Planet planet;
     private GameObject[,,] currentChunksLoaded;
 
@@ -71,7 +85,6 @@ public class TerrainManager : MonoBehaviour
     private void Awake() 
     { 
         planetRadius =  chunksPerSide*chunkSize/2f;
-        baseVectors = ComputeBaseVectors();
         currentChunksLoaded = new GameObject[6,chunkSize,chunkSize];
 
         if (instance != null && instance != this) 
@@ -84,56 +97,23 @@ public class TerrainManager : MonoBehaviour
         } 
     }
 
-    public Vector3[,,] ComputeBaseVectors() {
-        int numBlocks = chunkSize*chunksPerSide;
-        Vector3[,,] baseVectors = new Vector3[6,numBlocks+1, numBlocks+1];
-        for (int side=0; side<6; side++) {
-            Vector3 normal = sideYaxisList[side];
-            Vector3 xAxis = sideXaxisList[side];
-            Vector3 zAxis = sideZaxisList[side];
-
-            for (int i=0; i<=numBlocks; i++) {
-                for (int j=0; j<=numBlocks; j++) {
-                    float x = i - numBlocks/2f;
-                    float z = j - numBlocks/2f;
-                    Vector3 radius = normal*planetRadius + x*xAxis*blockLength + z*zAxis*blockLength;
-                    baseVectors[side, i, j] = Vector3.Normalize(radius);
-                    /*if (side == 0 && i == 0 && j == 3) {
-                        Debug.Log(normal + " " + xAxis + " " + zAxis);
-                        Debug.Log(i + " " + j + " " + x + " " + z + " " + numBlocks);
-                        Debug.Log(baseVectors[side, i, j]);
-                    }*/
-                    //spawnDebugBall(baseVectors[side, i, j], 0.2f);
-                }    
-            }
-        }
-        return baseVectors;
-    }
-
-
-    public bool closeEnough(int side, int centerX, int centerY) {
-        //Debug.Log(baseVectors.GetLength(1));
-        //Debug.Log(centerX);
-        float height = currentPosition.position.magnitude;
-        return (baseVectors[side, centerX, centerY] - currentPosition.position.normalized).magnitude < radiusOfLoad;
+    public bool ChunkCloseEnoughToLoad(int side, int chunkX, int chunkZ) {
+        return (BaseVectorAtCenter(side, chunkX, chunkZ) - currentPosition.position.normalized).magnitude < radiusOfLoad;
     }
 
     public void GeneratePlanet()
     {
         for (int side=0; side<6; side++) {
             for (int chunkX=0; chunkX < chunksPerSide; chunkX++) {
-                for (int chunkY=0; chunkY < chunksPerSide; chunkY++) {
-                    int centerX = chunkX * chunkSize + chunkSize/2;
-                    int centerY = chunkY * chunkSize + chunkSize/2;
-                    
-                    if (closeEnough(side, centerX, centerY)) {
-                        GameObject mesh = currentChunksLoaded[side, chunkX, chunkY];
+                for (int chunkZ=0; chunkZ < chunksPerSide; chunkZ++) {
+                    if (ChunkCloseEnoughToLoad(side, chunkX, chunkZ)) {
+                        GameObject mesh = currentChunksLoaded[side, chunkX, chunkZ];
                         if (mesh == null) {
-                            currentChunksLoaded[side, chunkX, chunkY] = GenerateChunk(planet, planetMeshGenerator, side, chunkX, chunkY);
+                            currentChunksLoaded[side, chunkX, chunkZ] = GenerateChunk(planet, planetMeshGenerator, side, chunkX, chunkZ);
                         }
                     } 
                     else {
-                        GameObject mesh = currentChunksLoaded[side, chunkX, chunkY];
+                        GameObject mesh = currentChunksLoaded[side, chunkX, chunkZ];
                         if (mesh != null) {
                             Destroy(mesh);
                         }

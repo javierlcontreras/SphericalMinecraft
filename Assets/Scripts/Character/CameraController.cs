@@ -12,7 +12,7 @@ class CameraController {
 
     public void MoveCamera(float amount) {
         verticalLookRotation += amount;
-		verticalLookRotation = Mathf.Clamp(verticalLookRotation,-80,80);
+		verticalLookRotation = Mathf.Clamp(verticalLookRotation,-90,90);
 		cameraTransform.localEulerAngles = Vector3.left * verticalLookRotation;
     }
 }

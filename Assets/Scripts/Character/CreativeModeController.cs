@@ -2,12 +2,10 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent (typeof(ControllerSettings))]
-public class FirstPersonController : MonoBehaviour {
+public class CreativeModeController : MonoBehaviour {
 
 	private ControllerSettings settings;
 	
-	private TangencialMovementController tangencialController;
-	private NormalMovementController normalController;
 	private CameraController cameraController;
 	
 	private Transform characterTransform;
@@ -16,17 +14,16 @@ public class FirstPersonController : MonoBehaviour {
 		Cursor.visible = false;
 
 		settings = GetComponent<ControllerSettings>();
-		tangencialController = new TangencialMovementController(settings.walkSpeed);
-		normalController = new NormalMovementController(settings);
 	}
-	void Start() {
+    void Start() {
         characterTransform = settings.CharacterTransform;		
 		cameraController = new CameraController(settings.CameraTransform);
     }
+
 	void FixedUpdate() {
         characterTransform.rotation = RadialCharacterOrientation();
 		float scalingFactor = ScalePlayerWithHeight();
-		characterTransform.localScale = settings.characterShape * scalingFactor;
+		characterTransform.localScale = new Vector3(0.6f*scalingFactor, 1.8f*scalingFactor, 0.4f*scalingFactor);
 		float mouseX = Input.GetAxis("Mouse X");
 		float mouseY = Input.GetAxis("Mouse Y");
 		float inputX = Input.GetAxisRaw("Horizontal");
@@ -39,27 +36,15 @@ public class FirstPersonController : MonoBehaviour {
 		// Move camera by input
 		cameraController.MoveCamera(mouseY * settings.mouseSensitivityY);
 		
-		Vector3 moveAmount = tangencialController.AmountToMoveWithTarget(inputX, inputY);
-		float verticalVelocity = normalController.VerticalVelocity(wantToJump, wantToShift);
-
-		Vector3 finalMove = characterTransform.TransformDirection(moveAmount + Vector3.up*verticalVelocity) * Time.fixedDeltaTime;
-		
-		Vector3 radialDirection = characterTransform.position.normalized;
-		Vector3 p1 = characterTransform.TransformPoint(settings.lowPoint);
-		int tries = 10;
-		while (tries > 0) {
-			tries--;
-			RaycastHit hit;
-			if (Physics.Raycast(p1, finalMove, out hit, finalMove.magnitude+settings.skinWidth, settings.groundedMask)) {
-				Debug.Log("Collision!");
-				finalMove -= Vector3.Dot(finalMove, hit.normal)*hit.normal;
-			}
-			else {
-				break;
-			}
-		}
-
-		characterTransform.Translate(characterTransform.InverseTransformDirection(finalMove));
+		Vector3 finalMove = (new Vector3(inputX, 0, inputY)) * settings.flySpeed;
+        if (wantToJump) {
+            finalMove.y += settings.flySpeed;
+        }
+        if (wantToShift) {
+            finalMove.y -= settings.flySpeed;
+        }
+		characterTransform.Translate(finalMove);
+        Debug.Log(finalMove * Time.fixedDeltaTime);
 	}
 
     Quaternion RadialCharacterOrientation() {
