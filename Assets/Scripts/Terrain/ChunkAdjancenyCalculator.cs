@@ -36,10 +36,10 @@ public class ChunkAdjacencyCalculator {
         if (inRange(nextX, 0, chunkSize) && inRange(nextZ, 0, chunkSize) && inRange(nextH, 0, chunkHeight)) {
             return planet.chunks[sideCoord, chunkX, chunkZ].blocks[nextX,nextH,nextZ];
         }
-        if (!inRange(nextH, 0, chunkHeight)) {
-            return new Block(new Vector3(-1,-1,-1),BlockTypeEnum.GetBlockTypeByName("air"), null);
-        }
-        Chunk nextChunk = ChunkNextToMe(chunk, pointingTo, pointingToGlobal);
+        return new Block(new Vector3(-1,-1,-1),BlockTypeEnum.GetBlockTypeByName("air"), null);
+        
+
+        /*Chunk nextChunk = ChunkNextToMe(chunk, pointingTo, pointingToGlobal);
         if (nextChunk.sideCoord == sideCoord) {
             int chunkNextX = (nextX + chunkSize)%chunkSize;
             int chunkNextZ = (nextZ + chunkSize)%chunkSize;
@@ -49,7 +49,7 @@ public class ChunkAdjacencyCalculator {
         Block nextBlock = blockClosestToInChunk(chunk, x, z, h, nextChunk);
         //chunk.blocks[x,y,h].DrawSphere();
         //nextBlock.DrawDebugSphere();
-        return nextBlock; 
+        return nextBlock; */
     }
     private Block blockClosestToInChunk(Chunk chunk, int x, int z, int h, Chunk nextChunk) {
         int sideCoord = chunk.sideCoord; 

@@ -10,11 +10,9 @@ public class ControllerSettings : MonoBehaviour {
 	public float flySpeed = 6;
 	public LayerMask groundedMask;
 
-	private Transform cameraTransform;
-	public Transform CameraTransform => cameraTransform;
-	private Transform characterTransform;
-	public Transform CharacterTransform => characterTransform;
-    
+	public Transform CameraTransform;
+	public Transform CharacterTransform;
+	
     public Vector3 lowPoint = new Vector3(0, -0.25f, 0);
 	public float skinWidth = 0.25f;
 
@@ -22,8 +20,7 @@ public class ControllerSettings : MonoBehaviour {
 
 	public float reach = 5;
 
-	void Awake() {	
-		cameraTransform = Camera.main.transform;
-		characterTransform = GetComponent<Transform> ();
-	}
+	public float feetSkinWidth = 0.5f;
+	public Vector3 feetPoint = new Vector3(0, -0.25f, 0);
+
 }

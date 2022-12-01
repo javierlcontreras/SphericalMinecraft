@@ -6,13 +6,17 @@ class NormalMovementController {
 	float verticalVelocity;
 	float shiftAndJumpVelocities = 6f;
     Transform character;
-	private float feetSkinWidth = 0.5f;
-	private Vector3 feetPoint = new Vector3(0, -0.25f, 0);
+    ControllerSettings settings;
+	private float feetSkinWidth;
+	private Vector3 feetPoint;
 
     private LayerMask groundedMask;
-    public NormalMovementController(ControllerSettings settings) {	
+    public NormalMovementController(ControllerSettings _settings) {	
         verticalVelocity = 0;
+        settings = _settings;
         groundedMask = settings.groundedMask;
+        feetSkinWidth = settings.feetSkinWidth;
+        feetPoint = settings.feetPoint;
         character = settings.CharacterTransform;
     }
 

@@ -13,16 +13,14 @@ public class FirstPersonController : MonoBehaviour {
 	private Transform characterTransform;
 	void Awake() {
 		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
-
+		Cursor.visible = false;	
 		settings = GetComponent<ControllerSettings>();
+
 		tangencialController = new TangencialMovementController(settings.walkSpeed);
 		normalController = new NormalMovementController(settings);
-	}
-	void Start() {
-        characterTransform = settings.CharacterTransform;		
 		cameraController = new CameraController(settings.CameraTransform);
-    }
+        characterTransform = settings.CharacterTransform;	
+	}
 	void FixedUpdate() {
         characterTransform.rotation = RadialCharacterOrientation();
 		float scalingFactor = ScalePlayerWithHeight();

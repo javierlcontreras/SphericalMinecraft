@@ -286,10 +286,14 @@ MonoBehaviour:
   groundedMask:
     serializedVersion: 2
     m_Bits: 64
+  CameraTransform: {fileID: 963194228}
+  CharacterTransform: {fileID: 166101069}
   lowPoint: {x: 0, y: -0.25, z: 0}
   skinWidth: 0.25
   characterShape: {x: 0.48000002, y: 1.4399999, z: 0.32000002}
   reach: 5
+  feetSkinWidth: 0.5
+  feetPoint: {x: 0, y: -0.25, z: 0}
 --- !u!114 &166101074
 MonoBehaviour:
   m_ObjectHideFlags: 0

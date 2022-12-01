@@ -30,7 +30,7 @@ public class PointingTo : MonoBehaviour
         if (wantToBreak) {
             Debug.Log("Break!");
             Block blockPointed = PointingToBlock();
-            if (blockPointed != null) {
+            if (blockPointed != null && blockPointed.inChunkPosition.y >= 1) { 
                 Chunk chunkPointed = blockPointed.chunk;
                 int side = chunkPointed.sideCoord;
                 int chunkX = chunkPointed.xCoord;

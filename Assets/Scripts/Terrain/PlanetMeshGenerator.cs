@@ -62,39 +62,40 @@ public class PlanetMeshGenerator {
         for (int i=0; i<chunkSize; i++) {
             for (int j=0; j<chunkSize; j++) {
                 for (int h=0; h<chunkHeight; h++) {
-                    if (chunk.blocks[i,h,j].type.GetName() != "air") continue;
+                    Block block  = chunk.blocks[i,h,j];
+                    if (block.type.GetName() == "air") continue;
                     for (int nextTo=0; nextTo < 6; nextTo++) {
                         Vector3 pointingTo = sideYaxisList[nextTo];
                         Vector3 orientedToX = sideXaxisList[nextTo];
                         Vector3 orientedToZ = sideZaxisList[nextTo];
 
-                        int oppositeNextTo = 2*(nextTo/2) + (nextTo+1)%2;
-                        string faceDrawn = sideNameList[oppositeNextTo];
+                        //int oppositeNextTo = 2*(nextTo/2) + (nextTo+1)%2;
+                        string faceDrawn = sideNameList[nextTo];
                         
                         Vector3 pos = new Vector3(i, h, j);
                         Vector3 nextPos = pos + pointingTo;
                         Vector3 pointingToGlobal = chunkToGlobal*pointingTo;
 
                         Block nextBlock = chunkAdjCalculator.BlockNextToMe(chunk, i, j, h, pointingTo, pointingToGlobal);
-                        if (nextBlock.type.GetName() == "air") continue;
+                        if (nextBlock.type.GetName() != "air") continue;
                         
                         // in chunk coordinate system
-                        Vector3 normal = -pointingTo;
+                        Vector3 normal = pointingTo;
                         Vector3 A = orientedToX;
                         Vector3 B = orientedToZ;
                         Vector3 mid = (pos + nextPos)/2f;
                         // to global
                         Vector3[] vertices = new Vector3[4] {
                             blockIndexToPointInChunkCoords(mid - A/2f - B/2f, xCoord, zCoord, sideCoord),
-                            blockIndexToPointInChunkCoords(mid + A/2f - B/2f, xCoord, zCoord, sideCoord),
+                            blockIndexToPointInChunkCoords(mid - A/2f + B/2f, xCoord, zCoord, sideCoord),
                             blockIndexToPointInChunkCoords(mid + A/2f + B/2f, xCoord, zCoord, sideCoord),
-                            blockIndexToPointInChunkCoords(mid - A/2f + B/2f, xCoord, zCoord, sideCoord)
+                            blockIndexToPointInChunkCoords(mid + A/2f - B/2f, xCoord, zCoord, sideCoord)
                         };
                         Vector3 AGlobal = chunkToGlobal * A;
                         Vector3 BGlobal = chunkToGlobal * B;
                         Vector3 normalGlobal = chunkToGlobal * normal;
 
-                        BlockSide side = new BlockSide(vertices, nextBlock.type.GetAtlasCoord(faceDrawn), sideNameList[sideCoord], faceDrawn);
+                        BlockSide side = new BlockSide(vertices, block.type.GetAtlasCoord(faceDrawn), sideNameList[sideCoord], faceDrawn);
                         quads.Add(side);
                     }
                 }

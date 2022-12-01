@@ -32,7 +32,7 @@ public class PlanetDataGenerator {
 
     public void AddTrees(Planet planet) {
         // TODO: surface this
-        int numTrees = 2;
+        int numTrees = 10;
         for (int tree = 0; tree < numTrees; tree++) {
             int randSide = Random.Range(0, 6);
             int chunkX = Random.Range(0, chunksPerSide);

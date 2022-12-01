@@ -6,17 +6,15 @@ using static PlanetDataGenerator;
 
 public class TerrainManager : MonoBehaviour
 {
-    private const int chunksPerSide = 4;
+    private const int chunksPerSide = 2;
     public int ChunksPerSide => chunksPerSide;
-    private const int chunkSize = 8;
+    private const int chunkSize = 16;
     public int ChunkSize => chunkSize;
-    private const int chunkHeight = 16;
+    private const int chunkHeight = 64;
     public int ChunkHeight => chunkHeight;
-    private const float blockLength = 1f;
-    public float BlockLength => blockLength;
-    private const int textureBlockSize = 16;
+    private const int textureBlockSize = 128;
     public int TextureBlockSize => textureBlockSize;
-    private const int textureAtlasSize = 128;
+    private const int textureAtlasSize = 2048;
     public int TextureAtlasSize => textureAtlasSize;
     private float planetRadius;
     public float PlanetRadius => planetRadius;
@@ -66,7 +64,7 @@ public class TerrainManager : MonoBehaviour
         int numBlocks = chunksPerSide*chunkSize;
         float x = chunkX*chunkSize + blockX - numBlocks/2f;
         float z = chunkZ*chunkSize + blockZ - numBlocks/2f;
-        Vector3 radius = normal*planetRadius + x*xAxis*blockLength + z*zAxis*blockLength;
+        Vector3 radius = normal*planetRadius + x*xAxis*GetBlockSize() + z*zAxis*GetBlockSize();
         return radius.normalized;
     }
 
@@ -92,7 +90,7 @@ public class TerrainManager : MonoBehaviour
         int zGlobal = (int) (zPointOnPlane * chunkSize*chunksPerSide);
 
         int xChunk = xGlobal / chunkSize;
-        int zChunk = xGlobal / chunkSize;
+        int zChunk = zGlobal / chunkSize;
         int xBlock = xGlobal % chunkSize;
         int zBlock = zGlobal % chunkSize;
 
@@ -131,7 +129,7 @@ public class TerrainManager : MonoBehaviour
     private void Awake() 
     { 
         planetRadius =  chunksPerSide*chunkSize/2f;
-        currentChunksLoaded = new GameObject[6,chunkSize,chunkSize];
+        currentChunksLoaded = new GameObject[6,chunksPerSide,chunksPerSide];
 
         if (instance != null && instance != this) 
         { 

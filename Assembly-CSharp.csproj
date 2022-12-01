@@ -39,6 +39,7 @@
      <Compile Include="Assets/Scripts/Terrain/Block.cs" />
      <Compile Include="Assets/Scripts/Character/NormalMovementController.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockSide.cs" />
+     <Compile Include="Assets/Scripts/MiningPlacing/PointingTo.cs" />
      <Compile Include="Assets/Scripts/Terrain/TerrainManager.cs" />
      <Compile Include="Assets/Scripts/Sky/InvertNormals.cs" />
      <Compile Include="Assets/Scripts/Terrain/NoiseGenerator.cs" />
@@ -57,7 +58,6 @@
      <Compile Include="Assets/Scripts/Terrain/Chunk.cs" />
      <Compile Include="Assets/Scripts/Character/ControllerSettings.cs" />
      <Compile Include="Assets/DebugDrawingExtension/DebugExtension.cs" />
-     <Compile Include="Assets/Scripts/MiningPlacing/PointingTo.cs" />
      <None Include="Assets/DebugDrawingExtension/readme.txt" />
     <Reference Include="UnityEngine">
         <HintPath>/home/jlcontreras/Unity/Hub/Editor/2021.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

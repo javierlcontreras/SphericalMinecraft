@@ -36,8 +36,8 @@ public class Chunk {
     public void CreateChunkData() {
         for (int x = 0; x < chunkSize; x++) {
             for (int z = 0; z < chunkSize; z++) {
+                float height = TerrainHeightFromNoise(x, z);
                 for (int y = 0; y<chunkHeight; y++) {
-                    float height = TerrainHeightFromNoise(x, z);
                     BlockType type = FillDirtUpToHeight(y, height);
 
                     Vector3 inChunkPosition = new Vector3(x,y,z);
@@ -48,8 +48,17 @@ public class Chunk {
     }
 
     public BlockType FillDirtUpToHeight(int y, float height) {
-        if (y <= height) {
-            return BlockTypeEnum.GetBlockTypeByName("dirt");
+        if (y == 0) {
+            return BlockTypeEnum.GetBlockTypeByName("bedrock");
+        }
+        else if (y < 2*height/3) {
+            return BlockTypeEnum.GetBlockTypeByName("stone");
+        }
+        else if (y < height) {
+            return BlockTypeEnum.GetBlockTypeByName("stone");
+        }
+        else if (y < 1+height) {
+            return BlockTypeEnum.GetBlockTypeByName("sand");
         }
         else {
             return BlockTypeEnum.GetBlockTypeByName("air");
@@ -60,8 +69,8 @@ public class Chunk {
         Vector3 samplingDirection = TerrainManager.instance.BaseVector(sideCoord, xCoord, zCoord, x, z);
         
         float terrainHeight = PerlinNoise.get3DPerlinNoise(samplingDirection, 1);
-        terrainHeight += 0.5f*PerlinNoise.get3DPerlinNoise(samplingDirection, 2);
-        terrainHeight += 0.25f*PerlinNoise.get3DPerlinNoise(samplingDirection, 4);
+        terrainHeight += 0.7f*PerlinNoise.get3DPerlinNoise(samplingDirection, 2);
+        terrainHeight += 0.45f*PerlinNoise.get3DPerlinNoise(samplingDirection, 4);
         terrainHeight /= 1.75f;
         terrainHeight *= (TerrainManager.instance.ChunkHeight - 2)/3f;
         terrainHeight += 1f; 
