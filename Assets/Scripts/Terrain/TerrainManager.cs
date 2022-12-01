@@ -6,7 +6,7 @@ using static PlanetDataGenerator;
 
 public class TerrainManager : MonoBehaviour
 {
-    private const int chunksPerSide = 1;
+    private const int chunksPerSide = 4;
     public int ChunksPerSide => chunksPerSide;
     private const int chunkSize = 8;
     public int ChunkSize => chunkSize;
@@ -74,8 +74,54 @@ public class TerrainManager : MonoBehaviour
         int center = chunkSize/2;
         return BaseVector(side, chunkX, chunkZ, center, center);
     }
+    public float GetBlockSize() {
+        return 2f*planetRadius/(chunksPerSide*chunkSize);
+    }
 
-    private Planet planet;
+    public Block BlockClosestToGlobalPoint(Vector3 point) {
+        Vector3 dir = point.normalized;
+        float normInf = Mathf.Max(Mathf.Abs(dir.x), Mathf.Abs(dir.y), Mathf.Abs(dir.z)); 
+        Vector3 cubeDir = dir / normInf;
+
+        int side = SideFromPoint(point);
+        
+        float xPointOnPlane = 0.5f*(Vector3.Dot(sideXaxisList[side], cubeDir) + 1);
+        float zPointOnPlane = 0.5f*(Vector3.Dot(sideZaxisList[side], cubeDir) + 1);
+        
+        int xGlobal = (int) (xPointOnPlane * chunkSize*chunksPerSide); 
+        int zGlobal = (int) (zPointOnPlane * chunkSize*chunksPerSide);
+
+        int xChunk = xGlobal / chunkSize;
+        int zChunk = xGlobal / chunkSize;
+        int xBlock = xGlobal % chunkSize;
+        int zBlock = zGlobal % chunkSize;
+
+        float height = point.magnitude;
+        int hBlock = (int) ((point.magnitude - planetRadius)/GetBlockSize() + 0.5);
+
+        Debug.Log(side + " " + xChunk + " " + zChunk + " " + xBlock + " " + hBlock + " " + zBlock);
+        return planet.chunks[side, xChunk, zChunk].blocks[xBlock, hBlock, zBlock];
+    }
+    public int SideFromPoint(Vector3 point) {
+        Vector3 dir = point.normalized;
+        float normInf = Mathf.Max(Mathf.Abs(dir.x), Mathf.Abs(dir.y), Mathf.Abs(dir.z)); 
+        Vector3 cubeDir = dir / normInf;
+
+        float minDist = 10000;
+        int bestSide = -1;
+        for (int side = 0; side < 6; side++) {
+            float dot = Vector3.Dot(sideYaxisList[side], cubeDir);
+            float distToPlane = Mathf.Abs(dot - 1);
+            if ( distToPlane < minDist ) {
+                minDist = distToPlane;
+                bestSide = side;
+            } 
+        }
+        return bestSide;
+    }
+
+
+    public Planet planet;
     private GameObject[,,] currentChunksLoaded;
 
     private PlanetDataGenerator planetDataGenerator;
@@ -107,24 +153,28 @@ public class TerrainManager : MonoBehaviour
             for (int chunkX=0; chunkX < chunksPerSide; chunkX++) {
                 for (int chunkZ=0; chunkZ < chunksPerSide; chunkZ++) {
                     if (ChunkCloseEnoughToLoad(side, chunkX, chunkZ)) {
-                        GameObject mesh = currentChunksLoaded[side, chunkX, chunkZ];
-                        if (mesh == null) {
-                            currentChunksLoaded[side, chunkX, chunkZ] = GenerateChunk(planet, planetMeshGenerator, side, chunkX, chunkZ);
-                        }
+                        GenerateChunkMesh(side, chunkX, chunkZ);
                     } 
                     else {
-                        GameObject mesh = currentChunksLoaded[side, chunkX, chunkZ];
-                        if (mesh != null) {
-                            Destroy(mesh);
-                        }
+                        DestroyChunkMesh(side, chunkX, chunkZ);
                     }
                 }
             }
         }
     }
 
-    public GameObject GenerateChunk(Planet planet, PlanetMeshGenerator planetMeshGenerator, int sideCoord, int xCoord, int yCoord) {
-        Mesh mesh = planetMeshGenerator.GenerateChunkMesh(sideCoord, xCoord, yCoord);
+    public void DestroyChunkMesh(int sideCoord, int xCoord, int zCoord) {
+        GameObject oldMesh = currentChunksLoaded[sideCoord, xCoord, zCoord];
+        if (oldMesh == null) return;
+        Destroy(oldMesh);
+        currentChunksLoaded[sideCoord, xCoord, zCoord] = null;
+    }
+
+    public void GenerateChunkMesh(int sideCoord, int xCoord, int zCoord) {
+        GameObject oldMesh = currentChunksLoaded[sideCoord, xCoord, zCoord];
+        if (oldMesh != null) return;
+
+        Mesh mesh = planetMeshGenerator.GenerateChunkMesh(sideCoord, xCoord, zCoord);
         GameObject world = new GameObject("Chunk", typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
         int TerrainLayer = LayerMask.NameToLayer("Terrain");
         world.layer = TerrainLayer;
@@ -135,7 +185,7 @@ public class TerrainManager : MonoBehaviour
         // = world.GetComponent<Rigidbody>();
         //world.GetComponent<Rigidbody>().useGravity = false;
 
-        return world;
+        currentChunksLoaded[sideCoord, xCoord, zCoord] = world;
     }
 
     private void Start() {

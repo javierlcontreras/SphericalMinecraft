@@ -1,13 +1,13 @@
-public class Block {
-    public int xInChunk {get;}
-    public int yInChunk {get;}
-    public int height {get;}  // relative to chunk
-    public BlockType type;
+using UnityEngine;
 
-    public Block(int _xInChunk, int _yInChunk, int _height, BlockType _type) {
-        xInChunk = _xInChunk;
-        yInChunk = _yInChunk;
-        height = _height;
+public class Block {
+    public Vector3 inChunkPosition;
+    public BlockType type;
+    public Chunk chunk;
+
+    public Block(Vector3 _inChunkPosition, BlockType _type, Chunk _chunk) {
+        inChunkPosition = _inChunkPosition;
         type = _type;
+        chunk = _chunk;
     }
 }

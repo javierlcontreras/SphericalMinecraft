@@ -11,7 +11,8 @@ public class PlanetMeshGenerator {
     private int chunksPerSide;
     private int chunkSize;
     private int chunkHeight;
-    private float[] blockHeightToHeight;
+    //private float[] blockHeightToHeight;
+    private float blockSize;
 
     private Vector3[] sideYaxisList;
     private Vector3[] sideXaxisList;
@@ -30,21 +31,15 @@ public class PlanetMeshGenerator {
         chunkSize = planet.GetChunkSize();
         chunksPerSide = planet.GetChunksPerSide();
         chunkHeight = planet.GetChunkHeight();
-        blockHeightToHeight = new float[chunkHeight+1];
+
+        blockSize = TerrainManager.instance.GetBlockSize();
+        /*blockHeightToHeight = new float[chunkHeight+1];
         float lastRadius = planetRadius;
         for (int h=0; h<=chunkHeight; h++) {
             blockHeightToHeight[h] = lastRadius;
-            float blockSizeAtPreviousHeight = (2f*lastRadius*Mathf.PI)/(chunksPerSide*chunkSize*4f);
             lastRadius += blockSizeAtPreviousHeight;
-        }
-        Debug.Log(blockHeightToHeight[0]);
-        Debug.Log(blockHeightToHeight[1]);
-        Debug.Log(blockHeightToHeight[2]);
-        Debug.Log(blockHeightToHeight[3]);
-        Debug.Log(blockHeightToHeight[4]);
-        //blockLength = planetRadius*2.0f/chunksPerSide/chunkSize;
-        //Debug.Log(blockLength);
-
+        }*/
+        
         chunkAdjCalculator = new ChunkAdjacencyCalculator(planet, sideXaxisList, sideYaxisList, sideZaxisList, sideNameList);
         //spawnCoreBall();
     }
@@ -52,7 +47,7 @@ public class PlanetMeshGenerator {
     private List<BlockSide> GenerateListOfQuads(Chunk chunk) {
         int sideCoord = chunk.sideCoord; 
         int xCoord = chunk.xCoord;
-        int yCoord = chunk.yCoord;
+        int zCoord = chunk.zCoord;
         Vector3 sideNormal = sideYaxisList[sideCoord];
         Vector3 sideXaxis = sideXaxisList[sideCoord];
         Vector3 sideZaxis = sideZaxisList[sideCoord];
@@ -67,7 +62,7 @@ public class PlanetMeshGenerator {
         for (int i=0; i<chunkSize; i++) {
             for (int j=0; j<chunkSize; j++) {
                 for (int h=0; h<chunkHeight; h++) {
-                    if (chunk.blocks[i,j,h].type.GetName() != "air") continue;
+                    if (chunk.blocks[i,h,j].type.GetName() != "air") continue;
                     for (int nextTo=0; nextTo < 6; nextTo++) {
                         Vector3 pointingTo = sideYaxisList[nextTo];
                         Vector3 orientedToX = sideXaxisList[nextTo];
@@ -90,10 +85,10 @@ public class PlanetMeshGenerator {
                         Vector3 mid = (pos + nextPos)/2f;
                         // to global
                         Vector3[] vertices = new Vector3[4] {
-                            blockIndexToPointInChunkCoords(mid - A/2f - B/2f, xCoord, yCoord, sideCoord),
-                            blockIndexToPointInChunkCoords(mid + A/2f - B/2f, xCoord, yCoord, sideCoord),
-                            blockIndexToPointInChunkCoords(mid + A/2f + B/2f, xCoord, yCoord, sideCoord),
-                            blockIndexToPointInChunkCoords(mid - A/2f + B/2f, xCoord, yCoord, sideCoord)
+                            blockIndexToPointInChunkCoords(mid - A/2f - B/2f, xCoord, zCoord, sideCoord),
+                            blockIndexToPointInChunkCoords(mid + A/2f - B/2f, xCoord, zCoord, sideCoord),
+                            blockIndexToPointInChunkCoords(mid + A/2f + B/2f, xCoord, zCoord, sideCoord),
+                            blockIndexToPointInChunkCoords(mid - A/2f + B/2f, xCoord, zCoord, sideCoord)
                         };
                         Vector3 AGlobal = chunkToGlobal * A;
                         Vector3 BGlobal = chunkToGlobal * B;
@@ -114,7 +109,7 @@ public class PlanetMeshGenerator {
         int h = (int)(pos.y + 0.5);
         int j = (int)(pos.z + 0.5);
 
-        return TerrainManager.instance.BaseVector(sideCoord, chunkI, chunkJ, i, j) * (blockHeightToHeight[h-1]);
+        return TerrainManager.instance.BaseVector(sideCoord, chunkI, chunkJ, i, j) * (planetRadius + blockSize*(h-1));//(blockHeightToHeight[h-1]);
     }
 
     private void spawnDebugBall(Vector3 vertexPosition, float size) {

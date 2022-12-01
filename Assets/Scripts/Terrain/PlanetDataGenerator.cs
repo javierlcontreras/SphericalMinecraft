@@ -36,16 +36,16 @@ public class PlanetDataGenerator {
         for (int tree = 0; tree < numTrees; tree++) {
             int randSide = Random.Range(0, 6);
             int chunkX = Random.Range(0, chunksPerSide);
-            int chunkY = Random.Range(0, chunksPerSide);
+            int chunkZ = Random.Range(0, chunksPerSide);
             int x = Random.Range(0, chunkSize);
-            int y = Random.Range(0, chunkSize);
+            int z = Random.Range(0, chunkSize);
 
             int stem = 3;
             for (int h = 0; h < chunkHeight && stem > 0; h++) {
-                if (planet.chunks[randSide, chunkX, chunkY].blocks[x, y, h].type.GetName() == "air") {
+                if (planet.chunks[randSide, chunkX, chunkZ].blocks[x, h, z].type.GetName() == "air") {
                     BlockType type = BlockTypeEnum.GetBlockTypeByName("wood");
                     if (stem < 3) type = BlockTypeEnum.GetBlockTypeByName("leaves");
-                    planet.chunks[randSide, chunkX, chunkY].blocks[x, y, h].type = type;
+                    planet.chunks[randSide, chunkX, chunkZ].blocks[x, h, z].type = type;
                     stem -= 1;
                 }
             }
@@ -56,7 +56,7 @@ public class PlanetDataGenerator {
         Chunk chunk = new Chunk(chunkSize, chunkHeight, sideCoord, xCoord, yCoord);
         //chunk.Flatten(1);
         //chunk.DebugPattern();
-        chunk.FromNoise();
+        chunk.CreateChunkData();
         return chunk;
     }
 } 

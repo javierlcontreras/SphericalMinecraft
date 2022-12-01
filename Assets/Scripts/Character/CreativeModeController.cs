@@ -44,7 +44,6 @@ public class CreativeModeController : MonoBehaviour {
             finalMove.y -= settings.flySpeed;
         }
 		characterTransform.Translate(finalMove);
-        Debug.Log(finalMove * Time.fixedDeltaTime);
 	}
 
     Quaternion RadialCharacterOrientation() {
