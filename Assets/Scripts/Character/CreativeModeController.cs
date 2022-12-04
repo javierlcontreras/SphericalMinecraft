@@ -56,6 +56,6 @@ public class CreativeModeController : MonoBehaviour {
     }
 
 	float ScalePlayerWithHeight() {
-		return characterTransform.position.magnitude / TerrainManager.instance.PlanetRadius;
+		return characterTransform.position.magnitude / TerrainManager.instance.GetCurrentPlanet().GetPlanetRadius();
 	}
 }

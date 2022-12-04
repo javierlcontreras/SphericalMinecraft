@@ -23,8 +23,8 @@ public class FirstPersonController : MonoBehaviour {
 	}
 	void FixedUpdate() {
         characterTransform.rotation = RadialCharacterOrientation();
-		float scalingFactor = ScalePlayerWithHeight();
-		characterTransform.localScale = settings.characterShape * scalingFactor;
+		//float scalingFactor = ScalePlayerWithHeight();
+		//characterTransform.localScale = settings.characterShape * scalingFactor;
 		float mouseX = Input.GetAxis("Mouse X");
 		float mouseY = Input.GetAxis("Mouse Y");
 		float inputX = Input.GetAxisRaw("Horizontal");
@@ -49,7 +49,6 @@ public class FirstPersonController : MonoBehaviour {
 			tries--;
 			RaycastHit hit;
 			if (Physics.Raycast(p1, finalMove, out hit, finalMove.magnitude+settings.skinWidth, settings.groundedMask)) {
-				Debug.Log("Collision!");
 				finalMove -= Vector3.Dot(finalMove, hit.normal)*hit.normal;
 			}
 			else {
@@ -70,6 +69,6 @@ public class FirstPersonController : MonoBehaviour {
     }
 
 	float ScalePlayerWithHeight() {
-		return characterTransform.position.magnitude / TerrainManager.instance.PlanetRadius;
+		return characterTransform.position.magnitude / TerrainManager.instance.GetCurrentPlanet().GetPlanetRadius();
 	}
 }

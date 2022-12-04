@@ -19,9 +19,9 @@ public class PlanetMeshGenerator {
     private Vector3[] sideZaxisList;
     private string[] sideNameList;
 
-    public PlanetMeshGenerator(Planet _planet, float _planetRadius) {
+    public PlanetMeshGenerator(Planet _planet) {
         planet = _planet;
-        planetRadius = _planetRadius;
+        planetRadius = planet.GetPlanetRadius();
         
         sideYaxisList = TerrainManager.instance.sideYaxisList;
         sideXaxisList = TerrainManager.instance.sideXaxisList;
@@ -32,7 +32,7 @@ public class PlanetMeshGenerator {
         chunksPerSide = planet.GetChunksPerSide();
         chunkHeight = planet.GetChunkHeight();
 
-        blockSize = TerrainManager.instance.GetBlockSize();
+        blockSize = planet.GetBlockSize();
         /*blockHeightToHeight = new float[chunkHeight+1];
         float lastRadius = planetRadius;
         for (int h=0; h<=chunkHeight; h++) {
@@ -40,7 +40,7 @@ public class PlanetMeshGenerator {
             lastRadius += blockSizeAtPreviousHeight;
         }*/
         
-        chunkAdjCalculator = new ChunkAdjacencyCalculator(planet, sideXaxisList, sideYaxisList, sideZaxisList, sideNameList);
+        chunkAdjCalculator = new ChunkAdjacencyCalculator(planet);
         //spawnCoreBall();
     }
 
@@ -54,8 +54,8 @@ public class PlanetMeshGenerator {
 
         //Debug.Log(sideNormal + " " + sideXaxis + " " + sideZaxis);
 
-        Quaternion chunkToGlobal = Quaternion.LookRotation(sideZaxis, sideNormal); 
-        Quaternion globalToChunk = Quaternion.Inverse(chunkToGlobal); 
+        Quaternion chunkToGlobal = chunk.ChunkToGlobal();
+        Quaternion globalToChunk = chunk.GlobalToChunk(); 
 
         List<BlockSide> quads = new List<BlockSide>();
 
@@ -63,7 +63,8 @@ public class PlanetMeshGenerator {
             for (int j=0; j<chunkSize; j++) {
                 for (int h=0; h<chunkHeight; h++) {
                     Block block  = chunk.blocks[i,h,j];
-                    if (block.type.GetName() == "air") continue;
+
+                    if (block.type.GetName() == "air" || block.type.GetName() == "bedrock") continue;
                     for (int nextTo=0; nextTo < 6; nextTo++) {
                         Vector3 pointingTo = sideYaxisList[nextTo];
                         Vector3 orientedToX = sideXaxisList[nextTo];
@@ -77,40 +78,15 @@ public class PlanetMeshGenerator {
                         Vector3 pointingToGlobal = chunkToGlobal*pointingTo;
 
                         Block nextBlock = chunkAdjCalculator.BlockNextToMe(chunk, i, j, h, pointingTo, pointingToGlobal);
-                        if (nextBlock.type.GetName() != "air") continue;
+                        if (nextBlock != null && nextBlock.type.GetName() != "air") continue;
                         
-                        // in chunk coordinate system
-                        Vector3 normal = pointingTo;
-                        Vector3 A = orientedToX;
-                        Vector3 B = orientedToZ;
-                        Vector3 mid = (pos + nextPos)/2f;
-                        // to global
-                        Vector3[] vertices = new Vector3[4] {
-                            blockIndexToPointInChunkCoords(mid - A/2f - B/2f, xCoord, zCoord, sideCoord),
-                            blockIndexToPointInChunkCoords(mid - A/2f + B/2f, xCoord, zCoord, sideCoord),
-                            blockIndexToPointInChunkCoords(mid + A/2f + B/2f, xCoord, zCoord, sideCoord),
-                            blockIndexToPointInChunkCoords(mid + A/2f - B/2f, xCoord, zCoord, sideCoord)
-                        };
-                        Vector3 AGlobal = chunkToGlobal * A;
-                        Vector3 BGlobal = chunkToGlobal * B;
-                        Vector3 normalGlobal = chunkToGlobal * normal;
-
-                        BlockSide side = new BlockSide(vertices, block.type.GetAtlasCoord(faceDrawn), sideNameList[sideCoord], faceDrawn);
-                        quads.Add(side);
+                        quads.Add(block.sides[nextTo]);
                     }
+
                 }
             }    
         }
-
         return quads;
-    }
-
-    private Vector3 blockIndexToPointInChunkCoords(Vector3 pos, int chunkI, int chunkJ, int sideCoord) {
-        int i = (int)(pos.x + 0.5);
-        int h = (int)(pos.y + 0.5);
-        int j = (int)(pos.z + 0.5);
-
-        return TerrainManager.instance.BaseVector(sideCoord, chunkI, chunkJ, i, j) * (planetRadius + blockSize*(h-1));//(blockHeightToHeight[h-1]);
     }
 
     private void spawnDebugBall(Vector3 vertexPosition, float size) {
@@ -129,6 +105,10 @@ public class PlanetMeshGenerator {
         
         List<BlockSide> quads = GenerateListOfQuads(chunk);
         
+        return MeshFromQuads(quads);
+    }
+
+    public Mesh MeshFromQuads(List<BlockSide> quads, bool meshWireMode = false) {
         List<Vector3> vertices = new List<Vector3>();
         List<Vector3> normals = new List<Vector3>();
         List<Vector2> uvs = new List<Vector2>();
@@ -154,10 +134,15 @@ public class PlanetMeshGenerator {
 
         Mesh mesh = new Mesh();
         mesh.vertices = vertices.ToArray();
-        mesh.normals = normals.ToArray();
-        mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
-
+        mesh.normals = normals.ToArray();
+        
+        if (meshWireMode) {
+            mesh.SetIndices(triangles, MeshTopology.Lines, 0);
+        }
+        else {
+            mesh.triangles = triangles.ToArray();
+        }
         return mesh;
     }
 } 

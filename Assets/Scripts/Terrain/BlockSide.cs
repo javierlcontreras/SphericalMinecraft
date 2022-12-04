@@ -1,14 +1,31 @@
 using UnityEngine;
 
 public class BlockSide {
-    Vector3[] vertices;
-    Vector2[] uvs;
+    private Vector3[] vertices;
+    private Vector2[] uvs;
     
+    private BlockSideTriangle[] triang;
+
+    public Vector3[] GetVertices() {
+        return vertices;
+    }
+    public void SetVertices(Vector3[] _vertices) {
+        vertices = _vertices;
+        recomputeTriang();
+    }
+
     public BlockSide(Vector3[] _vertices, Vector2 atlasCoord, string side, string pointing) {
         int rot = NumRotations(side, pointing);
        
         vertices = Rotate(_vertices, rot);
         uvs = computeUVsFromAtlas(atlasCoord);
+        recomputeTriang();
+    }
+
+    private void recomputeTriang() {
+        triang = new BlockSideTriangle[2];
+        triang[0] = new BlockSideTriangle(vertices[0], vertices[1], vertices[2], uvs[0], uvs[1], uvs[2]);
+        triang[1] = new BlockSideTriangle(vertices[0], vertices[2], vertices[3], uvs[0], uvs[2], uvs[3]);
     }
 
     private Vector3[] Rotate(Vector3[] A, int n) {
@@ -36,9 +53,6 @@ public class BlockSide {
     }
 
     public BlockSideTriangle[] GetTriangles() {
-        BlockSideTriangle[] triang = new BlockSideTriangle[2];
-        triang[0] = new BlockSideTriangle(vertices[0], vertices[1], vertices[2], uvs[0], uvs[1], uvs[2]);
-        triang[1] = new BlockSideTriangle(vertices[0], vertices[2], vertices[3], uvs[0], uvs[2], uvs[3]);
         return triang;
     }
 

@@ -11,15 +11,15 @@ public class ChunkAdjacencyCalculator {
     private Vector3[] sideZaxisList;
     private string[] sideNameList;
 
-    public ChunkAdjacencyCalculator(Planet _planet, Vector3[] _sideXaxisList, Vector3[] _sideYaxisList, Vector3[] _sideZaxisList, string[] _sideNameList) {
+    public ChunkAdjacencyCalculator(Planet _planet) {
         planet = _planet;
         chunkSize = planet.GetChunkSize();
         chunkHeight = planet.GetChunkHeight();
         chunksPerSide = planet.GetChunksPerSide();
-        sideXaxisList = _sideXaxisList;
-        sideYaxisList = _sideYaxisList;
-        sideZaxisList = _sideZaxisList;
-        sideNameList = _sideNameList;
+        sideXaxisList = TerrainManager.instance.sideXaxisList;
+        sideYaxisList = TerrainManager.instance.sideYaxisList;
+        sideZaxisList = TerrainManager.instance.sideZaxisList;
+        sideNameList = TerrainManager.instance.sideNameList;
     }
 
     public Block BlockNextToMe(Chunk chunk, int x, int z, int h, Vector3 pointingTo, Vector3 pointingToGlobal) { // pointing to is in chunk coordinate space
@@ -36,10 +36,11 @@ public class ChunkAdjacencyCalculator {
         if (inRange(nextX, 0, chunkSize) && inRange(nextZ, 0, chunkSize) && inRange(nextH, 0, chunkHeight)) {
             return planet.chunks[sideCoord, chunkX, chunkZ].blocks[nextX,nextH,nextZ];
         }
-        return new Block(new Vector3(-1,-1,-1),BlockTypeEnum.GetBlockTypeByName("air"), null);
-        
+        return null;
+    }        
 
-        /*Chunk nextChunk = ChunkNextToMe(chunk, pointingTo, pointingToGlobal);
+    /*
+        Chunk nextChunk = ChunkNextToMe(chunk, pointingTo, pointingToGlobal);
         if (nextChunk.sideCoord == sideCoord) {
             int chunkNextX = (nextX + chunkSize)%chunkSize;
             int chunkNextZ = (nextZ + chunkSize)%chunkSize;
@@ -49,7 +50,7 @@ public class ChunkAdjacencyCalculator {
         Block nextBlock = blockClosestToInChunk(chunk, x, z, h, nextChunk);
         //chunk.blocks[x,y,h].DrawSphere();
         //nextBlock.DrawDebugSphere();
-        return nextBlock; */
+        return nextBlock; 
     }
     private Block blockClosestToInChunk(Chunk chunk, int x, int z, int h, Chunk nextChunk) {
         int sideCoord = chunk.sideCoord; 
@@ -85,21 +86,14 @@ public class ChunkAdjacencyCalculator {
     }
     private float distanceBlockToBlock(Chunk chunk, int blockX, int blockZ, Chunk nextChunk, int nextBlockX, int nextBlockZ) {
         int sideCoord1 = chunk.sideCoord;
-        Vector3 base1 = TerrainManager.instance.BaseVector(sideCoord1, chunk.xCoord, chunk.zCoord, blockX, blockZ);
+        Vector3 base1 = planet.BaseVector(sideCoord1, chunk.xCoord, chunk.zCoord, blockX, blockZ);
 
         int sideCoord2 = nextChunk.sideCoord;
-        Vector3 base2 = TerrainManager.instance.BaseVector(sideCoord2, nextChunk.xCoord, nextChunk.zCoord, nextBlockX, nextBlockZ);
+        Vector3 base2 = planet.BaseVector(sideCoord2, nextChunk.xCoord, nextChunk.zCoord, nextBlockX, nextBlockZ);
 
         return (base1 - base2).magnitude;
     }
-/*
-    public Quaternion RotationFromSideToSide(int side, int sideNext) {
-        Vector3 sideNormal = sideYaxisList[sideNext];
-        Vector3 sideXaxis = sideZaxisList[sideNext];
 
-        return Quaternion.LookRotation(sideZaxis, sideNormal);
-    }
-*/
     public Chunk ChunkNextToMe(Chunk chunk, Vector3 pointingTo, Vector3 pointingToGlobal) {
         int sideCoord = chunk.sideCoord; 
         int chunkX = chunk.xCoord;
@@ -158,6 +152,7 @@ public class ChunkAdjacencyCalculator {
         //Debug.Log(sideNameList[sideCoord] + " " + pointingToGlobal + " " + sideNameList[nextSide]);
         return nextSide;
     }
+    */
 
     public bool inRange(int a, int l, int r) {
         return l <= a && a < r;
