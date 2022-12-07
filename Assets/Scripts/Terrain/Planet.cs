@@ -5,13 +5,12 @@ using UnityEngine;
 public class Planet {
     public Chunk[,,] chunks;
     
-    private Vector3 position;
+    private PlanetGeneratorSettings settings;
     private GameObject planetGameObject;
-    string planetName;
+    
+    private Vector3 position;
+    private int height;
 
-    private int chunksPerSide;
-    private int chunkSize;
-    private int chunkHeight;
     private PlanetDataGenerator planetDataGenerator;
     private PlanetMeshGenerator planetMeshGenerator;
     public PlanetMeshGenerator GetPlanetMeshGenerator() {
@@ -20,71 +19,111 @@ public class Planet {
     
     private GameObject[,,] currentChunksLoaded;
 
-    public Planet(string _planetName, Vector3 _position, int _chunksPerSide, int _chunkSize, int _chunkHeight) {
-        planetName = _planetName;
-        planetGameObject = new GameObject(planetName);
+    public Planet(PlanetGeneratorSettings _settings) {
+        settings = _settings;
+
+        position = settings.GetInitialPosition();
+        planetGameObject = new GameObject(settings.GetName());
         planetGameObject.transform.position = position;
         
-        position = _position;
-        chunksPerSide = _chunksPerSide;
-        chunkSize = _chunkSize;
-        chunkHeight = _chunkHeight;
+        int chunksPerSide = settings.GetChunksPerSide();
         chunks = new Chunk[6, chunksPerSide, chunksPerSide];
-        
         currentChunksLoaded = new GameObject[6,chunksPerSide,chunksPerSide];
 
         planetDataGenerator = new PlanetDataGenerator(this);
         planetMeshGenerator = new PlanetMeshGenerator(this);
-    }
-    
-    public string GetPlanetName() {
-        return planetName;
-    }
-    
-    public float GetPlanetRadius() {
-        return chunksPerSide*chunkSize/2f;   
+        
+        height = PrecomputeHeight();
     }
 
-    public float GetBlockSize() {
-        return 1f;
+    public int GetHeight() {
+        return height;
     }
-
+    public string GetName() {
+        return settings.GetName();
+    }
     public int GetChunksPerSide() {
-        return chunksPerSide;
-    }
-    
+        return settings.GetChunksPerSide();
+    }        
     public int GetChunkSize() {
-        return chunkSize;
+        return settings.GetChunkSize();
     }
-    
-    public int GetChunkHeight() {
-        return chunkHeight;
-    }
-
     public Vector3 GetPosition() {
         return position;
     }
 
-    public Vector3 BaseVector(int side, int chunkX, int chunkZ, float blockX, float blockZ) {
+    public Vector3 BaseVector(int side, int chunkX, int chunkZ, float blockX, int blockY, float blockZ) {
         Vector3 normal = TerrainManager.instance.sideYaxisList[side];
         Vector3 xAxis = TerrainManager.instance.sideXaxisList[side];
         Vector3 zAxis = TerrainManager.instance.sideZaxisList[side];
-        int numBlocks = chunksPerSide*chunkSize;
-        float x = chunkX*chunkSize + blockX - numBlocks/2f;
-        float z = chunkZ*chunkSize + blockZ - numBlocks/2f;
-        Vector3 radius = normal*GetPlanetRadius() + x*xAxis*GetBlockSize() + z*zAxis*GetBlockSize();
+        int numBlocks = GetChunksPerSide()*GetChunkSize();
+        int mult = NumBlocksAtHeight(blockY) / GetChunksPerSide() / 4;
+        float x = chunkX*GetChunkSize() + blockX*mult - numBlocks/2f;
+        float z = chunkZ*GetChunkSize() + blockZ*mult - numBlocks/2f;
+        float coreRadius = TerrainManager.instance.GetCoreRadius();
+
+        float blockSize = 1f/(GetChunkSize()*GetChunksPerSide());
+        Vector3 radius = normal*1 + x*xAxis*blockSize + z*zAxis*blockSize;
+
         return radius.normalized;
     }
 
     public Vector3 BaseVectorAtCenter(int side, int chunkX, int chunkZ) {
-        float center = chunkSize/2f;
-        return BaseVector(side, chunkX, chunkZ, center, center);
+        float center = GetChunkSize()/2f;
+        return BaseVector(side, chunkX, chunkZ, center, GetHeight(), center);
+    }
+    
+    public float HeightAt(int h) {
+        return h + TerrainManager.instance.GetCoreRadius();
+    }
+    
+    public int PrecomputeHeight() {
+        // maximo h tal que 4*chunkSize*chunkPerSide - poligon en la esfera de radio h tiene lados 2 > i > 1
+        int polygonSides = 4*GetChunkSize()*GetChunksPerSide();
+        
+        int resultHeight = -1;
+        for (int height = 0; ; height++) {
+            float radius = HeightAt(height);
+            float sideLength  = 2.0f * radius * Mathf.Sin(Mathf.PI / polygonSides);
+            if (1 <= sideLength && sideLength < 2) {
+                resultHeight = height;
+            }
+            else if (resultHeight != -1) {
+                break;
+            }
+        }
+        return resultHeight;
+    }
+
+    public int NumBlocksAtHeight(int y) {        
+        float radius = HeightAt(y);
+        
+        // 2^n where 4*2^n-poligon that when inscribed in circle of radius r, has side lengths 1 <= s < 2}
+        int numSides = -1;
+        int power = 1;
+        for (int exponent=0; ; exponent++) {
+            float sideLength = 2f * radius * Mathf.Sin(Mathf.PI / power);
+            if (1 <= sideLength && sideLength < 2) {
+                numSides = power;
+                break;
+            }
+            power *= 2;
+        }
+        if (numSides < 4) numSides = 4;
+        /*Debug.DrawRay(Vector3.zero, Vector3.up, Color.red, 300);
+        for (int i=0; i<numSides; i++) {
+            float angle = i*2*Mathf.PI/numSides;
+            float x = radius*Mathf.Sin(angle);
+            float z = radius*Mathf.Cos(angle);
+            Debug.DrawRay(x*Vector3.right + z*Vector3.forward, Vector3.up, Color.white, 100);
+        }*/
+        return numSides;
     }
 
     public void SetChunk(int sideCoord, int xCoord, int yCoord, Chunk chunk) {
         chunks[sideCoord, xCoord, yCoord] = chunk;
     }
-
+/*
     public void DebugChunk(int side, int chunkX, int chunkY, int height) {        
         var builder = new StringBuilder();
         for (int i = 0; i < chunkSize; i++) {
@@ -96,14 +135,15 @@ public class Planet {
         }
         Debug.Log(builder.ToString());
     }
+*/
 
-    public void UpdatePlanet()
+    public void UpdatePlanetMesh()
     {
         for (int side=0; side<6; side++) {
-            for (int chunkX=0; chunkX < chunksPerSide; chunkX++) {
-                for (int chunkZ=0; chunkZ < chunksPerSide; chunkZ++) {
-                    Vector3 chunkPosition = BaseVectorAtCenter(side, chunkX, chunkZ) * GetPlanetRadius() + position;
-                    if (TerrainManager.instance.ChunkCloseEnoughToLoad(chunkPosition)) {
+            for (int chunkX=0; chunkX < GetChunksPerSide(); chunkX++) {
+                for (int chunkZ=0; chunkZ < GetChunksPerSide(); chunkZ++) {
+                    Vector3 chunkPosition = BaseVectorAtCenter(side, chunkX, chunkZ);
+                    if (TerrainManager.instance.ChunkCloseEnoughToLoad(chunkPosition, position)) {
                         GenerateChunkMesh(side, chunkX, chunkZ);
                     } 
                     else {
@@ -126,7 +166,7 @@ public class Planet {
 
         Mesh mesh = planetMeshGenerator.GenerateChunkMesh(sideCoord, xCoord, zCoord);
         string chunkName = "(" + sideCoord + "," + xCoord + "," + zCoord + ")";
-        GameObject chunk = new GameObject(planetName + ": "+ chunkName, typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
+        GameObject chunk = new GameObject(GetName() + ": "+ chunkName, typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
         int TerrainLayer = LayerMask.NameToLayer("Terrain");
         chunk.layer = TerrainLayer;
         chunk.GetComponent<MeshFilter>().mesh = mesh;
@@ -137,7 +177,7 @@ public class Planet {
         currentChunksLoaded[sideCoord, xCoord, zCoord] = chunk;
     }
 
-    public void GeneratePlanet() {
+    public void GeneratePlanetData() {
         planetDataGenerator.Generate();
     }
 }

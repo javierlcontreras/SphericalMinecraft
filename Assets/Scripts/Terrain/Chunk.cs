@@ -2,22 +2,26 @@ using UnityEngine;
 
 public class Chunk {
     private int chunkSize, chunkHeight;
-    public int sideCoord {get;}
-    public int xCoord {get;}
-    public int zCoord {get;}
+    private int sideCoord;
+    private int xCoord;
+    private int zCoord;
+    public int GetSideCoord() { return sideCoord; }
+    public int GetXCoord() { return xCoord; }
+    public int GetZCoord() { return zCoord; }
     
     public Block[,,] blocks;
-    public Planet planet;
+    private Planet planet;
+    public Planet GetPlanet() { return planet; }
     
-    public Chunk(int _chunkSize, int _chunkHeight, int _sideCoord, int _xCoord, int _zCoord, Planet _planet) {
-        chunkSize = _chunkSize;
-        chunkHeight = _chunkHeight;
+    public Chunk(int _sideCoord, int _xCoord, int _zCoord, Planet _planet) {
         sideCoord = _sideCoord;
         xCoord = _xCoord;
         zCoord = _zCoord;
 
-        blocks = new Block[chunkSize, chunkHeight, chunkSize];
         planet = _planet;
+        chunkSize = planet.GetChunkSize();
+        chunkHeight = planet.GetHeight();
+        blocks = new Block[chunkSize, chunkHeight, chunkSize];
     }
 
     public float DistanceToChunk(Chunk nextChunk) {
@@ -25,67 +29,59 @@ public class Chunk {
         int nextChunkX = nextChunk.xCoord; 
         int nextChunkZ = nextChunk.zCoord;
 
-        int x1 = xCoord * chunkSize + chunkSize/2;
-        int z1 = zCoord * chunkSize + chunkSize/2;
-        int x2 = nextChunkX * chunkSize + chunkSize/2;
-        int z2 = nextChunkZ * chunkSize + chunkSize/2;
         Vector3 base1 = planet.BaseVectorAtCenter(sideCoord, xCoord, zCoord);
         Vector3 base2 = planet.BaseVectorAtCenter(sideNext, nextChunkX, nextChunkZ);
 
         return (base1 - base2).magnitude;
     }
 
-    public void CreateChunkData() {
-        for (int x = 0; x < chunkSize; x++) {
-            for (int z = 0; z < chunkSize; z++) {
-                float height = TerrainHeightFromNoise(x, z);
-                for (int y = 0; y<chunkHeight; y++) {
-                    BlockType type = FillDirtUpToHeight(y, height);
-
+    public void Init() {
+        for (int y = 0; y<chunkHeight; y++) {
+            for (int x = 0; x < chunkSize; x++) {
+                for (int z = 0; z < chunkSize; z++) { 
+                    BlockType type = BlockTypeEnum.GetBlockTypeByName("invalid");
                     Vector3 inChunkPosition = new Vector3(x,y,z);
-                    blocks[x, y, z] = new Block(inChunkPosition, type, this);
+                    blocks[x, y, z] = new Block(x, y, z, type, this);
                 }
             }
         }
     }
 
-    public BlockType FillDirtUpToHeight(int y, float height) {
-        if (planet.GetPlanetName() == "Earth") {
-            if (y == 0) {
-                return BlockTypeEnum.GetBlockTypeByName("bedrock");
-            }
-            else if (y < 2*height/3) {
-                return BlockTypeEnum.GetBlockTypeByName("stone");
-            }
-            else if (y < height) {
-                return BlockTypeEnum.GetBlockTypeByName("dirt");
-            }
-            else if (y < 1+height) {
-                return BlockTypeEnum.GetBlockTypeByName("grass");
-            }
-            else {
-                return BlockTypeEnum.GetBlockTypeByName("air");
-            }
-        }
-        else {
-            if (y == 0) {
-                return BlockTypeEnum.GetBlockTypeByName("bedrock");
-            }
-            else if (y < 2*height/3) {
-                return BlockTypeEnum.GetBlockTypeByName("stone");
-            }
-            else if (y < height) {
-                return BlockTypeEnum.GetBlockTypeByName("sand");
-            }
-            else if (y < 1+height) {
-                return BlockTypeEnum.GetBlockTypeByName("sand");
-            }
-            else {
-                return BlockTypeEnum.GetBlockTypeByName("air");
+    public void CreateChunkData() {
+        Init();
+        
+        int height = chunkHeight / 2;
+        for (int y = 0; y<chunkHeight; y++) {
+            // TODO this two can be swapped by < NumSidesAtHeight
+            int numSides = planet.NumBlocksAtHeight(y) / planet.GetChunksPerSide(); 
+            Debug.Log(numSides + " " + planet.GetChunkSize());
+            for (int x = 0; x < numSides; x++) {
+                for (int z = 0; z < numSides; z++) { 
+                    BlockType type = FillDirtUpToHeight(y, height);
+                    blocks[x, y, z].SetBlockType(type);
+                }
             }
         }
     }
-
+ 
+    public BlockType FillDirtUpToHeight(int y, float height) {
+        if (y == 0) {
+            return BlockTypeEnum.GetBlockTypeByName("bedrock");
+        }
+        else if (y < 2*height/3) {
+            return BlockTypeEnum.GetBlockTypeByName("stone");
+        }
+        else if (y < height) {
+            return BlockTypeEnum.GetBlockTypeByName("dirt");
+        }
+        else if (y < 1+height) {
+            return BlockTypeEnum.GetBlockTypeByName("grass");
+        }
+        else {
+            return BlockTypeEnum.GetBlockTypeByName("air");
+        }
+    }
+/*
     public float TerrainHeightFromNoise(int x, int z) {
         Vector3 samplingDirection = planet.BaseVector(sideCoord, xCoord, zCoord, x, z);
         
@@ -98,7 +94,7 @@ public class Chunk {
 
         return terrainHeight;
     }
-
+*/
     public Quaternion ChunkToGlobal() {
         Vector3 sideNormal = TerrainManager.instance.sideYaxisList[sideCoord];
         Vector3 sideXaxis = TerrainManager.instance.sideXaxisList[sideCoord];

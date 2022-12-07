@@ -3,21 +3,66 @@ using System.Collections.Generic;
 
 using UnityEngine;
 public class Block {
-    public BlockType type;
+    private BlockType type;
 
-    public Vector3 inChunkPosition;
-    public Vector3 globalPosition;
-    public Chunk chunk;
+    private int xCoord, yCoord, zCoord;
+    private Vector3 inChunkPosition;
+    private Vector3 globalPosition;
+    private Chunk chunk;
 
+    public Vector3[] vertexPositions;
     public BlockSide[] sides;
 
-    public Block(Vector3 _inChunkPosition, BlockType _type, Chunk _chunk) {
-        inChunkPosition = _inChunkPosition;
+    public Block(int _xCoord, int _yCoord, int _zCoord, BlockType _type, Chunk _chunk) {
+        xCoord = _xCoord;
+        yCoord = _yCoord;
+        zCoord = _zCoord;
         type = _type;
         chunk = _chunk;
 
-        globalPosition = blockIndexToPointInChunkCoordsBilinear(inChunkPosition);
+        inChunkPosition = new Vector3(zCoord, yCoord, zCoord);
+        vertexPositions = computeVertexPositions();
+        globalPosition = averageOf(vertexPositions);
         sides = computeSides();
+    }
+
+    public BlockType GetBlockType() {
+        return type;
+    }
+    public void SetBlockType(BlockType _type) {
+        type = _type;
+    }
+
+    private Vector3[] computeVertexPositions() {
+        Vector3[] vertices = new Vector3[8];
+       
+        for (int option=0; option < 8*3; option += 3) {
+            int dx = TerrainManager.instance.vertexOptions[option];
+            int dy = TerrainManager.instance.vertexOptions[option+1];
+            int dz = TerrainManager.instance.vertexOptions[option+2];
+            int vertexX = xCoord + dx;
+            int vertexY = yCoord + dy;
+            int vertexZ = zCoord + dz;
+            
+            vertices[option/3] = chunkIndexToGlobalPosition(vertexX, vertexY, vertexZ);
+        }
+        return vertices;
+    }
+    private Vector3 chunkIndexToGlobalPosition(int vertexX, int vertexY, int vertexZ) {
+        int chunkSide = chunk.GetSideCoord();
+        int chunkX = chunk.GetXCoord();
+        int chunkZ = chunk.GetZCoord();
+        Planet planet = chunk.GetPlanet();
+        return planet.BaseVector(chunkSide, chunkX, chunkZ, vertexX, vertexY, vertexZ) * planet.HeightAt(vertexY);
+    }
+
+    private Vector3 averageOf(Vector3[] list) {
+        Vector3 res = Vector3.zero;
+        int n = list.Length;
+        for (int i=0; i<n; i++) {
+            res += list[i] / (1f*n);
+        }
+        return res;
     }
 
     private BlockSide[] computeSides() {
@@ -25,70 +70,26 @@ public class Block {
         Quaternion globalToChunk = chunk.GlobalToChunk(); 
 
         BlockSide[] sideList = new BlockSide[6];
-        for (int nextTo=0; nextTo < 6; nextTo++) {
-            Vector3 pointingTo = TerrainManager.instance.sideYaxisList[nextTo];
-            Vector3 orientedToX = TerrainManager.instance.sideXaxisList[nextTo];
-            Vector3 orientedToZ = TerrainManager.instance.sideZaxisList[nextTo];
-
-            string faceDrawn = TerrainManager.instance.sideNameList[nextTo];
-            
-            Vector3 pos = inChunkPosition;
-            Vector3 nextPos = pos + pointingTo;
-            Vector3 pointingToGlobal = chunkToGlobal*pointingTo;
-
-            // in chunk coordinate system
-            Vector3 normal = pointingTo;
-            Vector3 A = orientedToX;
-            Vector3 B = orientedToZ;
-            Vector3 mid = (pos + nextPos)/2f;
-            // to global
+        for (int option=0; option < 6*4; option += 4) {
+            string faceDrawn = TerrainManager.instance.sideNameList[option/4];
+            int vertex1 = TerrainManager.instance.sideOptions[option];
+            int vertex2 = TerrainManager.instance.sideOptions[option+1];
+            int vertex3 = TerrainManager.instance.sideOptions[option+2];
+            int vertex4 = TerrainManager.instance.sideOptions[option+3];
             Vector3[] vertices = new Vector3[4] {
-                blockIndexToPointInChunkCoords(mid - A/2f - B/2f),
-                blockIndexToPointInChunkCoords(mid - A/2f + B/2f),
-                blockIndexToPointInChunkCoords(mid + A/2f + B/2f),
-                blockIndexToPointInChunkCoords(mid + A/2f - B/2f)
+                vertexPositions[vertex1],    
+                vertexPositions[vertex2],    
+                vertexPositions[vertex3],    
+                vertexPositions[vertex4]    
             };
-            Vector3 AGlobal = chunkToGlobal * A;
-            Vector3 BGlobal = chunkToGlobal * B;
-            Vector3 normalGlobal = chunkToGlobal * normal;
 
-            string sideName = TerrainManager.instance.sideNameList[chunk.sideCoord];
+            string sideName = TerrainManager.instance.sideNameList[chunk.GetSideCoord()];
             BlockSide side = new BlockSide(vertices, type.GetAtlasCoord(faceDrawn), sideName, faceDrawn);
-            sideList[nextTo] = side;
+            sideList[option/4] = side;
         }
         return sideList;
     }
-
-    private Vector3 blockIndexToPointInChunkCoords(Vector3 pos) {
-        int chunkI = chunk.xCoord; 
-        int chunkJ = chunk.zCoord;
-        int sideCoord = chunk.sideCoord;
-
-        int i = (int)(pos.x + 0.5f);
-        int h = (int)(pos.y + 0.5f);
-        int j = (int)(pos.z + 0.5f);
-
-        Planet planet = chunk.planet;
-        float planetRadius = planet.GetPlanetRadius();
-        float blockSize = planet.GetBlockSize();
-        return planet.BaseVector(sideCoord, chunkI, chunkJ, i, j) * (planetRadius + blockSize*(h-1));//(blockHeightToHeight[h-1]);
-    }
-
-    private Vector3 blockIndexToPointInChunkCoordsBilinear(Vector3 pos) {
-        int chunkI = chunk.xCoord; 
-        int chunkJ = chunk.zCoord;
-        int sideCoord = chunk.sideCoord;
-        
-        float i = (pos.x + 0.5f);
-        float h = (pos.y + 0.5f);
-        float j = (pos.z + 0.5f);
-        
-        Planet planet = chunk.planet;
-        float planetRadius = planet.GetPlanetRadius();
-        float blockSize = planet.GetBlockSize();
-        return planet.BaseVector(sideCoord, chunkI, chunkJ, i, j) * (planetRadius + blockSize * (h - 1));//(blockHeightToHeight[h-1]);
-    }
-
+/*
     public Mesh ComputeOutline(float overlineRatio = 1.1f) {
         List<BlockSide> listSides = new List<BlockSide>();
         BlockSide[] sideCopy = computeSides();
@@ -106,4 +107,5 @@ public class Block {
         
         return mesh;
     }
+*/
 }

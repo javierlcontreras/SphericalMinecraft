@@ -1,4 +1,4 @@
-using System.Collections;
+/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,9 +32,10 @@ public class PointingTo : MonoBehaviour {
     }
 
     public Block BlockToClosestTo(Vector3 point, Chunk chunk) {
-        Vector3 sideXaxis = TerrainManager.instance.sideXaxisList[chunk.sideCoord]; 
-        Vector3 sideYaxis = TerrainManager.instance.sideYaxisList[chunk.sideCoord]; 
-        Vector3 sideZaxis = TerrainManager.instance.sideZaxisList[chunk.sideCoord]; 
+        int sideCoord = chunk.GetSideCoord();
+        Vector3 sideXaxis = TerrainManager.instance.sideXaxisList[sideCoord]; 
+        Vector3 sideYaxis = TerrainManager.instance.sideYaxisList[sideCoord]; 
+        Vector3 sideZaxis = TerrainManager.instance.sideZaxisList[sideCoord]; 
         Planet planet = TerrainManager.instance.GetCurrentPlanet();
         int chunkSize = planet.GetChunkSize();
         int chunksPerSide = planet.GetChunksPerSide();
@@ -118,3 +119,4 @@ public class PointingTo : MonoBehaviour {
         }
     }
 }
+*/

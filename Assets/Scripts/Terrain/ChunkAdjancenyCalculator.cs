@@ -14,7 +14,7 @@ public class ChunkAdjacencyCalculator {
     public ChunkAdjacencyCalculator(Planet _planet) {
         planet = _planet;
         chunkSize = planet.GetChunkSize();
-        chunkHeight = planet.GetChunkHeight();
+        chunkHeight = planet.GetHeight();
         chunksPerSide = planet.GetChunksPerSide();
         sideXaxisList = TerrainManager.instance.sideXaxisList;
         sideYaxisList = TerrainManager.instance.sideYaxisList;
@@ -22,21 +22,46 @@ public class ChunkAdjacencyCalculator {
         sideNameList = TerrainManager.instance.sideNameList;
     }
 
-    public Block BlockNextToMe(Chunk chunk, int x, int z, int h, Vector3 pointingTo, Vector3 pointingToGlobal) { // pointing to is in chunk coordinate space
-        int sideCoord = chunk.sideCoord; 
-        int chunkX = chunk.xCoord;
-        int chunkZ = chunk.zCoord;
+    public BlockAdjacency BlockNextToMe(Chunk chunk, int x, int y, int z, Vector3 pointingTo, Vector3 pointingToGlobal) { // pointing to is in chunk coordinate space
+        int sideCoord = chunk.GetSideCoord(); 
+        int chunkX = chunk.GetXCoord();
+        int chunkZ = chunk.GetZCoord();
 
         //Debug.Log(sideNameList[sideCoord] + " " + pointingTo + " " + pointingToGlobal);
 
         int nextX = x + (int)pointingTo.x; 
         int nextZ = z + (int)pointingTo.z; 
-        int nextH = h + (int)pointingTo.y; 
+        int nextY = y + (int)pointingTo.y; 
+        Planet planet = chunk.GetPlanet();
+        int nextNumBlocks = planet.NumBlocksAtHeight(nextY);
+        int numBlocks = planet.NumBlocksAtHeight(y);
         
-        if (inRange(nextX, 0, chunkSize) && inRange(nextZ, 0, chunkSize) && inRange(nextH, 0, chunkHeight)) {
-            return planet.chunks[sideCoord, chunkX, chunkZ].blocks[nextX,nextH,nextZ];
+        if (nextNumBlocks < numBlocks) {
+            if (!inRange(nextX/2, 0, chunkSize) || !inRange(nextZ/2, 0, chunkSize) || !inRange(nextY, 0, chunkHeight)) {
+                return null;
+            }
+            Block block = planet.chunks[sideCoord, chunkX, chunkZ].blocks[nextX/2,nextY,nextZ/2];
+            return new BlockAdjacency(block);
         }
-        return null;
+        else if (nextNumBlocks > numBlocks) {
+            if (!inRange(2*nextX+1, 0, chunkSize) || !inRange(2*nextZ+1, 0, chunkSize) || !inRange(nextY, 0, chunkHeight)) {
+                return null;
+            }
+            Block[] blocks = new Block[4]{
+                planet.chunks[sideCoord, chunkX, chunkZ].blocks[2*nextX,nextY,2*nextZ],
+                planet.chunks[sideCoord, chunkX, chunkZ].blocks[2*nextX,nextY,2*nextZ+1],
+                planet.chunks[sideCoord, chunkX, chunkZ].blocks[2*nextX+1,nextY,2*nextZ],
+                planet.chunks[sideCoord, chunkX, chunkZ].blocks[2*nextX+1,nextY,2*nextZ+1],
+            };
+            return new BlockAdjacency(blocks);
+        }
+        else {
+            if (!inRange(nextX, 0, chunkSize) || !inRange(nextZ, 0, chunkSize) || !inRange(nextY, 0, chunkHeight)) {
+                return null;
+            }
+            Block block = planet.chunks[sideCoord, chunkX, chunkZ].blocks[nextX,nextY,nextZ];
+            return new BlockAdjacency(block);
+        }
     }        
 
     /*
@@ -44,7 +69,7 @@ public class ChunkAdjacencyCalculator {
         if (nextChunk.sideCoord == sideCoord) {
             int chunkNextX = (nextX + chunkSize)%chunkSize;
             int chunkNextZ = (nextZ + chunkSize)%chunkSize;
-            return nextChunk.blocks[chunkNextX,nextH,chunkNextZ]; 
+            return nextChunk.blocks[chunkNextX,nextY,chunkNextZ]; 
         } 
 
         Block nextBlock = blockClosestToInChunk(chunk, x, z, h, nextChunk);

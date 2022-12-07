@@ -46,12 +46,35 @@ public class TerrainManager : MonoBehaviour
         Vector3.down,
         Vector3.down
     };
+    public int[] vertexOptions = new int[8*3] {
+        0,0,0, // left-bot-back
+        1,0,0, // right-bot-back
+        0,1,0, // left-top-back
+        1,1,0, // right-top-back
+        0,0,1, // left-bot-forw
+        1,0,1, // right-bot-forw
+        0,1,1, // left-top-forw
+        1,1,1  // right-top-forw
+    };
+    // TODO: possibly rearange order in each
+    public int[] sideOptions = new int[6*4] {
+        2,3,6,7, // top
+        0,1,4,5, // bot
 
+        1,3,5,7, // right
+        0,2,4,6, // left
+        
+        4,5,6,7, // forward
+        0,1,2,3, // back
+    };
+
+    public float GetCoreRadius() {
+        return 0.5f*0.5f*Mathf.Sqrt(2.0f);
+    }
 
     public Transform currentPosition;
     public float radiusOfLoad;
     public Planet planet;
-    public Planet moon;
     
     public Planet GetCurrentPlanet() {
         return planet;
@@ -67,20 +90,25 @@ public class TerrainManager : MonoBehaviour
         } 
     }
 
-    public bool ChunkCloseEnoughToLoad(Vector3 chunkPosition) {
-        return (chunkPosition - currentPosition.position).magnitude < radiusOfLoad;
+    public bool ChunkCloseEnoughToLoad(Vector3 chunkPosition, Vector3 planetPosition) {
+        Vector3 radialPosition = (currentPosition.position - planetPosition).normalized;
+        return (chunkPosition - radialPosition).magnitude < radiusOfLoad;
     }
 
     private void Start() {
-        planet = new Planet("Earth", Vector3.zero, 4, 16, 64);
-        planet.GeneratePlanet();
-        moon = new Planet("Moon", Vector3.up * 150, 1, 16, 32);
-        moon.GeneratePlanet();
+        PlanetGeneratorSettings planetSettings = new PlanetGeneratorSettings("Earth", Vector3.zero, 1, 16);
+        planet = new Planet(planetSettings);
+        //planet.GeneratePlanetData();
+        
+        for (int h=0; h<10; h++) {
+            Debug.Log(h + ": " + planet.NumBlocksAtHeight(h));
+        }
+        Debug.Log(planet.GetHeight() + ": " + planet.NumBlocksAtHeight(planet.GetHeight()));
+        Debug.Log((planet.GetHeight()+1) + ": " + planet.NumBlocksAtHeight(planet.GetHeight()+1));
     }
 
     private void Update() {
-        planet.UpdatePlanet();
-        moon.UpdatePlanet();
+        //planet.UpdatePlanetMesh();
     }
 
     public void DestroyChunk(GameObject mesh) {

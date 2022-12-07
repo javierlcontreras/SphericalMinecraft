@@ -6,14 +6,11 @@ using UnityEngine;
 public class PlanetMeshGenerator {
     private Planet planet;
     private ChunkAdjacencyCalculator chunkAdjCalculator;
-    private float planetRadius;
-
+    
     private int chunksPerSide;
     private int chunkSize;
     private int chunkHeight;
-    //private float[] blockHeightToHeight;
-    private float blockSize;
-
+    
     private Vector3[] sideYaxisList;
     private Vector3[] sideXaxisList;
     private Vector3[] sideZaxisList;
@@ -21,7 +18,6 @@ public class PlanetMeshGenerator {
 
     public PlanetMeshGenerator(Planet _planet) {
         planet = _planet;
-        planetRadius = planet.GetPlanetRadius();
         
         sideYaxisList = TerrainManager.instance.sideYaxisList;
         sideXaxisList = TerrainManager.instance.sideXaxisList;
@@ -30,24 +26,15 @@ public class PlanetMeshGenerator {
         
         chunkSize = planet.GetChunkSize();
         chunksPerSide = planet.GetChunksPerSide();
-        chunkHeight = planet.GetChunkHeight();
-
-        blockSize = planet.GetBlockSize();
-        /*blockHeightToHeight = new float[chunkHeight+1];
-        float lastRadius = planetRadius;
-        for (int h=0; h<=chunkHeight; h++) {
-            blockHeightToHeight[h] = lastRadius;
-            lastRadius += blockSizeAtPreviousHeight;
-        }*/
+        chunkHeight = planet.GetHeight();
         
         chunkAdjCalculator = new ChunkAdjacencyCalculator(planet);
-        //spawnCoreBall();
     }
 
     private List<BlockSide> GenerateListOfQuads(Chunk chunk) {
-        int sideCoord = chunk.sideCoord; 
-        int xCoord = chunk.xCoord;
-        int zCoord = chunk.zCoord;
+        int sideCoord = chunk.GetSideCoord(); 
+        int xCoord = chunk.GetXCoord();
+        int zCoord = chunk.GetZCoord();
         Vector3 sideNormal = sideYaxisList[sideCoord];
         Vector3 sideXaxis = sideXaxisList[sideCoord];
         Vector3 sideZaxis = sideZaxisList[sideCoord];
@@ -59,47 +46,40 @@ public class PlanetMeshGenerator {
 
         List<BlockSide> quads = new List<BlockSide>();
 
-        for (int i=0; i<chunkSize; i++) {
-            for (int j=0; j<chunkSize; j++) {
-                for (int h=0; h<chunkHeight; h++) {
+        for (int h=0; h<chunkHeight; h++) {
+            int realChunkSize = planet.NumBlocksAtHeight(h) / chunksPerSide;
+            for (int i=0; i<realChunkSize; i++) {
+                for (int j=0; j<realChunkSize; j++) {
                     Block block  = chunk.blocks[i,h,j];
-
-                    if (block.type.GetName() == "air" || block.type.GetName() == "bedrock") continue;
+                    string blockTypeName = block.GetBlockType().GetName();
+                    if (blockTypeName == "air" || blockTypeName == "invalid") continue;
                     for (int nextTo=0; nextTo < 6; nextTo++) {
                         Vector3 pointingTo = sideYaxisList[nextTo];
                         Vector3 orientedToX = sideXaxisList[nextTo];
                         Vector3 orientedToZ = sideZaxisList[nextTo];
-
-                        //int oppositeNextTo = 2*(nextTo/2) + (nextTo+1)%2;
                         string faceDrawn = sideNameList[nextTo];
                         
                         Vector3 pos = new Vector3(i, h, j);
                         Vector3 nextPos = pos + pointingTo;
                         Vector3 pointingToGlobal = chunkToGlobal*pointingTo;
 
-                        Block nextBlock = chunkAdjCalculator.BlockNextToMe(chunk, i, j, h, pointingTo, pointingToGlobal);
-                        if (nextBlock != null && nextBlock.type.GetName() != "air") continue;
+                        BlockAdjacency blocksAdjacent = chunkAdjCalculator.BlockNextToMe(chunk, i, h, j, pointingTo, pointingToGlobal);
+                        if (blocksAdjacent != null && !blocksAdjacent.IsAnyAir()) continue;
                         
                         quads.Add(block.sides[nextTo]);
                     }
-
                 }
             }    
         }
         return quads;
     }
-
+/*
     private void spawnDebugBall(Vector3 vertexPosition, float size) {
         GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         ball.transform.position = vertexPosition;
         ball.transform.localScale *= size;           
     }
-
-    private void spawnCoreBall() {
-        //Debug.Log(planetRadius + " " + blockLength);
-        spawnDebugBall(Vector3.zero, 2f*planetRadius);
-    }
-
+*/
     public Mesh GenerateChunkMesh(int sideCoord, int xCoord, int yCoord) {
         Chunk chunk = planet.chunks[sideCoord, xCoord, yCoord];
         

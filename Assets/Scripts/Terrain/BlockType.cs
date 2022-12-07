@@ -121,6 +121,16 @@ class Leaves : BlockType {
     }
 }
 
+class Invalid : BlockType {
+    string name = "invalid";
+
+    public string GetName() { return name; }
+    public Vector2 GetAtlasCoord(string side) {
+        return new Vector2(-1,-1);
+    }
+}
+
+
 public static class BlockTypeEnum {
     static Dictionary<string, BlockType> dict = new Dictionary<string, BlockType> () {
         ["air"] = new Air(),
@@ -132,7 +142,8 @@ public static class BlockTypeEnum {
         ["sand"] = new Sand(),
         ["bedrock"] = new Bedrock(),
         ["wood"] = new Wood(),
-        ["leaves"] = new Leaves()
+        ["leaves"] = new Leaves(),
+        ["invalid"] = new Invalid()
     };
 
     public static BlockType GetBlockTypeByName(string name) {
