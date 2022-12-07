@@ -56,7 +56,6 @@ public class TerrainManager : MonoBehaviour
         0,1,1, // left-top-forw
         1,1,1  // right-top-forw
     };
-    // TODO: possibly rearange order in each
     public static readonly int[] sideOptions = new int[] {
         6,7,3,2, // top
         5,4,0,1, // bot
@@ -72,7 +71,7 @@ public class TerrainManager : MonoBehaviour
 
     public Transform currentPosition;
     public float radiusOfLoad;
-    public Planet planet;
+    private Planet planet;
     
     public Planet GetCurrentPlanet() {
         return planet;
@@ -95,16 +94,15 @@ public class TerrainManager : MonoBehaviour
 
     private void Start() {
         
-        PlanetGeneratorSettings planetSettings = new PlanetGeneratorSettings("Earth", Vector3.zero, 2, 16);
+        PlanetGeneratorSettings planetSettings = new PlanetGeneratorSettings("Earth", Vector3.zero, 4, 16, 128);
         planet = new Planet(planetSettings);
         planet.GeneratePlanetData();
-        Debug.Log(planet.GetHeight());
         
-        planet.chunks[0,0,0].DebugChunkDataAtHeight(3);
+        //Debug.Log(planet.GetHeight());
+        //planet.chunks[0,0,0].DebugChunkDataAtHeight(3);
 
-        planet.UpdatePlanetMesh();
 
-        for (int option=0; option < 8*3; option += 3) {
+        /*for (int option=0; option < 8*3; option += 3) {
             int x = vertexOptions[option];
             int y = vertexOptions[option+1];
             int z = vertexOptions[option+2];
@@ -112,10 +110,11 @@ public class TerrainManager : MonoBehaviour
             sphere.transform.localScale =  0.1f * Vector3.one;
             sphere.transform.position = new Vector3(x,y,z);
             sphere.name += ": " + (option/3);
-        }
+        }*/
     }
 
     private void Update() {
+        planet.UpdatePlanetMesh();
     }
 
     public void DestroyChunk(GameObject mesh) {

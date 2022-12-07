@@ -67,7 +67,7 @@ public class Chunk {
         int maxNumSides = planet.NumBlocksAtHeightPerChunk(planet.GetHeight()-1); 
         for (int x = 0; x < maxNumSides; x++) {
             for (int z = 0; z < maxNumSides; z++) { 
-                float height = chunkHeight/2;//TerrainHeightFromNoise(x,z);
+                float height = TerrainHeightFromNoise(x,z);
                 for (int y = 0; y<chunkHeight; y++) {
                     int numSides = planet.NumBlocksAtHeightPerChunk(y);
                     if (x >= numSides || z >= numSides) continue;

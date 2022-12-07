@@ -33,7 +33,12 @@ public class Block {
         type = _type;
         sides = computeSides();
     }
-
+    public Vector3 GetInChunkPosition() {
+        return inChunkPosition;
+    }
+    public Chunk GetChunk() {
+        return chunk;
+    }
     private Vector3[] computeVertexPositions() {
         Vector3[] vertices = new Vector3[8];
        
@@ -101,7 +106,7 @@ public class Block {
         }
         return sideList;
     }
-/*
+
     public Mesh ComputeOutline(float overlineRatio = 1.1f) {
         List<BlockSide> listSides = new List<BlockSide>();
         BlockSide[] sideCopy = computeSides();
@@ -114,10 +119,10 @@ public class Block {
             side.SetVertices(newVertices);
             listSides.Add(side);
         }
-        Mesh mesh = chunk.planet.GetPlanetMeshGenerator().MeshFromQuads(listSides, true);
+        Mesh mesh = chunk.GetPlanet().GetPlanetMeshGenerator().MeshFromQuads(listSides, true);
         //mesh.uv = null;
         
         return mesh;
     }
-*/
+
 }

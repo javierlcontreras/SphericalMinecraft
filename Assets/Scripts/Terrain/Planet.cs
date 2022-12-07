@@ -33,7 +33,7 @@ public class Planet {
         blocksAtHeight = new int[chunkHeight+10];
         for (int h=0; h<chunkHeight+10; h++) {
             blocksAtHeight[h] = PrecomputeNumBlocksAtHeight(h);
-            Debug.Log("Blocks at height " + h + ": " + blocksAtHeight[h]);
+            //Debug.Log("Blocks at height " + h + ": " + blocksAtHeight[h]);
         }
         planetDataGenerator = new PlanetDataGenerator(this);
         planetMeshGenerator = new PlanetMeshGenerator(this);
@@ -74,11 +74,11 @@ public class Planet {
         Vector3 radius = normal*1 + x*xAxis*blockSize + z*zAxis*blockSize;
         radius = radius.normalized;
 
-        if(radius.x == 0) Debug.DrawRay(Vector3.zero, radius, Color.red, 400);
+/*        if(radius.x == 0) Debug.DrawRay(Vector3.zero, radius, Color.red, 400);
         if(radius.y == 0) Debug.DrawRay(Vector3.zero, radius, Color.blue, 400);
         if(radius.z == 0) Debug.DrawRay(Vector3.zero, radius, Color.green, 400);
         //Debug.DrawRay(Vector3.zero, radius, Color.white, 400);
-
+*/
         return radius;
     }
 
@@ -95,8 +95,9 @@ public class Planet {
         // maximo h tal que 4*chunkSize*chunkPerSide - poligon en la esfera de radio h tiene lados 2 > i > 1
         int polygonSides = 4*GetChunkSize()*GetChunksPerSide();
         
+        int maxHeight = settings.GetMaxHeight();
         int resultHeight = -1;
-        for (int h = 0; ; h++) {
+        for (int h = 0; h < maxHeight; h++) {
             float radius = HeightAtBottomOfLayer(h);
             float sideLength  = 2.0f * radius * Mathf.Sin(Mathf.PI / polygonSides);
             if (1 <= sideLength && sideLength < 2) {
@@ -106,6 +107,7 @@ public class Planet {
                 break;
             }
         }
+        if (resultHeight == -1) resultHeight = maxHeight;
         return resultHeight;
     }
     public int NumBlocksAtHeight(int y) {

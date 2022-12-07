@@ -35,7 +35,8 @@ public class PlanetDataGenerator {
         chunk.CreateChunkData();
         return chunk;
     }
-  /*  
+
+/*  
     public void AddTrees(Planet planet) {
         // TODO: surface this
         int numTrees = 3;

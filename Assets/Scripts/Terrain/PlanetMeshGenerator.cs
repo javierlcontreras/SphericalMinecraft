@@ -46,7 +46,7 @@ public class PlanetMeshGenerator {
 
         List<BlockSide> quads = new List<BlockSide>();
 
-        Debug.Log("Chunk Height " + chunkHeight);
+        //Debug.Log("Chunk Height " + chunkHeight);
         for (int h=0; h<chunkHeight; h++) {
             int realChunkSize = planet.NumBlocksAtHeightPerChunk(h);
             //Debug.Log("realChunkSize " + realChunkSize);

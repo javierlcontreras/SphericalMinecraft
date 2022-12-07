@@ -5,12 +5,14 @@ public class PlanetGeneratorSettings {
     private Vector3 initialPosition;
     private int chunksPerSide;
     private int chunkSize;
+    private int maxHeight;
     
-    public PlanetGeneratorSettings(string _name, Vector3 _initialPosition, int _chunksPerSide, int _chunkSize) {
+    public PlanetGeneratorSettings(string _name, Vector3 _initialPosition, int _chunksPerSide, int _chunkSize, int _maxHeight) {
         name = _name;
         initialPosition = _initialPosition;
         chunkSize = _chunkSize;
         chunksPerSide = _chunksPerSide;
+        maxHeight = _maxHeight;
 
         if (!isPowerOf2(chunkSize) || !isPowerOf2(chunksPerSide)) {
             Debug.Log("chunkSize and chunksPerSide MUST be powers of 2");
@@ -33,5 +35,8 @@ public class PlanetGeneratorSettings {
     }
     public Vector3 GetInitialPosition() {
         return initialPosition;
+    }
+    public int GetMaxHeight() {
+        return maxHeight;
     }
 } 

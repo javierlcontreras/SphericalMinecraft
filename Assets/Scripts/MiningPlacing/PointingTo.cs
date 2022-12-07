@@ -1,4 +1,4 @@
-/*using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,8 +21,8 @@ public class PointingTo : MonoBehaviour {
         int sideCoord = int.Parse(coord[0]);
         int xCoord = int.Parse(coord[1]);
         int zCoord = int.Parse(coord[2]);
-        Chunk chunk = TerrainManager.instance.planet.chunks[sideCoord, xCoord, zCoord];
-        
+        //Debug.Log("Just hit: " + chunkName);
+        Chunk chunk = TerrainManager.instance.GetCurrentPlanet().chunks[sideCoord, xCoord, zCoord];
         if (place == false) {
             return BlockToClosestTo(hit.point - blockSkin*hit.normal, chunk);
         }
@@ -33,32 +33,32 @@ public class PointingTo : MonoBehaviour {
 
     public Block BlockToClosestTo(Vector3 point, Chunk chunk) {
         int sideCoord = chunk.GetSideCoord();
-        Vector3 sideXaxis = TerrainManager.instance.sideXaxisList[sideCoord]; 
-        Vector3 sideYaxis = TerrainManager.instance.sideYaxisList[sideCoord]; 
-        Vector3 sideZaxis = TerrainManager.instance.sideZaxisList[sideCoord]; 
+        Vector3 sideXaxis = TerrainManager.sideXaxisList[sideCoord]; 
+        Vector3 sideYaxis = TerrainManager.sideYaxisList[sideCoord]; 
+        Vector3 sideZaxis = TerrainManager.sideZaxisList[sideCoord]; 
         Planet planet = TerrainManager.instance.GetCurrentPlanet();
         int chunkSize = planet.GetChunkSize();
         int chunksPerSide = planet.GetChunksPerSide();
-        float blockSize = planet.GetBlockSize();
-        float planetRadius = planet.GetPlanetRadius();
-
+        
+        float height = point.magnitude;
+        int hBlock = (int)(height - TerrainManager.instance.GetCoreRadius());
+        int realChunkSize = Mathf.Max(1, planet.NumBlocksAtHeightPerChunk(hBlock));
+        int mult = chunkSize / realChunkSize;
         Vector3 dir = point.normalized;
         float normInf = Mathf.Max(Mathf.Abs(dir.x), Mathf.Abs(dir.y), Mathf.Abs(dir.z)); 
         Vector3 cubeDir = dir / normInf;
 
-        int side = chunk.sideCoord;
-        
+        int side = chunk.GetSideCoord();
         float xPointOnPlane = 0.5f*(Vector3.Dot(sideXaxis, cubeDir) + 1);
         float zPointOnPlane = 0.5f*(Vector3.Dot(sideZaxis, cubeDir) + 1);
         
-        int xGlobal = (int) (xPointOnPlane * chunkSize*chunksPerSide); 
+        int xGlobal = (int) (xPointOnPlane * chunkSize*chunksPerSide);
         int zGlobal = (int) (zPointOnPlane * chunkSize*chunksPerSide);
 
         int xBlock = xGlobal % chunkSize;
         int zBlock = zGlobal % chunkSize;
-
-        float height = point.magnitude;
-        int hBlock = 1 + (int) ((point.magnitude - planetRadius)/blockSize);
+        xBlock /= mult; 
+        zBlock /= mult; 
 
         return chunk.blocks[xBlock, hBlock, zBlock];
     }
@@ -91,32 +91,31 @@ public class PointingTo : MonoBehaviour {
         Chunk chunkPointed = null;
         if (wantToBreak && timeDelayActions > thresholdTime) {
             Block blockPointed = BlockToBreak();
-            if (blockPointed != null && blockPointed.type.GetName() == "air") {
+            if (blockPointed != null && blockPointed.GetBlockType().GetName() == "air") {
                 Debug.Log("BUG");
             }
-            else if (blockPointed != null && blockPointed.inChunkPosition.y >= 1) { 
-                chunkPointed = blockPointed.chunk;
-                blockPointed.type = BlockTypeEnum.GetBlockTypeByName("air");
+            else if (blockPointed != null && blockPointed.GetInChunkPosition().y >= 1) { 
+                chunkPointed = blockPointed.GetChunk();
+                blockPointed.SetBlockType(BlockTypeEnum.GetBlockTypeByName("air"));
                 success = true;
             }
         }
         else if (wantToPlace && timeDelayActions > thresholdTime) {
             Block blockPointed = BlockToBreak(true);
-            if (blockPointed != null && blockPointed.type.GetName() != "air") {
+            if (blockPointed != null && blockPointed.GetBlockType().GetName() != "air") {
                 Debug.Log("BUG");
             }
             else if (blockPointed != null) { 
-                chunkPointed = blockPointed.chunk;
-                blockPointed.type = BlockTypeEnum.GetBlockTypeByName("sand");
+                chunkPointed = blockPointed.GetChunk();
+                blockPointed.SetBlockType(BlockTypeEnum.GetBlockTypeByName("sand"));
                 success = true;
             }
         }
         if (success) {
             Planet planet = TerrainManager.instance.GetCurrentPlanet();
-            planet.DestroyChunkMesh(chunkPointed.sideCoord, chunkPointed.xCoord, chunkPointed.zCoord);
-            planet.GenerateChunkMesh(chunkPointed.sideCoord, chunkPointed.xCoord, chunkPointed.zCoord);
+            planet.DestroyChunkMesh(chunkPointed.GetSideCoord(), chunkPointed.GetXCoord(), chunkPointed.GetZCoord());
+            planet.GenerateChunkMesh(chunkPointed.GetSideCoord(), chunkPointed.GetXCoord(), chunkPointed.GetZCoord());
             timeDelayActions = 0;
         }
     }
 }
-*/

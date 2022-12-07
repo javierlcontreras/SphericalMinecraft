@@ -11,11 +11,11 @@ public class BlockSideTriangle {
             b,
             c
         };
-        // TODO this is bugged of course. Doesnt work for sides of blocks, only for top!
+        Vector3 normal = -Vector3.Cross(a - b, c - b).normalized;
         normals = new Vector3[3] {
-            Vector3.Normalize(a), 
-            Vector3.Normalize(b), 
-            Vector3.Normalize(c) 
+            normal, 
+            normal, 
+            normal 
         };
         uvs = new Vector2[3] {
             uva,
