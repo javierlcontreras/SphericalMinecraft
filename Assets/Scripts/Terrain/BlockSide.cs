@@ -3,29 +3,37 @@ using UnityEngine;
 public class BlockSide {
     private Vector3[] vertices;
     private Vector2[] uvs;
-    
-    private BlockSideTriangle[] triang;
+    private Vector3 atlasCoord;
+
+    public BlockSide(Vector3[] _vertices, Vector2 _atlasCoord, string side, string pointing) {
+        int rot = NumRotations(side, pointing);
+       
+        vertices = Rotate(_vertices, rot);
+        atlasCoord = _atlasCoord;
+        uvs = computeUVsFromAtlas(atlasCoord);
+    }
 
     public Vector3[] GetVertices() {
         return vertices;
     }
     public void SetVertices(Vector3[] _vertices) {
         vertices = _vertices;
-        recomputeTriang();
+    }
+    public Vector2 GetAtlasCoord() {
+        return atlasCoord;
     }
 
-    public BlockSide(Vector3[] _vertices, Vector2 atlasCoord, string side, string pointing) {
-        int rot = NumRotations(side, pointing);
-       
-        vertices = Rotate(_vertices, rot);
-        uvs = computeUVsFromAtlas(atlasCoord);
-        recomputeTriang();
-    }
-
-    private void recomputeTriang() {
-        triang = new BlockSideTriangle[2];
+    public BlockSideTriangle[] GetTriangles() {
+        BlockSideTriangle[] triang = new BlockSideTriangle[2];
         triang[0] = new BlockSideTriangle(vertices[0], vertices[1], vertices[2], uvs[0], uvs[1], uvs[2]);
         triang[1] = new BlockSideTriangle(vertices[0], vertices[2], vertices[3], uvs[0], uvs[2], uvs[3]);
+        return triang;
+    }
+    public void DebugSide() {
+        Debug.Log(vertices[0]);
+        Debug.Log(vertices[1]);
+        Debug.Log(vertices[2]);
+        Debug.Log(vertices[3]);
     }
 
     private Vector3[] Rotate(Vector3[] A, int n) {
@@ -40,6 +48,7 @@ public class BlockSide {
         else return Rotate(Rotate(A, n-1), 1);
     }
 
+
     private Vector2[] computeUVsFromAtlas(Vector2 atlasCoord) {
         float s = 1f*TerrainManager.instance.TextureBlockSize/TerrainManager.instance.TextureAtlasSize;
         float x = atlasCoord.x*s;
@@ -52,15 +61,11 @@ public class BlockSide {
         };
     }
 
-    public BlockSideTriangle[] GetTriangles() {
-        return triang;
-    }
-
     private int NumRotations(string side, string pointing) {
-        if (pointing == "right")           return 0;
-        if (pointing == "left")            return 2;
-        if (pointing == "forward")         return 1;
-        if (pointing == "back")            return 1;
+        if (pointing == "right")           return 1;
+        if (pointing == "left")            return 3;
+        if (pointing == "forward")         return 2;
+        if (pointing == "back")            return 2;
         return 0;
     }
 }

@@ -14,7 +14,7 @@ public class TerrainManager : MonoBehaviour
     private const int textureAtlasSize = 2048;
     public int TextureAtlasSize => textureAtlasSize;
     
-    public string[] sideNameList = new string[] {
+    public static readonly string[] sideNameList = new string[] {
         "up",
         "down",
         "right",
@@ -22,7 +22,7 @@ public class TerrainManager : MonoBehaviour
         "forward",
         "back"
     };
-    public Vector3[] sideYaxisList = new Vector3[]{
+    public static readonly Vector3[] sideYaxisList = new Vector3[]{
         Vector3.up,
         Vector3.down,
         Vector3.right,
@@ -30,7 +30,7 @@ public class TerrainManager : MonoBehaviour
         Vector3.forward,
         Vector3.back
     };
-    public Vector3[] sideXaxisList = new Vector3[]{
+    public static readonly Vector3[] sideXaxisList = new Vector3[]{
         Vector3.forward,
         Vector3.back,
         Vector3.up,
@@ -38,7 +38,7 @@ public class TerrainManager : MonoBehaviour
         Vector3.right,
         Vector3.left
     };
-    public Vector3[] sideZaxisList = new Vector3[]{
+    public static readonly Vector3[] sideZaxisList = new Vector3[]{
         Vector3.left,
         Vector3.left,
         Vector3.back,
@@ -46,7 +46,7 @@ public class TerrainManager : MonoBehaviour
         Vector3.down,
         Vector3.down
     };
-    public int[] vertexOptions = new int[8*3] {
+    public static readonly int[] vertexOptions = new int[] {
         0,0,0, // left-bot-back
         1,0,0, // right-bot-back
         0,1,0, // left-top-back
@@ -57,15 +57,13 @@ public class TerrainManager : MonoBehaviour
         1,1,1  // right-top-forw
     };
     // TODO: possibly rearange order in each
-    public int[] sideOptions = new int[6*4] {
-        2,3,6,7, // top
-        0,1,4,5, // bot
-
-        1,3,5,7, // right
-        0,2,4,6, // left
-        
-        4,5,6,7, // forward
-        0,1,2,3, // back
+    public static readonly int[] sideOptions = new int[] {
+        6,7,3,2, // top
+        5,4,0,1, // bot
+        7,5,1,3, // right
+        4,6,2,0, // left
+        7,6,4,5, // forward
+        2,3,1,0 // back
     };
 
     public float GetCoreRadius() {
@@ -96,19 +94,28 @@ public class TerrainManager : MonoBehaviour
     }
 
     private void Start() {
-        PlanetGeneratorSettings planetSettings = new PlanetGeneratorSettings("Earth", Vector3.zero, 1, 16);
-        planet = new Planet(planetSettings);
-        //planet.GeneratePlanetData();
         
-        for (int h=0; h<10; h++) {
-            Debug.Log(h + ": " + planet.NumBlocksAtHeight(h));
+        PlanetGeneratorSettings planetSettings = new PlanetGeneratorSettings("Earth", Vector3.zero, 2, 16);
+        planet = new Planet(planetSettings);
+        planet.GeneratePlanetData();
+        Debug.Log(planet.GetHeight());
+        
+        planet.chunks[0,0,0].DebugChunkDataAtHeight(3);
+
+        planet.UpdatePlanetMesh();
+
+        for (int option=0; option < 8*3; option += 3) {
+            int x = vertexOptions[option];
+            int y = vertexOptions[option+1];
+            int z = vertexOptions[option+2];
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.transform.localScale =  0.1f * Vector3.one;
+            sphere.transform.position = new Vector3(x,y,z);
+            sphere.name += ": " + (option/3);
         }
-        Debug.Log(planet.GetHeight() + ": " + planet.NumBlocksAtHeight(planet.GetHeight()));
-        Debug.Log((planet.GetHeight()+1) + ": " + planet.NumBlocksAtHeight(planet.GetHeight()+1));
     }
 
     private void Update() {
-        //planet.UpdatePlanetMesh();
     }
 
     public void DestroyChunk(GameObject mesh) {

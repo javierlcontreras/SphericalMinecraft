@@ -31,20 +31,32 @@ public class Block {
     }
     public void SetBlockType(BlockType _type) {
         type = _type;
+        sides = computeSides();
     }
 
     private Vector3[] computeVertexPositions() {
         Vector3[] vertices = new Vector3[8];
        
         for (int option=0; option < 8*3; option += 3) {
-            int dx = TerrainManager.instance.vertexOptions[option];
-            int dy = TerrainManager.instance.vertexOptions[option+1];
-            int dz = TerrainManager.instance.vertexOptions[option+2];
+            int dx = TerrainManager.vertexOptions[option];
+            int dy = TerrainManager.vertexOptions[option+1];
+            int dz = TerrainManager.vertexOptions[option+2];
             int vertexX = xCoord + dx;
-            int vertexY = yCoord + dy;
+            int vertexY = yCoord + (dy - 1);
             int vertexZ = zCoord + dz;
             
-            vertices[option/3] = chunkIndexToGlobalPosition(vertexX, vertexY, vertexZ);
+
+            int blocks = chunk.GetPlanet().NumBlocksAtHeight(yCoord);
+            int blocksNextTo = chunk.GetPlanet().NumBlocksAtHeight(vertexY);
+            if (blocksNextTo < blocks && dy == 0) {
+                Planet planet = chunk.GetPlanet();
+                Vector3 pos = chunkIndexToGlobalPosition(vertexX, yCoord, vertexZ).normalized * (1 + planet.HeightAtBottomOfLayer(vertexY));
+                vertices[option/3] = pos;
+            }
+            else {
+                vertices[option/3] = chunkIndexToGlobalPosition(vertexX, vertexY, vertexZ);
+            } 
+
         }
         return vertices;
     }
@@ -53,7 +65,7 @@ public class Block {
         int chunkX = chunk.GetXCoord();
         int chunkZ = chunk.GetZCoord();
         Planet planet = chunk.GetPlanet();
-        return planet.BaseVector(chunkSide, chunkX, chunkZ, vertexX, vertexY, vertexZ) * planet.HeightAt(vertexY);
+        return planet.BaseVector(chunkSide, chunkX, chunkZ, vertexX, vertexY, vertexZ) * (1 + planet.HeightAtBottomOfLayer(vertexY));
     }
 
     private Vector3 averageOf(Vector3[] list) {
@@ -71,19 +83,19 @@ public class Block {
 
         BlockSide[] sideList = new BlockSide[6];
         for (int option=0; option < 6*4; option += 4) {
-            string faceDrawn = TerrainManager.instance.sideNameList[option/4];
-            int vertex1 = TerrainManager.instance.sideOptions[option];
-            int vertex2 = TerrainManager.instance.sideOptions[option+1];
-            int vertex3 = TerrainManager.instance.sideOptions[option+2];
-            int vertex4 = TerrainManager.instance.sideOptions[option+3];
-            Vector3[] vertices = new Vector3[4] {
+            string faceDrawn = TerrainManager.sideNameList[option/4];
+            int vertex1 = TerrainManager.sideOptions[option];
+            int vertex2 = TerrainManager.sideOptions[option+1];
+            int vertex3 = TerrainManager.sideOptions[option+2];
+            int vertex4 = TerrainManager.sideOptions[option+3];
+            Vector3[] vertices = new Vector3[] {
                 vertexPositions[vertex1],    
                 vertexPositions[vertex2],    
                 vertexPositions[vertex3],    
                 vertexPositions[vertex4]    
             };
 
-            string sideName = TerrainManager.instance.sideNameList[chunk.GetSideCoord()];
+            string sideName = TerrainManager.sideNameList[chunk.GetSideCoord()];
             BlockSide side = new BlockSide(vertices, type.GetAtlasCoord(faceDrawn), sideName, faceDrawn);
             sideList[option/4] = side;
         }

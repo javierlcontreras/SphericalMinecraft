@@ -19,10 +19,10 @@ public class PlanetMeshGenerator {
     public PlanetMeshGenerator(Planet _planet) {
         planet = _planet;
         
-        sideYaxisList = TerrainManager.instance.sideYaxisList;
-        sideXaxisList = TerrainManager.instance.sideXaxisList;
-        sideZaxisList = TerrainManager.instance.sideZaxisList;
-        sideNameList = TerrainManager.instance.sideNameList;
+        sideYaxisList = TerrainManager.sideYaxisList;
+        sideXaxisList = TerrainManager.sideXaxisList;
+        sideZaxisList = TerrainManager.sideZaxisList;
+        sideNameList = TerrainManager.sideNameList;
         
         chunkSize = planet.GetChunkSize();
         chunksPerSide = planet.GetChunksPerSide();
@@ -46,12 +46,16 @@ public class PlanetMeshGenerator {
 
         List<BlockSide> quads = new List<BlockSide>();
 
+        Debug.Log("Chunk Height " + chunkHeight);
         for (int h=0; h<chunkHeight; h++) {
-            int realChunkSize = planet.NumBlocksAtHeight(h) / chunksPerSide;
+            int realChunkSize = planet.NumBlocksAtHeightPerChunk(h);
+            //Debug.Log("realChunkSize " + realChunkSize);
             for (int i=0; i<realChunkSize; i++) {
                 for (int j=0; j<realChunkSize; j++) {
+
                     Block block  = chunk.blocks[i,h,j];
                     string blockTypeName = block.GetBlockType().GetName();
+                    //Debug.Log("Block type check: " + blockTypeName);
                     if (blockTypeName == "air" || blockTypeName == "invalid") continue;
                     for (int nextTo=0; nextTo < 6; nextTo++) {
                         Vector3 pointingTo = sideYaxisList[nextTo];

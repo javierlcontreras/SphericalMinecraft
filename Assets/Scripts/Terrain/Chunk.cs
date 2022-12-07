@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 public class Chunk {
@@ -47,16 +48,29 @@ public class Chunk {
         }
     }
 
+    public void DebugChunkDataAtHeight(int y) {
+        var builder = new StringBuilder();
+        int numSides = planet.NumBlocksAtHeightPerChunk(y);
+        Debug.Log("Real chunkSize " + numSides); 
+        for (int x = 0; x < numSides; x++) {
+            for (int z = 0; z < numSides; z++) { 
+                BlockType type = blocks[x, y, z].GetBlockType();
+                builder.Append(type.GetName()[0]);
+            }
+            builder.Append("\n");
+        }
+        Debug.Log(builder.ToString());
+    }
+
     public void CreateChunkData() {
         Init();
-        
-        int height = chunkHeight / 2;
-        for (int y = 0; y<chunkHeight; y++) {
-            // TODO this two can be swapped by < NumSidesAtHeight
-            int numSides = planet.NumBlocksAtHeight(y) / planet.GetChunksPerSide(); 
-            Debug.Log(numSides + " " + planet.GetChunkSize());
-            for (int x = 0; x < numSides; x++) {
-                for (int z = 0; z < numSides; z++) { 
+        int maxNumSides = planet.NumBlocksAtHeightPerChunk(planet.GetHeight()-1); 
+        for (int x = 0; x < maxNumSides; x++) {
+            for (int z = 0; z < maxNumSides; z++) { 
+                float height = chunkHeight/2;//TerrainHeightFromNoise(x,z);
+                for (int y = 0; y<chunkHeight; y++) {
+                    int numSides = planet.NumBlocksAtHeightPerChunk(y);
+                    if (x >= numSides || z >= numSides) continue;
                     BlockType type = FillDirtUpToHeight(y, height);
                     blocks[x, y, z].SetBlockType(type);
                 }
@@ -81,24 +95,25 @@ public class Chunk {
             return BlockTypeEnum.GetBlockTypeByName("air");
         }
     }
-/*
+
     public float TerrainHeightFromNoise(int x, int z) {
-        Vector3 samplingDirection = planet.BaseVector(sideCoord, xCoord, zCoord, x, z);
+        int y = planet.GetHeight()-1;
+        Vector3 samplingDirection = planet.BaseVector(sideCoord, xCoord, zCoord, x, y, z);
         
         float terrainHeight = PerlinNoise.get3DPerlinNoise(samplingDirection, 1);
         terrainHeight += 0.7f*PerlinNoise.get3DPerlinNoise(samplingDirection, 2);
         terrainHeight += 0.45f*PerlinNoise.get3DPerlinNoise(samplingDirection, 4);
         terrainHeight /= 1.75f;
-        terrainHeight *= (planet.GetChunkHeight() - 2)/3f;
+        terrainHeight *= (planet.GetHeight() - 2)/3f;
         terrainHeight += 1f; 
 
         return terrainHeight;
     }
-*/
+
     public Quaternion ChunkToGlobal() {
-        Vector3 sideNormal = TerrainManager.instance.sideYaxisList[sideCoord];
-        Vector3 sideXaxis = TerrainManager.instance.sideXaxisList[sideCoord];
-        Vector3 sideZaxis = TerrainManager.instance.sideZaxisList[sideCoord];
+        Vector3 sideNormal = TerrainManager.sideYaxisList[sideCoord];
+        Vector3 sideXaxis = TerrainManager.sideXaxisList[sideCoord];
+        Vector3 sideZaxis = TerrainManager.sideZaxisList[sideCoord];
 
         return Quaternion.LookRotation(sideZaxis, sideNormal); 
     }

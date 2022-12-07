@@ -11,6 +11,7 @@ public class BlockSideTriangle {
             b,
             c
         };
+        // TODO this is bugged of course. Doesnt work for sides of blocks, only for top!
         normals = new Vector3[3] {
             Vector3.Normalize(a), 
             Vector3.Normalize(b), 

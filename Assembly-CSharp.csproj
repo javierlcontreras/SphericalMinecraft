@@ -43,11 +43,13 @@
      <Compile Include="Assets/Scripts/Terrain/TerrainManager.cs" />
      <Compile Include="Assets/Scripts/Sky/InvertNormals.cs" />
      <Compile Include="Assets/Scripts/Terrain/NoiseGenerator.cs" />
+     <Compile Include="Assets/Scripts/Terrain/PlanetGeneratorSettings.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockType.cs" />
      <Compile Include="Assets/Scripts/Terrain/ChunkAdjancenyCalculator.cs" />
      <Compile Include="Assets/Scripts/Terrain/PlanetDataGenerator.cs" />
      <Compile Include="Assets/Scripts/Terrain/PerlinNoise.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockSideTriangle.cs" />
+     <Compile Include="Assets/Scripts/Terrain/BlockAdjacency.cs" />
      <Compile Include="Assets/Scripts/Character/CameraController.cs" />
      <Compile Include="Assets/Scripts/Terrain/Planet.cs" />
      <Compile Include="Assets/Scripts/Character/TangencialMovementController.cs" />
@@ -56,8 +58,6 @@
      <Compile Include="Assets/Scripts/Character/CreativeModeController.cs" />
      <Compile Include="Assets/Scripts/Terrain/Chunk.cs" />
      <Compile Include="Assets/Scripts/Character/ControllerSettings.cs" />
-     <Compile Include="Assets/Scripts/Terrain/PlanetGeneratorSettings.cs" />
-     <Compile Include="Assets/Scripts/Terrain/BlockAdjacency.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/home/jlcontreras/Unity/Hub/Editor/2021.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
