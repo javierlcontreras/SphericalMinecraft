@@ -8,6 +8,7 @@ public class Planet {
     
     private Vector3 position;
     private int chunkHeight;
+    private int minChunkHeight;
     private int[] blocksAtHeight;
 
     private PlanetDataGenerator planetDataGenerator;
@@ -29,7 +30,8 @@ public class Planet {
         chunks = new Chunk[6, chunksPerSide, chunksPerSide];
         currentChunksLoaded = new GameObject[6,chunksPerSide,chunksPerSide];
 
-        chunkHeight = PrecomputeHeight()+1;
+        chunkHeight = PrecomputeHeight(4*GetChunkSize()*GetChunksPerSide())+1;
+        minChunkHeight = PrecomputeHeight(4*GetChunksPerSide());
         blocksAtHeight = new int[chunkHeight+10];
         for (int h=0; h<chunkHeight+10; h++) {
             blocksAtHeight[h] = PrecomputeNumBlocksAtHeight(h);
@@ -41,6 +43,9 @@ public class Planet {
 
     public int GetHeight() {
         return chunkHeight;
+    }
+    public int GetMinHeight() {
+        return minChunkHeight;
     }
     public string GetName() {
         return settings.GetName();
@@ -91,13 +96,10 @@ public class Planet {
         return h + TerrainManager.instance.GetCoreRadius();
     }    
 
-    public int PrecomputeHeight() {
-        // maximo h tal que 4*chunkSize*chunkPerSide - poligon en la esfera de radio h tiene lados 2 > i > 1
-        int polygonSides = 4*GetChunkSize()*GetChunksPerSide();
-        
+    public int PrecomputeHeight(int polygonSides) {        
         int maxHeight = settings.GetMaxHeight();
         int resultHeight = -1;
-        for (int h = 0; h < maxHeight; h++) {
+        for (int h = 0; ; h++) {
             float radius = HeightAtBottomOfLayer(h);
             float sideLength  = 2.0f * radius * Mathf.Sin(Mathf.PI / polygonSides);
             if (1 <= sideLength && sideLength < 2) {
@@ -107,7 +109,10 @@ public class Planet {
                 break;
             }
         }
-        if (resultHeight == -1) resultHeight = maxHeight;
+        if (resultHeight == -1) {
+            Debug.Log("BUG: the needed height: " + resultHeight + " is larger that the maxHeight:" + maxHeight);
+            Debug.Break();
+        }
         return resultHeight;
     }
     public int NumBlocksAtHeight(int y) {

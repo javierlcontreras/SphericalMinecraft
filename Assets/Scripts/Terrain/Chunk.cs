@@ -65,12 +65,12 @@ public class Chunk {
     public void CreateChunkData() {
         Init();
         int maxNumSides = planet.NumBlocksAtHeightPerChunk(planet.GetHeight()-1); 
-        for (int x = 0; x < maxNumSides; x++) {
-            for (int z = 0; z < maxNumSides; z++) { 
-                float height = TerrainHeightFromNoise(x,z);
-                for (int y = 0; y<chunkHeight; y++) {
-                    int numSides = planet.NumBlocksAtHeightPerChunk(y);
-                    if (x >= numSides || z >= numSides) continue;
+        for (int y = 0; y<chunkHeight; y++) {
+            int numSides = planet.NumBlocksAtHeightPerChunk(y);
+            for (int x = 0; x < numSides; x++) {
+                for (int z = 0; z < numSides; z++) { 
+                    float height = TerrainHeightFromNoise(x,y,z);
+                    
                     BlockType type = FillDirtUpToHeight(y, height);
                     blocks[x, y, z].SetBlockType(type);
                 }
@@ -79,7 +79,7 @@ public class Chunk {
     }
  
     public BlockType FillDirtUpToHeight(int y, float height) {
-        if (y == 0) {
+        if (y < planet.GetMinHeight()) {
             return BlockTypeEnum.GetBlockTypeByName("bedrock");
         }
         else if (y < 2*height/3) {
@@ -96,8 +96,7 @@ public class Chunk {
         }
     }
 
-    public float TerrainHeightFromNoise(int x, int z) {
-        int y = planet.GetHeight()-1;
+    public float TerrainHeightFromNoise(int x, int y, int z) {
         Vector3 samplingDirection = planet.BaseVector(sideCoord, xCoord, zCoord, x, y, z);
         
         float terrainHeight = PerlinNoise.get3DPerlinNoise(samplingDirection, 1);

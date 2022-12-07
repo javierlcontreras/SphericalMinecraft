@@ -22,7 +22,7 @@ public class FirstPersonController : MonoBehaviour {
         characterTransform = settings.CharacterTransform;	
 	}
 	void FixedUpdate() {
-        characterTransform.rotation = settings.RadialCharacterOrientation();
+		characterTransform.rotation = settings.RadialCharacterOrientation();
 		//float scalingFactor = ScalePlayerWithHeight();
 		//characterTransform.localScale = settings.characterShape * scalingFactor;
 		float mouseX = Input.GetAxis("Mouse X");

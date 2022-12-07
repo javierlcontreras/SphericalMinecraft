@@ -6,6 +6,10 @@ using UnityEngine;
 public class PointingTo : MonoBehaviour {
     ControllerSettings settings;
 
+    float timeDelayActions = 0;
+    float thresholdTime = 0.1f;
+    GameObject pointingTo;
+
     public RaycastHit GlobalPointingPoint(){
         RaycastHit hit;
         Debug.DrawRay(settings.CameraTransform.position, settings.CameraTransform.forward*settings.reach);
@@ -63,14 +67,13 @@ public class PointingTo : MonoBehaviour {
         return chunk.blocks[xBlock, hBlock, zBlock];
     }
 
-    GameObject pointingTo;
     void Start() {
         settings = GetComponent<ControllerSettings>();
         pointingTo = new GameObject("Pointing to", typeof(MeshFilter), typeof(MeshRenderer));
     }
 
-    
-    void Update() {
+
+    void WireFrame() {
         Block blockPointed = BlockToBreak();
         Mesh mesh = null;
         if (blockPointed != null) {
@@ -78,13 +81,8 @@ public class PointingTo : MonoBehaviour {
         }
         pointingTo.GetComponent<MeshFilter>().mesh = mesh;
         pointingTo.GetComponent<MeshRenderer>().material = TerrainManager.instance.wireframeMaterial;
-
     }
-
-    float timeDelayActions = 0;
-    float thresholdTime = 0.1f;
-    void FixedUpdate() {
-        timeDelayActions += Time.fixedDeltaTime;
+    void MineAndPlace() {
         bool success = false;
         bool wantToBreak = Input.GetButton("Fire1");
         bool wantToPlace = Input.GetButton("Fire2");
@@ -92,9 +90,9 @@ public class PointingTo : MonoBehaviour {
         if (wantToBreak && timeDelayActions > thresholdTime) {
             Block blockPointed = BlockToBreak();
             if (blockPointed != null && blockPointed.GetBlockType().GetName() == "air") {
-                Debug.Log("BUG");
+                Debug.Log("BUG Want to break a air");
             }
-            else if (blockPointed != null && blockPointed.GetInChunkPosition().y >= 1) { 
+            else if (blockPointed != null && blockPointed.GetBlockType().GetName() != "bedrock") { 
                 chunkPointed = blockPointed.GetChunk();
                 blockPointed.SetBlockType(BlockTypeEnum.GetBlockTypeByName("air"));
                 success = true;
@@ -103,7 +101,7 @@ public class PointingTo : MonoBehaviour {
         else if (wantToPlace && timeDelayActions > thresholdTime) {
             Block blockPointed = BlockToBreak(true);
             if (blockPointed != null && blockPointed.GetBlockType().GetName() != "air") {
-                Debug.Log("BUG");
+                Debug.Log("BUG Want to place something in a non-air");
             }
             else if (blockPointed != null) { 
                 chunkPointed = blockPointed.GetChunk();
@@ -117,5 +115,10 @@ public class PointingTo : MonoBehaviour {
             planet.GenerateChunkMesh(chunkPointed.GetSideCoord(), chunkPointed.GetXCoord(), chunkPointed.GetZCoord());
             timeDelayActions = 0;
         }
+    }
+    void FixedUpdate() {
+        WireFrame();
+        timeDelayActions += Time.fixedDeltaTime;
+        MineAndPlace();
     }
 }

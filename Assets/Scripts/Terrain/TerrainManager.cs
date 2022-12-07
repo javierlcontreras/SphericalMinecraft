@@ -77,13 +77,19 @@ public class TerrainManager : MonoBehaviour
         return planet;
     }
 
-    public static TerrainManager instance = null; //{ get; private set; }
-    private void Awake() { 
+    /*public void Reload()
+    {
+        applicationIsQuitting = false;
+    }*/
+
+    // TODO: I think singleton is a bad idea, chango to Scriptable Object
+    public static TerrainManager instance = null;
+    public void Awake() { 
         if (instance != null && instance != this) { 
             Destroy(this); 
         } 
         else { 
-            instance = this; 
+            instance = this;
         } 
     }
 
@@ -94,12 +100,13 @@ public class TerrainManager : MonoBehaviour
 
     private void Start() {
         
-        PlanetGeneratorSettings planetSettings = new PlanetGeneratorSettings("Earth", Vector3.zero, 4, 16, 128);
+        PlanetGeneratorSettings planetSettings = new PlanetGeneratorSettings("Earth", Vector3.zero, 4, 8, 32);
         planet = new Planet(planetSettings);
+        
         planet.GeneratePlanetData();
         
-        //Debug.Log(planet.GetHeight());
         //planet.chunks[0,0,0].DebugChunkDataAtHeight(3);
+        Debug.Log("Planet Height: " + planet.GetHeight());
 
 
         /*for (int option=0; option < 8*3; option += 3) {

@@ -21,7 +21,7 @@ public class CreativeModeController : MonoBehaviour {
     }
 
 	void FixedUpdate() {
-        characterTransform.rotation = settings.RadialCharacterOrientation();
+		characterTransform.rotation = settings.RadialCharacterOrientation();
 		//float scalingFactor = ScalePlayerWithHeight();
 		//characterTransform.localScale = new Vector3(0.6f*scalingFactor, 1.8f*scalingFactor, 0.4f*scalingFactor);
 		float mouseX = Input.GetAxis("Mouse X");
