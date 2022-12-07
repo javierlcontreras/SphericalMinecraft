@@ -47,7 +47,6 @@
      <Compile Include="Assets/Scripts/Terrain/ChunkAdjancenyCalculator.cs" />
      <Compile Include="Assets/Scripts/Terrain/PlanetDataGenerator.cs" />
      <Compile Include="Assets/Scripts/Terrain/PerlinNoise.cs" />
-     <Compile Include="Assets/DebugDrawingExtension/Example/Example.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockSideTriangle.cs" />
      <Compile Include="Assets/Scripts/Character/CameraController.cs" />
      <Compile Include="Assets/Scripts/Terrain/Planet.cs" />
@@ -57,8 +56,6 @@
      <Compile Include="Assets/Scripts/Character/CreativeModeController.cs" />
      <Compile Include="Assets/Scripts/Terrain/Chunk.cs" />
      <Compile Include="Assets/Scripts/Character/ControllerSettings.cs" />
-     <Compile Include="Assets/DebugDrawingExtension/DebugExtension.cs" />
-     <None Include="Assets/DebugDrawingExtension/readme.txt" />
     <Reference Include="UnityEngine">
         <HintPath>/home/jlcontreras/Unity/Hub/Editor/2021.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

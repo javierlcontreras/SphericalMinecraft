@@ -76,7 +76,7 @@ public class PointingTo : MonoBehaviour {
             mesh = blockPointed.ComputeOutline();
         }
         pointingTo.GetComponent<MeshFilter>().mesh = mesh;
-        pointingTo.GetComponent<MeshRenderer>().material = TerrainManager.instance.textureMaterial;
+        pointingTo.GetComponent<MeshRenderer>().material = TerrainManager.instance.wireframeMaterial;
 
     }
 

@@ -5,10 +5,13 @@ using UnityEngine;
 public class Planet {
     public Chunk[,,] chunks;
     
+    private Vector3 position;
+    private GameObject planetGameObject;
+    string planetName;
+
     private int chunksPerSide;
     private int chunkSize;
     private int chunkHeight;
-    
     private PlanetDataGenerator planetDataGenerator;
     private PlanetMeshGenerator planetMeshGenerator;
     public PlanetMeshGenerator GetPlanetMeshGenerator() {
@@ -17,7 +20,12 @@ public class Planet {
     
     private GameObject[,,] currentChunksLoaded;
 
-    public Planet(int _chunksPerSide, int _chunkSize, int _chunkHeight) {
+    public Planet(string _planetName, Vector3 _position, int _chunksPerSide, int _chunkSize, int _chunkHeight) {
+        planetName = _planetName;
+        planetGameObject = new GameObject(planetName);
+        planetGameObject.transform.position = position;
+        
+        position = _position;
         chunksPerSide = _chunksPerSide;
         chunkSize = _chunkSize;
         chunkHeight = _chunkHeight;
@@ -25,9 +33,12 @@ public class Planet {
         
         currentChunksLoaded = new GameObject[6,chunksPerSide,chunksPerSide];
 
-        planetDataGenerator = new PlanetDataGenerator(chunkSize, chunkHeight, chunksPerSide);
+        planetDataGenerator = new PlanetDataGenerator(this);
         planetMeshGenerator = new PlanetMeshGenerator(this);
-
+    }
+    
+    public string GetPlanetName() {
+        return planetName;
     }
     
     public float GetPlanetRadius() {
@@ -48,6 +59,10 @@ public class Planet {
     
     public int GetChunkHeight() {
         return chunkHeight;
+    }
+
+    public Vector3 GetPosition() {
+        return position;
     }
 
     public Vector3 BaseVector(int side, int chunkX, int chunkZ, float blockX, float blockZ) {
@@ -87,7 +102,7 @@ public class Planet {
         for (int side=0; side<6; side++) {
             for (int chunkX=0; chunkX < chunksPerSide; chunkX++) {
                 for (int chunkZ=0; chunkZ < chunksPerSide; chunkZ++) {
-                    Vector3 chunkPosition = BaseVectorAtCenter(side, chunkX, chunkZ);
+                    Vector3 chunkPosition = BaseVectorAtCenter(side, chunkX, chunkZ) * GetPlanetRadius() + position;
                     if (TerrainManager.instance.ChunkCloseEnoughToLoad(chunkPosition)) {
                         GenerateChunkMesh(side, chunkX, chunkZ);
                     } 
@@ -111,17 +126,18 @@ public class Planet {
 
         Mesh mesh = planetMeshGenerator.GenerateChunkMesh(sideCoord, xCoord, zCoord);
         string chunkName = "(" + sideCoord + "," + xCoord + "," + zCoord + ")";
-        GameObject world = new GameObject("Chunk " + chunkName, typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
+        GameObject chunk = new GameObject(planetName + ": "+ chunkName, typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
         int TerrainLayer = LayerMask.NameToLayer("Terrain");
-        world.layer = TerrainLayer;
-        world.GetComponent<MeshFilter>().mesh = mesh;
-        world.GetComponent<MeshRenderer>().material = TerrainManager.instance.textureMaterial;
-        world.GetComponent<MeshCollider>().sharedMesh = mesh;
-        
-        currentChunksLoaded[sideCoord, xCoord, zCoord] = world;
+        chunk.layer = TerrainLayer;
+        chunk.GetComponent<MeshFilter>().mesh = mesh;
+        chunk.GetComponent<MeshRenderer>().material = TerrainManager.instance.textureMaterial;
+        chunk.GetComponent<MeshCollider>().sharedMesh = mesh;
+        chunk.transform.position = position;
+        chunk.transform.SetParent(planetGameObject.transform);
+        currentChunksLoaded[sideCoord, xCoord, zCoord] = chunk;
     }
 
     public void GeneratePlanet() {
-        planetDataGenerator.Generate(this);
+        planetDataGenerator.Generate();
     }
 }

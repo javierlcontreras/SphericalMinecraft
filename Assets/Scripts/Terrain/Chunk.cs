@@ -50,20 +50,39 @@ public class Chunk {
     }
 
     public BlockType FillDirtUpToHeight(int y, float height) {
-        if (y == 0) {
-            return BlockTypeEnum.GetBlockTypeByName("bedrock");
-        }
-        else if (y < 2*height/3) {
-            return BlockTypeEnum.GetBlockTypeByName("stone");
-        }
-        else if (y < height) {
-            return BlockTypeEnum.GetBlockTypeByName("dirt");
-        }
-        else if (y < 1+height) {
-            return BlockTypeEnum.GetBlockTypeByName("grass");
+        if (planet.GetPlanetName() == "Earth") {
+            if (y == 0) {
+                return BlockTypeEnum.GetBlockTypeByName("bedrock");
+            }
+            else if (y < 2*height/3) {
+                return BlockTypeEnum.GetBlockTypeByName("stone");
+            }
+            else if (y < height) {
+                return BlockTypeEnum.GetBlockTypeByName("dirt");
+            }
+            else if (y < 1+height) {
+                return BlockTypeEnum.GetBlockTypeByName("grass");
+            }
+            else {
+                return BlockTypeEnum.GetBlockTypeByName("air");
+            }
         }
         else {
-            return BlockTypeEnum.GetBlockTypeByName("air");
+            if (y == 0) {
+                return BlockTypeEnum.GetBlockTypeByName("bedrock");
+            }
+            else if (y < 2*height/3) {
+                return BlockTypeEnum.GetBlockTypeByName("stone");
+            }
+            else if (y < height) {
+                return BlockTypeEnum.GetBlockTypeByName("sand");
+            }
+            else if (y < 1+height) {
+                return BlockTypeEnum.GetBlockTypeByName("sand");
+            }
+            else {
+                return BlockTypeEnum.GetBlockTypeByName("air");
+            }
         }
     }
 

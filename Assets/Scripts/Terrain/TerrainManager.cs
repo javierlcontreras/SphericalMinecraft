@@ -8,6 +8,7 @@ public class TerrainManager : MonoBehaviour
 {
 
     public Material textureMaterial;
+    public Material wireframeMaterial;
     private const int textureBlockSize = 128;
     public int TextureBlockSize => textureBlockSize;
     private const int textureAtlasSize = 2048;
@@ -50,6 +51,7 @@ public class TerrainManager : MonoBehaviour
     public Transform currentPosition;
     public float radiusOfLoad;
     public Planet planet;
+    public Planet moon;
     
     public Planet GetCurrentPlanet() {
         return planet;
@@ -66,16 +68,19 @@ public class TerrainManager : MonoBehaviour
     }
 
     public bool ChunkCloseEnoughToLoad(Vector3 chunkPosition) {
-        return (chunkPosition - currentPosition.position.normalized).magnitude < radiusOfLoad;
+        return (chunkPosition - currentPosition.position).magnitude < radiusOfLoad;
     }
 
     private void Start() {
-        planet = new Planet(4, 4, 32);
+        planet = new Planet("Earth", Vector3.zero, 4, 16, 64);
         planet.GeneratePlanet();
+        moon = new Planet("Moon", Vector3.up * 150, 1, 16, 32);
+        moon.GeneratePlanet();
     }
 
     private void Update() {
         planet.UpdatePlanet();
+        moon.UpdatePlanet();
     }
 
     public void DestroyChunk(GameObject mesh) {

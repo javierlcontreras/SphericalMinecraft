@@ -22,7 +22,7 @@ public class FirstPersonController : MonoBehaviour {
         characterTransform = settings.CharacterTransform;	
 	}
 	void FixedUpdate() {
-        characterTransform.rotation = RadialCharacterOrientation();
+        characterTransform.rotation = settings.RadialCharacterOrientation();
 		//float scalingFactor = ScalePlayerWithHeight();
 		//characterTransform.localScale = settings.characterShape * scalingFactor;
 		float mouseX = Input.GetAxis("Mouse X");
@@ -57,18 +57,5 @@ public class FirstPersonController : MonoBehaviour {
 		}
 
 		characterTransform.Translate(characterTransform.InverseTransformDirection(finalMove));
-	}
-
-    Quaternion RadialCharacterOrientation() {
-        Vector3 globalForward = characterTransform.TransformDirection(Vector3.forward);
-        Vector3 properUp = characterTransform.position.normalized;
-        Vector3 properForward = Vector3.Cross(Vector3.Cross(properUp, globalForward), properUp);
-        Quaternion playerOrientation = Quaternion.LookRotation(properForward, properUp);
-        
-        return playerOrientation;
-    }
-
-	float ScalePlayerWithHeight() {
-		return characterTransform.position.magnitude / TerrainManager.instance.GetCurrentPlanet().GetPlanetRadius();
 	}
 }

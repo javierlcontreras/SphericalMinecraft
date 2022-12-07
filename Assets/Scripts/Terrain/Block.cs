@@ -101,7 +101,7 @@ public class Block {
             side.SetVertices(newVertices);
             listSides.Add(side);
         }
-        Mesh mesh = chunk.planet.GetPlanetMeshGenerator().MeshFromQuads(listSides);
+        Mesh mesh = chunk.planet.GetPlanetMeshGenerator().MeshFromQuads(listSides, true);
         //mesh.uv = null;
         
         return mesh;

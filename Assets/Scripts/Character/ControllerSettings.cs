@@ -23,4 +23,13 @@ public class ControllerSettings : MonoBehaviour {
 	public float feetSkinWidth = 0.5f;
 	public Vector3 feetPoint = new Vector3(0, -0.25f, 0);
 
+
+    public Quaternion RadialCharacterOrientation() {
+        Vector3 globalForward = CharacterTransform.TransformDirection(Vector3.forward);
+        Vector3 properUp = (CharacterTransform.position - TerrainManager.instance.GetCurrentPlanet().GetPosition()).normalized;
+        Vector3 properForward = Vector3.Cross(Vector3.Cross(properUp, globalForward), properUp);
+        Quaternion playerOrientation = Quaternion.LookRotation(properForward, properUp);
+        
+        return playerOrientation;
+    }
 }

@@ -4,17 +4,19 @@ using UnityEngine;
 
 
 public class PlanetDataGenerator {
-    int chunkSize;
-    int chunkHeight;
-    int chunksPerSide;
+    private Planet planet;
+    private int chunkSize;
+    private int chunkHeight;
+    private int chunksPerSide;
 
-    public PlanetDataGenerator(int _chunkSize, int _chunkHeight, int _chunksPerSide) {
-        chunkSize = _chunkSize;
-        chunkHeight = _chunkHeight;
-        chunksPerSide = _chunksPerSide;
+    public PlanetDataGenerator(Planet _planet) {
+        planet = _planet;
+        chunkSize = planet.GetChunkSize();
+        chunkHeight = planet.GetChunkHeight();
+        chunksPerSide = planet.GetChunksPerSide();
     }
 
-    public void Generate(Planet planet) {
+    public void Generate() {
         for (int side = 0; side < 6; side++) {
             for (int chunkX = 0; chunkX < chunksPerSide; chunkX++) {
                 for (int chunkY = 0; chunkY < chunksPerSide; chunkY++) {
@@ -23,12 +25,12 @@ public class PlanetDataGenerator {
                 }
             }
         }
-        AddTrees(planet);
+        //AddTrees(planet);
     }
 
     public void AddTrees(Planet planet) {
         // TODO: surface this
-        int numTrees = 2;
+        int numTrees = 3;
         for (int tree = 0; tree < numTrees; tree++) {
             int randSide = Random.Range(0, 6);
             int chunkX = Random.Range(0, chunksPerSide);
