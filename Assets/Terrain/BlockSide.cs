@@ -3,14 +3,14 @@ using UnityEngine;
 public class BlockSide {
     private Vector3[] vertices;
     private Vector2[] uvs;
-    private Vector3 atlasCoord;
+    private Vector2Int atlasCoord;
 
-    public BlockSide(Vector3[] _vertices, Vector2 _atlasCoord, string side, string pointing) {
+    public BlockSide(Vector3[] _vertices, Vector2Int _atlasCoord, string side, string pointing) {
         int rot = NumRotations(side, pointing);
        
         vertices = Rotate(_vertices, rot);
         atlasCoord = _atlasCoord;
-        uvs = computeUVsFromAtlas(atlasCoord);
+        uvs = TerrainGenerationConstants.ComputeUVsFromAtlasCoord(atlasCoord);
     }
 
     public Vector3[] GetVertices() {
@@ -19,7 +19,7 @@ public class BlockSide {
     public void SetVertices(Vector3[] _vertices) {
         vertices = _vertices;
     }
-    public Vector2 GetAtlasCoord() {
+    public Vector2Int GetAtlasCoord() {
         return atlasCoord;
     }
 
@@ -46,19 +46,6 @@ public class BlockSide {
             return new Vector3[]{a1, a2, a3, a0};
         }
         else return Rotate(Rotate(A, n-1), 1);
-    }
-
-
-    private Vector2[] computeUVsFromAtlas(Vector2 atlasCoord) {
-        float s = TerrainGenerationConstants.GetTextureBlockSize();
-        float x = atlasCoord.x*s;
-        float y = 1 - atlasCoord.y*s;
-        return new Vector2[] {
-            new Vector2(x, y-s),
-            new Vector2(x+s, y-s),
-            new Vector2(x+s, y),
-            new Vector2(x, y)
-        };
     }
 
     private int NumRotations(string side, string pointing) {

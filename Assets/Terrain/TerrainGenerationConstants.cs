@@ -63,4 +63,16 @@ public class TerrainGenerationConstants {
     public static float GetTextureBlockSize() {
         return 1f*textureBlockSize/textureAtlasSize;
     }
+
+    public static Vector2[] ComputeUVsFromAtlasCoord(Vector2Int atlasCoord) {
+        float s = GetTextureBlockSize();
+        float x = atlasCoord.x*s;
+        float y = 1 - atlasCoord.y*s;
+        return new Vector2[] {
+            new Vector2(x, y-s),
+            new Vector2(x+s, y-s),
+            new Vector2(x+s, y),
+            new Vector2(x, y)
+        };
+    }
 }

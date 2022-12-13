@@ -34,12 +34,12 @@ public class PlanetChunkLoader {
             oldMesh.SetActive(true);
             return;
         }
-        Debug.Log("Creating new chunk mesh!");
+        //Debug.Log("Creating new chunk mesh!");
 
         Chunk chunk = planet.chunks[sideCoord, xCoord, zCoord];
         if (chunk == null) { // this is here to delay terrain generation until it is really necessary
             planet.GetPlanetDataGenerator().GenerateChunk(sideCoord, xCoord, zCoord);
-            Debug.Log("Creating chunk data!");
+            //Debug.Log("Creating chunk data!");
         }
 
         string chunkName = "(" + sideCoord + "," + xCoord + "," + zCoord + ")";
