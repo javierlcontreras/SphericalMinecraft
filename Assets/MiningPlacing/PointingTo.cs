@@ -5,11 +5,17 @@ using UnityEngine;
 [RequireComponent (typeof(ControllerSettings))]
 public class PointingTo : MonoBehaviour {
     ControllerSettings settings;
+    public Material wireframeMaterial;
 
     float timeDelayActions = 0;
     float thresholdTime = 0.1f;
     GameObject pointingTo;
 
+	private ChunkLoader chunkLoader;
+	public void Awake() {
+		chunkLoader = GameObject.Find("ChunkLoader").GetComponent<ChunkLoader>();
+	}
+    
     public RaycastHit GlobalPointingPoint(){
         RaycastHit hit;
         Debug.DrawRay(settings.CameraTransform.position, settings.CameraTransform.forward*settings.reach);
@@ -26,7 +32,7 @@ public class PointingTo : MonoBehaviour {
         int xCoord = int.Parse(coord[1]);
         int zCoord = int.Parse(coord[2]);
         //Debug.Log("Just hit: " + chunkName);
-        Chunk chunk = TerrainManager.instance.GetCurrentPlanet().chunks[sideCoord, xCoord, zCoord];
+        Chunk chunk = chunkLoader.GetCurrentPlanet().chunks[sideCoord, xCoord, zCoord];
         if (place == false) {
             return BlockToClosestTo(hit.point - blockSkin*hit.normal, chunk);
         }
@@ -37,15 +43,15 @@ public class PointingTo : MonoBehaviour {
 
     public Block BlockToClosestTo(Vector3 point, Chunk chunk) {
         int sideCoord = chunk.GetSideCoord();
-        Vector3 sideXaxis = TerrainManager.sideXaxisList[sideCoord]; 
-        Vector3 sideYaxis = TerrainManager.sideYaxisList[sideCoord]; 
-        Vector3 sideZaxis = TerrainManager.sideZaxisList[sideCoord]; 
-        Planet planet = TerrainManager.instance.GetCurrentPlanet();
+        Vector3 sideXaxis = TerrainGenerationConstants.sideXaxisList[sideCoord]; 
+        Vector3 sideYaxis = TerrainGenerationConstants.sideYaxisList[sideCoord]; 
+        Vector3 sideZaxis = TerrainGenerationConstants.sideZaxisList[sideCoord]; 
+        PlanetTerrain planet = chunkLoader.GetCurrentPlanet();
         int chunkSize = planet.GetChunkSize();
         int chunksPerSide = planet.GetChunksPerSide();
         
         float height = point.magnitude;
-        int hBlock = (int)(height - TerrainManager.instance.GetCoreRadius());
+        int hBlock = (int)(height - TerrainGenerationConstants.GetCoreRadius());
         int realChunkSize = Mathf.Max(1, planet.NumBlocksAtHeightPerChunk(hBlock));
         int mult = chunkSize / realChunkSize;
         Vector3 dir = point.normalized;
@@ -69,7 +75,7 @@ public class PointingTo : MonoBehaviour {
 
     void Start() {
         settings = GetComponent<ControllerSettings>();
-        pointingTo = new GameObject("Pointing to", typeof(MeshFilter), typeof(MeshRenderer));
+        pointingTo = new GameObject("Pointing Wireframe", typeof(MeshFilter), typeof(MeshRenderer));
     }
 
 
@@ -80,8 +86,9 @@ public class PointingTo : MonoBehaviour {
             mesh = blockPointed.ComputeOutline();
         }
         pointingTo.GetComponent<MeshFilter>().mesh = mesh;
-        pointingTo.GetComponent<MeshRenderer>().material = TerrainManager.instance.wireframeMaterial;
+        pointingTo.GetComponent<MeshRenderer>().material = wireframeMaterial;
     }
+
     void MineAndPlace() {
         bool success = false;
         bool wantToBreak = Input.GetButton("Fire1");
@@ -90,7 +97,7 @@ public class PointingTo : MonoBehaviour {
         if (wantToBreak && timeDelayActions > thresholdTime) {
             Block blockPointed = BlockToBreak();
             if (blockPointed != null && blockPointed.GetBlockType().GetName() == "air") {
-                Debug.Log("BUG Want to break a air");
+                Debug.LogWarning("BUG Want to break a air");
             }
             else if (blockPointed != null && blockPointed.GetBlockType().GetName() != "bedrock") { 
                 chunkPointed = blockPointed.GetChunk();
@@ -101,7 +108,7 @@ public class PointingTo : MonoBehaviour {
         else if (wantToPlace && timeDelayActions > thresholdTime) {
             Block blockPointed = BlockToBreak(true);
             if (blockPointed != null && blockPointed.GetBlockType().GetName() != "air") {
-                Debug.Log("BUG Want to place something in a non-air");
+                Debug.LogWarning("BUG Want to place something in a non-air");
             }
             else if (blockPointed != null) { 
                 chunkPointed = blockPointed.GetChunk();
@@ -109,13 +116,13 @@ public class PointingTo : MonoBehaviour {
                 success = true;
             }
         }
+
         if (success) {
-            Planet planet = TerrainManager.instance.GetCurrentPlanet();
-            planet.DestroyChunkMesh(chunkPointed.GetSideCoord(), chunkPointed.GetXCoord(), chunkPointed.GetZCoord());
-            planet.GenerateChunkMesh(chunkPointed.GetSideCoord(), chunkPointed.GetXCoord(), chunkPointed.GetZCoord());
+            chunkLoader.RegenerateChunkMesh(chunkLoader.GetCurrentPlanet(), chunkPointed.GetSideCoord(), chunkPointed.GetXCoord(), chunkPointed.GetZCoord());
             timeDelayActions = 0;
         }
     }
+
     void FixedUpdate() {
         WireFrame();
         timeDelayActions += Time.fixedDeltaTime;

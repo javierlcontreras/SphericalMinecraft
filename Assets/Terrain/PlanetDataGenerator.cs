@@ -4,12 +4,12 @@ using UnityEngine;
 
 
 public class PlanetDataGenerator {
-    private Planet planet;
+    private PlanetTerrain planet;
     private int chunkSize;
     private int height;
     private int chunksPerSide;
 
-    public PlanetDataGenerator(Planet _planet) {
+    public PlanetDataGenerator(PlanetTerrain _planet) {
         planet = _planet;
         chunkSize = planet.GetChunkSize();
         chunksPerSide = planet.GetChunksPerSide();

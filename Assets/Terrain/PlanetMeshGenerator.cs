@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 public class PlanetMeshGenerator {
-    private Planet planet;
+    private PlanetTerrain planet;
     private ChunkAdjacencyCalculator chunkAdjCalculator;
     
     private int chunksPerSide;
@@ -16,13 +16,13 @@ public class PlanetMeshGenerator {
     private Vector3[] sideZaxisList;
     private string[] sideNameList;
 
-    public PlanetMeshGenerator(Planet _planet) {
+    public PlanetMeshGenerator(PlanetTerrain _planet) {
         planet = _planet;
         
-        sideYaxisList = TerrainManager.sideYaxisList;
-        sideXaxisList = TerrainManager.sideXaxisList;
-        sideZaxisList = TerrainManager.sideZaxisList;
-        sideNameList = TerrainManager.sideNameList;
+        sideYaxisList = TerrainGenerationConstants.sideYaxisList;
+        sideXaxisList = TerrainGenerationConstants.sideXaxisList;
+        sideZaxisList = TerrainGenerationConstants.sideZaxisList;
+        sideNameList = TerrainGenerationConstants.sideNameList;
         
         chunkSize = planet.GetChunkSize();
         chunksPerSide = planet.GetChunksPerSide();

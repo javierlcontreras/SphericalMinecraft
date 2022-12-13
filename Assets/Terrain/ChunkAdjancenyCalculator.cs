@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class ChunkAdjacencyCalculator {
-    private Planet planet;
+    private PlanetTerrain planet;
     private int chunkSize;
     private int chunksPerSide;
     private int chunkHeight;
@@ -11,15 +11,15 @@ public class ChunkAdjacencyCalculator {
     private Vector3[] sideZaxisList;
     private string[] sideNameList;
 
-    public ChunkAdjacencyCalculator(Planet _planet) {
+    public ChunkAdjacencyCalculator(PlanetTerrain _planet) {
         planet = _planet;
         chunkSize = planet.GetChunkSize();
         chunkHeight = planet.GetHeight();
         chunksPerSide = planet.GetChunksPerSide();
-        sideXaxisList = TerrainManager.sideXaxisList;
-        sideYaxisList = TerrainManager.sideYaxisList;
-        sideZaxisList = TerrainManager.sideZaxisList;
-        sideNameList = TerrainManager.sideNameList;
+        sideXaxisList = TerrainGenerationConstants.sideXaxisList;
+        sideYaxisList = TerrainGenerationConstants.sideYaxisList;
+        sideZaxisList = TerrainGenerationConstants.sideZaxisList;
+        sideNameList = TerrainGenerationConstants.sideNameList;
     }
 
     public BlockAdjacency BlockNextToMe(Chunk chunk, int x, int y, int z, Vector3 pointingTo, Vector3 pointingToGlobal) { // pointing to is in chunk coordinate space
@@ -36,7 +36,7 @@ public class ChunkAdjacencyCalculator {
             return null;
         }
         
-        Planet planet = chunk.GetPlanet();
+        PlanetTerrain planet = chunk.GetPlanet();
         int realChunkSize = planet.NumBlocksAtHeightPerChunk(y);
         int nextRealChunkSize = planet.NumBlocksAtHeightPerChunk(nextY);
 

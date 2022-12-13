@@ -50,7 +50,7 @@ public class BlockSide {
 
 
     private Vector2[] computeUVsFromAtlas(Vector2 atlasCoord) {
-        float s = 1f*TerrainManager.instance.TextureBlockSize/TerrainManager.instance.TextureAtlasSize;
+        float s = TerrainGenerationConstants.GetTextureBlockSize();
         float x = atlasCoord.x*s;
         float y = 1 - atlasCoord.y*s;
         return new Vector2[] {

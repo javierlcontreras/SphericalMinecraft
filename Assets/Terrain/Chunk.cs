@@ -11,10 +11,10 @@ public class Chunk {
     public int GetZCoord() { return zCoord; }
     
     public Block[,,] blocks;
-    private Planet planet;
-    public Planet GetPlanet() { return planet; }
+    private PlanetTerrain planet;
+    public PlanetTerrain GetPlanet() { return planet; }
     
-    public Chunk(int _sideCoord, int _xCoord, int _zCoord, Planet _planet) {
+    public Chunk(int _sideCoord, int _xCoord, int _zCoord, PlanetTerrain _planet) {
         sideCoord = _sideCoord;
         xCoord = _xCoord;
         zCoord = _zCoord;
@@ -110,9 +110,9 @@ public class Chunk {
     }
 
     public Quaternion ChunkToGlobal() {
-        Vector3 sideNormal = TerrainManager.sideYaxisList[sideCoord];
-        Vector3 sideXaxis = TerrainManager.sideXaxisList[sideCoord];
-        Vector3 sideZaxis = TerrainManager.sideZaxisList[sideCoord];
+        Vector3 sideNormal = TerrainGenerationConstants.sideYaxisList[sideCoord];
+        Vector3 sideXaxis = TerrainGenerationConstants.sideXaxisList[sideCoord];
+        Vector3 sideZaxis = TerrainGenerationConstants.sideZaxisList[sideCoord];
 
         return Quaternion.LookRotation(sideZaxis, sideNormal); 
     }

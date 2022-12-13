@@ -36,18 +36,20 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets/Terrain/ChunkLoader.cs" />
      <Compile Include="Assets/Clouds/Scripts/Noise/WorleyNoiseSettings.cs" />
      <Compile Include="Assets/Terrain/Block.cs" />
      <Compile Include="Assets/Character/NormalMovementController.cs" />
      <Compile Include="Assets/Helper/Compute Helper/Processing/GaussianBlur.cs" />
+     <Compile Include="Assets/CelestialMechanics/OrbitManager.cs" />
      <Compile Include="Assets/Clouds/Scripts/CloudManager.cs" />
      <Compile Include="Assets/Terrain/BlockSide.cs" />
      <Compile Include="Assets/Effects/CameraEffect.cs" />
      <Compile Include="Assets/MiningPlacing/PointingTo.cs" />
-     <Compile Include="Assets/Terrain/TerrainManager.cs" />
      <Compile Include="Assets/Clouds/Scripts/Noise/NoiseGenerator.cs" />
+     <Compile Include="Assets/Terrain/TerrainGenerationConstants.cs" />
      <Compile Include="Assets/Terrain/NoiseGenerator.cs" />
-     <Compile Include="Assets/Terrain/PlanetGeneratorSettings.cs" />
+     <Compile Include="Assets/CelestialMechanics/CelestialBody.cs" />
      <Compile Include="Assets/Terrain/BlockType.cs" />
      <Compile Include="Assets/Terrain/ChunkAdjancenyCalculator.cs" />
      <Compile Include="Assets/Terrain/PlanetDataGenerator.cs" />
@@ -57,9 +59,10 @@
      <Compile Include="Assets/Terrain/BlockAdjacency.cs" />
      <Compile Include="Assets/Effects/EffectManager.cs" />
      <Compile Include="Assets/Character/CameraController.cs" />
-     <Compile Include="Assets/Terrain/Planet.cs" />
+     <Compile Include="Assets/Terrain/PlanetChunkLoader.cs" />
      <Compile Include="Assets/Character/TangencialMovementController.cs" />
      <Compile Include="Assets/Character/FirstPersonController.cs" />
+     <Compile Include="Assets/Terrain/PlanetTerrain.cs" />
      <Compile Include="Assets/Terrain/PlanetMeshGenerator.cs" />
      <Compile Include="Assets/Character/CreativeModeController.cs" />
      <Compile Include="Assets/Helper/Compute Helper/ComputeHelper.cs" />

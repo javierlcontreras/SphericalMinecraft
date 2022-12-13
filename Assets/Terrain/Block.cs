@@ -43,9 +43,9 @@ public class Block {
         Vector3[] vertices = new Vector3[8];
        
         for (int option=0; option < 8*3; option += 3) {
-            int dx = TerrainManager.vertexOptions[option];
-            int dy = TerrainManager.vertexOptions[option+1];
-            int dz = TerrainManager.vertexOptions[option+2];
+            int dx = TerrainGenerationConstants.vertexOptions[option];
+            int dy = TerrainGenerationConstants.vertexOptions[option+1];
+            int dz = TerrainGenerationConstants.vertexOptions[option+2];
             int vertexX = xCoord + dx;
             int vertexY = yCoord + (dy - 1);
             int vertexZ = zCoord + dz;
@@ -54,7 +54,7 @@ public class Block {
             int blocks = chunk.GetPlanet().NumBlocksAtHeight(yCoord);
             int blocksNextTo = chunk.GetPlanet().NumBlocksAtHeight(vertexY);
             if (blocksNextTo < blocks && dy == 0) {
-                Planet planet = chunk.GetPlanet();
+                PlanetTerrain planet = chunk.GetPlanet();
                 Vector3 pos = chunkIndexToGlobalPosition(vertexX, yCoord, vertexZ).normalized * (1 + planet.HeightAtBottomOfLayer(vertexY));
                 vertices[option/3] = pos;
             }
@@ -69,7 +69,7 @@ public class Block {
         int chunkSide = chunk.GetSideCoord();
         int chunkX = chunk.GetXCoord();
         int chunkZ = chunk.GetZCoord();
-        Planet planet = chunk.GetPlanet();
+        PlanetTerrain planet = chunk.GetPlanet();
         return planet.BaseVector(chunkSide, chunkX, chunkZ, vertexX, vertexY, vertexZ) * (1 + planet.HeightAtBottomOfLayer(vertexY));
     }
 
@@ -88,11 +88,11 @@ public class Block {
 
         BlockSide[] sideList = new BlockSide[6];
         for (int option=0; option < 6*4; option += 4) {
-            string faceDrawn = TerrainManager.sideNameList[option/4];
-            int vertex1 = TerrainManager.sideOptions[option];
-            int vertex2 = TerrainManager.sideOptions[option+1];
-            int vertex3 = TerrainManager.sideOptions[option+2];
-            int vertex4 = TerrainManager.sideOptions[option+3];
+            string faceDrawn = TerrainGenerationConstants.sideNameList[option/4];
+            int vertex1 = TerrainGenerationConstants.sideOptions[option];
+            int vertex2 = TerrainGenerationConstants.sideOptions[option+1];
+            int vertex3 = TerrainGenerationConstants.sideOptions[option+2];
+            int vertex4 = TerrainGenerationConstants.sideOptions[option+3];
             Vector3[] vertices = new Vector3[] {
                 vertexPositions[vertex1],    
                 vertexPositions[vertex2],    
@@ -100,7 +100,7 @@ public class Block {
                 vertexPositions[vertex4]    
             };
 
-            string sideName = TerrainManager.sideNameList[chunk.GetSideCoord()];
+            string sideName = TerrainGenerationConstants.sideNameList[chunk.GetSideCoord()];
             BlockSide side = new BlockSide(vertices, type.GetAtlasCoord(faceDrawn), sideName, faceDrawn);
             sideList[option/4] = side;
         }
