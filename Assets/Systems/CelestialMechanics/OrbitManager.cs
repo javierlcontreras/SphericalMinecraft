@@ -18,9 +18,9 @@ public class OrbitManager : MonoBehaviour
         float distance = direction.magnitude;
         float strength = earth.GetMass()*moon.GetMass() /  distance / distance;
         // earth.UpdateVelocity(Time.fixedDeltaTime, -direction.normalized * strength);
-        moon.UpdateVelocity(Time.fixedDeltaTime, direction.normalized * strength);
+        // moon.UpdateVelocity(Time.fixedDeltaTime, direction.normalized * strength);
 
-        //earth.UpdatePosition(Time.fixedDeltaTime);
-        moon.UpdatePosition(Time.fixedDeltaTime);
+        // earth.UpdatePosition(Time.fixedDeltaTime);
+        // moon.UpdatePosition(Time.fixedDeltaTime);
     }
 }

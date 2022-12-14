@@ -30,7 +30,7 @@ public class PlanetDataGenerator {
 
     public void GenerateChunk(int sideCoord, int xCoord, int zCoord) {
         Chunk chunk = new Chunk(sideCoord, xCoord, zCoord, planet);
-        chunk.CreateChunkData();
+        chunk.GetChunkDataGenerator().CreateChunkData();
         planet.SetChunk(sideCoord, xCoord, zCoord, chunk);
     }
 

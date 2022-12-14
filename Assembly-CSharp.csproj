@@ -74,6 +74,7 @@
      <Compile Include="Assets/Systems/MiningPlacing/Inventory.cs" />
      <Compile Include="Assets/Systems/Atmosphere/Scripts/AtmosphereSettings.cs" />
      <Compile Include="Assets/Systems/Character/ControllerSettings.cs" />
+     <Compile Include="Assets/Systems/Terrain/ChunkDataGenerator.cs" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets/Systems/HUD/HUD.shader" />

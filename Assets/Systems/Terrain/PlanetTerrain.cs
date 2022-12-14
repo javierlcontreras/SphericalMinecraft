@@ -9,8 +9,10 @@ public class PlanetTerrain : MonoBehaviour {
     public Material GetSurfaceTexturesMaterial() {
         return surfaceTexturesMaterial;
     }
+    public string[] terrainLayersTypes;    
+    public float[] terrainLayersHeights;    
     public Chunk[,,] chunks;
-        
+    
     private int chunkHeight;
     private int minChunkHeight;
     private int[] blocksAtHeight;

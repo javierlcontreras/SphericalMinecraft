@@ -8,14 +8,14 @@ public class ChunkLoader : MonoBehaviour {
     
     // TODO: temporary, it should not treat any planet specially. Should look at all the tagged GameObjects Planet and treat them equally,
     // choose main planet by proximity and choose other planets to draw also by proximity.
-    public PlanetTerrain[] planet;
+    public PlanetTerrain[] planets;
 
     private void Awake() {
         currentPosition = GameObject.Find("Player").transform;
     }
 
     public PlanetTerrain GetCurrentPlanet() {
-        return planet[0];
+        return planets[0];
     }
 
     public float GetRadiusOfLoad() {
@@ -57,6 +57,8 @@ public class ChunkLoader : MonoBehaviour {
     }
 
     private void Update() {
-        UpdatePlanetMesh(planet[0]);
+        for (int i=0; i<planets.Length; i++) {
+            UpdatePlanetMesh(planets[i]);
+        }
     }
 }
