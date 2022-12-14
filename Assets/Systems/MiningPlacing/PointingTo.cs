@@ -10,6 +10,8 @@ public class PointingTo : MonoBehaviour {
     float timeDelayActions = 0;
     float thresholdTime = 0.1f;
     GameObject pointingTo;
+    
+    private Inventory inventory;
 
 	private ChunkLoader chunkLoader;
 	public void Awake() {
@@ -74,6 +76,7 @@ public class PointingTo : MonoBehaviour {
     }
 
     void Start() {
+        inventory = gameObject.GetComponent<Inventory>();
         settings = GetComponent<ControllerSettings>();
         pointingTo = new GameObject("Pointing Wireframe", typeof(MeshFilter), typeof(MeshRenderer));
     }
@@ -112,7 +115,8 @@ public class PointingTo : MonoBehaviour {
             }
             else if (blockPointed != null) { 
                 chunkPointed = blockPointed.GetChunk();
-                blockPointed.SetBlockType(BlockTypeEnum.GetBlockTypeByName("sand"));
+                BlockType type = inventory.GetSlot(inventory.GetSelectedSlotIndex()).GetBlockType();
+                blockPointed.SetBlockType(type);
                 success = true;
             }
         }

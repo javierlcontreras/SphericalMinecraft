@@ -2,12 +2,11 @@ using UnityEngine;
 
 public class PlanetChunkLoader {
     private PlanetTerrain planet;
-    private int chunksPerSide;
     private GameObject[,,] currentChunksLoaded;
 
     public PlanetChunkLoader(PlanetTerrain _planet) {
         planet = _planet;
-        chunksPerSide = planet.GetChunksPerSide();
+        int chunksPerSide = planet.GetChunksPerSide();
         currentChunksLoaded = new GameObject[6,chunksPerSide,chunksPerSide];
     }
 

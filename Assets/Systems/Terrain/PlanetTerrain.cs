@@ -88,7 +88,7 @@ public class PlanetTerrain : MonoBehaviour {
     public int PrecomputeHeight(int polygonSides) {        
         int maxHeight = GetMaxHeight();
         int resultHeight = -1;
-        for (int h = 0; ; h++) {
+        for (int h = 0; h < maxHeight; h++) {
             float radius = HeightAtBottomOfLayer(h);
             float sideLength  = 2.0f * radius * Mathf.Sin(Mathf.PI / polygonSides);
             if (1 <= sideLength && sideLength < 2) {

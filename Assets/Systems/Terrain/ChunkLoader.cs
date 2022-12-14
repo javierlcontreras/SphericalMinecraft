@@ -1,33 +1,35 @@
 using UnityEngine;
 
 public class ChunkLoader : MonoBehaviour {
+    public float radiusOfLoad;
+    public float radiusOfSave;
     public bool dontRenderChunks = false;
     private Transform currentPosition;
     
     // TODO: temporary, it should not treat any planet specially. Should look at all the tagged GameObjects Planet and treat them equally,
     // choose main planet by proximity and choose other planets to draw also by proximity.
-    private PlanetTerrain earth;
-    private PlanetTerrain moon;
+    public PlanetTerrain[] planet;
+
     private void Awake() {
         currentPosition = GameObject.Find("Player").transform;
-        earth = GameObject.Find("Earth").GetComponent<PlanetTerrain>();
-        moon = GameObject.Find("Moon").GetComponent<PlanetTerrain>();
-    }
-    public PlanetTerrain GetCurrentPlanet() {
-        return earth;
     }
 
-    public float radiusOfLoad;
+    public PlanetTerrain GetCurrentPlanet() {
+        return planet[0];
+    }
+
     public float GetRadiusOfLoad() {
         return radiusOfLoad;
     }
-
-    public bool ChunkCloseEnoughToLoad(Vector3 chunkPosition, Vector3 planetPosition) {
-        Vector3 radialPosition = (currentPosition.position - planetPosition).normalized;
-        return (chunkPosition.normalized - radialPosition).magnitude < GetRadiusOfLoad();
+    public float GetRadiusOfSave() {
+        return radiusOfSave;
     }
 
-
+    public float ChunkPlayerDistance(Vector3 chunkPosition, Vector3 planetPosition) {
+        Vector3 radialPosition = (currentPosition.position - planetPosition);
+        float height = radialPosition.magnitude;
+        return (chunkPosition.normalized*height - radialPosition).magnitude;
+    }
 
     public void UpdatePlanetMesh(PlanetTerrain planet) {
         if (dontRenderChunks) return;
@@ -35,11 +37,15 @@ public class ChunkLoader : MonoBehaviour {
             for (int chunkX=0; chunkX < planet.GetChunksPerSide(); chunkX++) {
                 for (int chunkZ=0; chunkZ < planet.GetChunksPerSide(); chunkZ++) {
                     Vector3 chunkPosition = planet.BaseVectorAtCenter(side, chunkX, chunkZ);
-                    if (ChunkCloseEnoughToLoad(chunkPosition, planet.GetPlanetPosition())) {
+                    float chunkPlayerDist = ChunkPlayerDistance(chunkPosition, planet.GetPlanetPosition());
+                    if (chunkPlayerDist < radiusOfLoad) {
                         planet.GetPlanetChunkLoader().GenerateChunkMesh(side, chunkX, chunkZ);
                     } 
-                    else {
+                    else if (chunkPlayerDist < radiusOfSave) {
                         planet.GetPlanetChunkLoader().HideChunkMesh(side, chunkX, chunkZ);
+                    }
+                    else {
+                        planet.GetPlanetChunkLoader().DestroyChunkMesh(side, chunkX, chunkZ);
                     }
                 }
             }
@@ -51,7 +57,6 @@ public class ChunkLoader : MonoBehaviour {
     }
 
     private void Update() {
-        UpdatePlanetMesh(earth);
-        UpdatePlanetMesh(moon);
+        UpdatePlanetMesh(planet[0]);
     }
 }

@@ -23,7 +23,6 @@ public class Chunk {
         chunkSize = planet.GetChunkSize();
         chunkHeight = planet.GetHeight();
         blocks = new Block[chunkSize, chunkHeight, chunkSize];
-        Init();
     }
 
     public float DistanceToChunk(Chunk nextChunk) {
@@ -36,13 +35,12 @@ public class Chunk {
 
         return (base1 - base2).magnitude;
     }
-
+/*
     public void Init() {
         for (int y = 0; y<chunkHeight; y++) {
             for (int x = 0; x < chunkSize; x++) {
                 for (int z = 0; z < chunkSize; z++) { 
                     BlockType type = BlockTypeEnum.GetBlockTypeByName("invalid");
-                    Vector3 inChunkPosition = new Vector3(x,y,z);
                     blocks[x, y, z] = new Block(x, y, z, type, this);
                 }
             }
@@ -61,7 +59,7 @@ public class Chunk {
             builder.Append("\n");
         }
         Debug.Log(builder.ToString());
-    }
+    }*/
 
     public void CreateChunkData() {
         int maxNumSides = planet.NumBlocksAtHeightPerChunk(planet.GetHeight()-1); 
@@ -72,7 +70,7 @@ public class Chunk {
                     float height = TerrainHeightFromNoise(x,y,z);
                     
                     BlockType type = FillDirtUpToHeight(y, height);
-                    blocks[x, y, z].SetBlockType(type);
+                    if (type.GetName() != "air") blocks[x, y, z] = new Block(x, y, z, type, this);
                 }
             }
         }

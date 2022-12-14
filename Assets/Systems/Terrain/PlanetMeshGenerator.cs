@@ -54,9 +54,13 @@ public class PlanetMeshGenerator {
                 for (int j=0; j<realChunkSize; j++) {
 
                     Block block  = chunk.blocks[i,h,j];
+                    if (block == null) continue;
                     string blockTypeName = block.GetBlockType().GetName();
                     //Debug.Log("Block type check: " + blockTypeName);
-                    if (blockTypeName == "air" || blockTypeName == "invalid") continue;
+                    if (blockTypeName == "air" || blockTypeName == "invalid") {
+                        Debug.LogWarning("Block of type air/invalid is being saved");
+                        continue;
+                    }
                     for (int nextTo=0; nextTo < 6; nextTo++) {
                         Vector3 pointingTo = sideYaxisList[nextTo];
                         Vector3 orientedToX = sideXaxisList[nextTo];
@@ -70,7 +74,7 @@ public class PlanetMeshGenerator {
                         BlockAdjacency blocksAdjacent = chunkAdjCalculator.BlockNextToMe(chunk, i, h, j, pointingTo, pointingToGlobal);
                         if (blocksAdjacent != null && !blocksAdjacent.IsAnyAir()) continue;
                         
-                        quads.Add(block.sides[nextTo]);
+                        quads.Add(block.GetSide(nextTo));
                     }
                 }
             }    

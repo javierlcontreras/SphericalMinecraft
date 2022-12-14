@@ -11,8 +11,7 @@ public class Block {
     private Chunk chunk;
 
     public Vector3[] vertexPositions;
-    public BlockSide[] sides;
-
+    private BlockSide[] sides;
     public Block(int _xCoord, int _yCoord, int _zCoord, BlockType _type, Chunk _chunk) {
         xCoord = _xCoord;
         yCoord = _yCoord;
@@ -23,7 +22,33 @@ public class Block {
         inChunkPosition = new Vector3(zCoord, yCoord, zCoord);
         vertexPositions = computeVertexPositions();
         globalPosition = averageOf(vertexPositions);
-        sides = computeSides();
+        sides = new BlockSide[6];
+    }
+
+    public BlockSide GetSide(int index, bool memo = true) {
+        if (memo && sides[index] != null) return sides[index];
+        Quaternion chunkToGlobal = chunk.ChunkToGlobal();
+        Quaternion globalToChunk = chunk.GlobalToChunk(); 
+
+        int option=index*4;
+        string faceDrawn = TerrainGenerationConstants.sideNameList[option/4];
+        int vertex1 = TerrainGenerationConstants.sideOptions[option];
+        int vertex2 = TerrainGenerationConstants.sideOptions[option+1];
+        int vertex3 = TerrainGenerationConstants.sideOptions[option+2];
+        int vertex4 = TerrainGenerationConstants.sideOptions[option+3];
+        Vector3[] vertices = new Vector3[] {
+            vertexPositions[vertex1],    
+            vertexPositions[vertex2],    
+            vertexPositions[vertex3],    
+            vertexPositions[vertex4]    
+        };
+
+        string sideName = TerrainGenerationConstants.sideNameList[chunk.GetSideCoord()];
+        BlockSide blockSide = new BlockSide(vertices, type.GetAtlasCoord(faceDrawn), sideName, faceDrawn);
+        if (memo) {
+            sides[index] = blockSide;
+        }
+        return blockSide;
     }
 
     public BlockType GetBlockType() {
@@ -31,7 +56,7 @@ public class Block {
     }
     public void SetBlockType(BlockType _type) {
         type = _type;
-        sides = computeSides();
+        sides = new BlockSide[6];
     }
     public Vector3 GetInChunkPosition() {
         return inChunkPosition;
@@ -82,35 +107,10 @@ public class Block {
         return res;
     }
 
-    private BlockSide[] computeSides() {
-        Quaternion chunkToGlobal = chunk.ChunkToGlobal();
-        Quaternion globalToChunk = chunk.GlobalToChunk(); 
-
-        BlockSide[] sideList = new BlockSide[6];
-        for (int option=0; option < 6*4; option += 4) {
-            string faceDrawn = TerrainGenerationConstants.sideNameList[option/4];
-            int vertex1 = TerrainGenerationConstants.sideOptions[option];
-            int vertex2 = TerrainGenerationConstants.sideOptions[option+1];
-            int vertex3 = TerrainGenerationConstants.sideOptions[option+2];
-            int vertex4 = TerrainGenerationConstants.sideOptions[option+3];
-            Vector3[] vertices = new Vector3[] {
-                vertexPositions[vertex1],    
-                vertexPositions[vertex2],    
-                vertexPositions[vertex3],    
-                vertexPositions[vertex4]    
-            };
-
-            string sideName = TerrainGenerationConstants.sideNameList[chunk.GetSideCoord()];
-            BlockSide side = new BlockSide(vertices, type.GetAtlasCoord(faceDrawn), sideName, faceDrawn);
-            sideList[option/4] = side;
-        }
-        return sideList;
-    }
-
     public Mesh ComputeOutline(float overlineRatio = 1.1f) {
         List<BlockSide> listSides = new List<BlockSide>();
-        BlockSide[] sideCopy = computeSides();
-        foreach (BlockSide side in sideCopy) {
+        for (int sideIndex=0; sideIndex<6; sideIndex++) {
+            BlockSide side = GetSide(sideIndex, false);
             Vector3[] vertices = side.GetVertices();
             Vector3[] newVertices = new Vector3[4];
             for (int i=0; i<4; i++) {

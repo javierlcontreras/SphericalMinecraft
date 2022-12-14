@@ -15,7 +15,7 @@ public class BlockAdjacency {
 
     public bool IsAnyAir () {
         foreach (Block block in list) {
-            if (block.GetBlockType().GetName() == "air") return true; 
+            if (block == null || block.GetBlockType().GetName() == "air") return true; 
         }
         return false;
     }

@@ -7,8 +7,7 @@ using System;
 public class ToolbarManager : MonoBehaviour
 {
     GameObject[] slots;
-    int selectedSlot = 0;
-    Color originalColor;
+    public Color originalColor;
 
     GameObject player;
     Inventory inventory;
@@ -21,33 +20,22 @@ public class ToolbarManager : MonoBehaviour
         for (int i=0; i<9; i++) {
             slots[i] = GameObject.Find("Slot " + (i+1));
         }
-        originalColor = new Color(1f, 1f, 1f, 0.3f);
+        originalColor = new Color(1f, 1f, 1f, 0.2f);
         player = GameObject.Find("Player");
         inventory = player.GetComponent<Inventory>();
         RecolorSlots();
         FillSlotsWithInventoryItems();
     }
 
-    void Update()
-    {
-        if(Input.inputString != ""){
-            int number;
-            bool is_a_number = Int32.TryParse(Input.inputString, out number);
-            if (is_a_number && number >= 1 && number < 10){
-                selectedSlot = number-1;
-                RecolorSlots();
-            }
-        }
-    }
-
-    void RecolorSlots() {
+    public void RecolorSlots() {
         for (int i=0; i<9; i++) {
             slots[i].GetComponent<Image>().color = originalColor;
         }
+        int selectedSlot = inventory.GetSelectedSlotIndex();
         slots[selectedSlot].GetComponent<Image>().color = Color.white;
     }
 
-    void FillSlotsWithInventoryItems() {
+    public void FillSlotsWithInventoryItems() {
         for (int i=0; i<9; i++) {
             InventorySlot slotItem = inventory.GetSlot(i);
             if (slotItem == null) {
