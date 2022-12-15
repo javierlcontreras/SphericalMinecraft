@@ -5,13 +5,12 @@ public class BlockSideTriangle {
     public Vector3[] normals;
     public Vector2[] uvs;
 
-    public BlockSideTriangle(Vector3 a, Vector3 b, Vector3 c, Vector2 uva, Vector2 uvb, Vector2 uvc) {
+    public BlockSideTriangle(Vector3 a, Vector3 b, Vector3 c, Vector2 uva, Vector2 uvb, Vector2 uvc, Vector3 normal) {
         vertices = new Vector3[3] {
             a,
             b,
             c
         };
-        Vector3 normal = -Vector3.Cross(a - b, c - b).normalized;
         normals = new Vector3[3] {
             normal, 
             normal, 

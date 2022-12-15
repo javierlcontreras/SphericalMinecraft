@@ -10,6 +10,7 @@ class NormalMovementController {
 	private float feetSkinWidth;
 	private Vector3 feetPoint;
 
+    private float maxVerticalVelocity;
     private LayerMask groundedMask;
     public NormalMovementController(ControllerSettings _settings) {	
         verticalVelocity = 0;
@@ -18,6 +19,7 @@ class NormalMovementController {
         feetSkinWidth = settings.feetSkinWidth;
         feetPoint = settings.feetPoint;
         character = settings.CharacterTransform;
+        maxVerticalVelocity = settings.maxVerticalVelocity;
     }
 
     public float VerticalVelocity(bool wantToJump, bool wantToShift) {
@@ -31,6 +33,8 @@ class NormalMovementController {
         else {
             verticalVelocity = 0;
         }
+        if (verticalVelocity > maxVerticalVelocity) verticalVelocity = maxVerticalVelocity;
+        if (verticalVelocity < -maxVerticalVelocity) verticalVelocity = -maxVerticalVelocity;
         return verticalVelocity + addedVel;
     }
 

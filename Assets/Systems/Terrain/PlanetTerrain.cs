@@ -38,7 +38,7 @@ public class PlanetTerrain : MonoBehaviour {
         chunks = new Chunk[6, chunksPerSide, chunksPerSide];
         
         chunkHeight = PrecomputeHeight(4*GetChunkSize()*GetChunksPerSide())+1;
-        minChunkHeight = PrecomputeHeight(4*GetChunksPerSide());
+        minChunkHeight = PrecomputeHeight(2*GetChunksPerSide())+1;
         blocksAtHeight = new int[chunkHeight+10];
         for (int h=0; h<chunkHeight+10; h++) {
             blocksAtHeight[h] = PrecomputeNumBlocksAtHeight(h);
@@ -87,7 +87,8 @@ public class PlanetTerrain : MonoBehaviour {
         return h + TerrainGenerationConstants.GetCoreRadius();
     }    
 
-    public int PrecomputeHeight(int polygonSides) {        
+    public int PrecomputeHeight(int polygonSides) {  
+        if (polygonSides <= 2) return 0;      
         int maxHeight = GetMaxHeight();
         int resultHeight = -1;
         for (int h = 0; h < maxHeight; h++) {

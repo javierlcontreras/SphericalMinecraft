@@ -309,7 +309,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166101062}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6535ce5181cc6bfa6a405d81091ba9a4, type: 3}
   m_Name: 
@@ -416,7 +416,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166101062}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3299c457f6f930ed5842a5bfa18dabb7, type: 3}
   m_Name: 
@@ -444,11 +444,13 @@ MonoBehaviour:
   CameraTransform: {fileID: 963194228}
   CharacterTransform: {fileID: 166101069}
   lowPoint: {x: 0, y: -0.25, z: 0}
-  skinWidth: 0.25
-  characterShape: {x: 0.48000002, y: 1.4399999, z: 0.32000002}
+  highPoint: {x: 0, y: 0.35, z: 0}
+  skinWidth: 0.1
+  characterShape: {x: 0.6, y: 1.8, z: 0.4}
   reach: 5
   feetPoint: {x: 0, y: -0.25, z: 0}
   feetSkinWidth: 0.5
+  maxVerticalVelocity: 15
 --- !u!114 &166101074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -600,7 +602,6 @@ MonoBehaviour:
   dontRenderChunks: 0
   planets:
   - {fileID: 699678334}
-  - {fileID: 724477388}
 --- !u!1 &362496753
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,7 +907,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &643492631
 Transform:
   m_ObjectHideFlags: 0
@@ -1240,7 +1241,7 @@ Transform:
   - {fileID: 1772421117}
   - {fileID: 643492631}
   m_Father: {fileID: 1307707555}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &699678334
 MonoBehaviour:
@@ -1297,7 +1298,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &724477387
 Transform:
   m_ObjectHideFlags: 0
@@ -1312,7 +1313,7 @@ Transform:
   m_Children:
   - {fileID: 1388191823}
   m_Father: {fileID: 1307707555}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &724477388
 MonoBehaviour:
@@ -1326,8 +1327,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bd6e72da8ef598f8bca054a1b76342e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunksPerSide: 1
-  chunkSize: 8
+  chunksPerSide: 2
+  chunkSize: 16
   maxHeight: 32
   surfaceTexturesMaterial: {fileID: 2100000, guid: 3d843c94aecc6b602a96dbfa936c791c, type: 2}
   terrainLayersTypes:
@@ -1654,7 +1655,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0.3, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1917,9 +1918,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1853915333}
   - {fileID: 699678332}
   - {fileID: 724477387}
-  - {fileID: 1853915333}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2631,7 +2632,7 @@ Light:
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
-    m_Resolution: 3
+    m_Resolution: 1
     m_CustomResolution: -1
     m_Strength: 0.32
     m_Bias: 0.05
@@ -2661,7 +2662,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 2147483647
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
@@ -2687,7 +2688,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1307707555}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 21.87, y: 43.54, z: 0}
 --- !u!1 &1952347313
 GameObject:

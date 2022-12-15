@@ -1,17 +1,12 @@
 FOR THE MVP
 Creative Mode on one single ultra flat planet with custom radius and custom layers
     BUGS
-        - quads have two different normals, gives a weird lighting artifact
-        - Character controler stil gets head in into stuff, the only raycast are at the feet, should have raycasts on top as well
-        - Place a block on you feet makes you fall through mesh
-        - Pointing is broken by making air blocks nulls to save memory
-        - Change of width layers are still wonky. Some more geometry needs to be done
+        - Shadow casting is broken, lower parts of blocks in the night area are bright. Also caves are bright
+            I HAVE NO IDEA HOW TO FIX
         - clouds and atmosphere are manually placed, they dont take the planet radius automatically
         - Leaves should be transparent when placed as blocks. How does minecraft do this?
-        - Shadow casting is broken, lower parts of blocks in the night area are bright. Also caves are bright
         - Placing a block in a chunk by clicking on the one close to it in another chunk is broken, needs better adjacency functions
-        - max fall speed on the player, so that it doesnt pierce the mesh on falls
-        - bedrock level is not exact, there is some bug with minHeight
+        - floating point kakes textures wonky at a distance. Make everything with shifts
     FEATURES
         - Augment block palette
         - make creative controller be creative, not spectator
@@ -19,7 +14,14 @@ Creative Mode on one single ultra flat planet with custom radius and custom laye
         - Save system
             Free RAM with old chunks to memory
             Create, load and save chunks asyncronously
-
+    DONE
+        - bedrock level is not exact, there is some bug with minHeight
+        - max fall speed on the player, so that it doesnt pierce the mesh on falls
+        - Change of width layers are still wonky. Some more geometry needs to be done
+        - Place a block on you feet makes you fall through mesh
+        - Pointing is broken by making air blocks nulls to save memory
+        - quads have two different normals, gives a weird lighting artifact
+        - Character controler stil gets head in into stuff, the only raycast are at the feet, should have raycasts on top as well
 
 
 

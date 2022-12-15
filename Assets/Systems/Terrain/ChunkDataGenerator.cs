@@ -18,7 +18,8 @@ public class ChunkDataGenerator {
                     float height = 0.5f * planet.GetHeight()/2;//TerrainHeightFromNoise(x,y,z);
                     
                     BlockType type = FillDirtUpToHeight(y, height);
-                    if (type.GetName() != "air") chunk.blocks[x, y, z] = new Block(x, y, z, type, chunk);
+                    Vector3Int inChunkIndex = new Vector3Int(x, y, z);
+                    if (type.GetName() != "air") chunk.blocks[x, y, z] = new Block(inChunkIndex, type, chunk);
                 }
             }
         }
@@ -26,7 +27,7 @@ public class ChunkDataGenerator {
  
     public BlockType FillDirtUpToHeight(int y, float height) {
         PlanetTerrain planet = chunk.GetPlanet();
-        if (y < planet.GetMinHeight()) {
+        if (y <= planet.GetMinHeight()) {
             return BlockTypeEnum.GetBlockTypeByName("bedrock");
         }
         string[] terrainLayerTypes = planet.terrainLayersTypes;

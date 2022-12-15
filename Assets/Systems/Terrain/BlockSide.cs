@@ -4,6 +4,7 @@ public class BlockSide {
     private Vector3[] vertices;
     private Vector2[] uvs;
     private Vector2Int atlasCoord;
+    private Vector3 normal; 
 
     public BlockSide(Vector3[] _vertices, Vector2Int _atlasCoord, string side, string pointing) {
         int rot = NumRotations(side, pointing);
@@ -11,6 +12,7 @@ public class BlockSide {
         vertices = Rotate(_vertices, rot);
         atlasCoord = _atlasCoord;
         uvs = TerrainGenerationConstants.ComputeUVsFromAtlasCoord(atlasCoord);
+        normal = Vector3.Cross(vertices[1] - vertices[0], vertices[2] - vertices[0]).normalized;
     }
 
     public Vector3[] GetVertices() {
@@ -25,8 +27,8 @@ public class BlockSide {
 
     public BlockSideTriangle[] GetTriangles() {
         BlockSideTriangle[] triang = new BlockSideTriangle[2];
-        triang[0] = new BlockSideTriangle(vertices[0], vertices[1], vertices[2], uvs[0], uvs[1], uvs[2]);
-        triang[1] = new BlockSideTriangle(vertices[0], vertices[2], vertices[3], uvs[0], uvs[2], uvs[3]);
+        triang[0] = new BlockSideTriangle(vertices[0], vertices[1], vertices[2], uvs[0], uvs[1], uvs[2], normal);
+        triang[1] = new BlockSideTriangle(vertices[0], vertices[2], vertices[3], uvs[0], uvs[2], uvs[3], normal);
         return triang;
     }
     public void DebugSide() {

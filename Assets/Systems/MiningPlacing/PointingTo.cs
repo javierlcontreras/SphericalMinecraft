@@ -10,31 +10,39 @@ public class PointingTo : MonoBehaviour {
     float timeDelayActions = 0;
     float thresholdTime = 0.1f;
     GameObject pointingTo;
-    
+
     private Inventory inventory;
+    private Transform character;
 
 	private ChunkLoader chunkLoader;
-	public void Awake() {
+	
+    void Start() {
 		chunkLoader = GameObject.Find("ChunkLoader").GetComponent<ChunkLoader>();
-	}
+        character = transform;
+        inventory = gameObject.GetComponent<Inventory>();
+        settings = GetComponent<ControllerSettings>();
+        pointingTo = new GameObject("Pointing Wireframe", typeof(MeshFilter), typeof(MeshRenderer));
+    }
     
-    public RaycastHit GlobalPointingPoint(){
+    public RaycastHit RaycastFromCamera(){
         RaycastHit hit;
         Debug.DrawRay(settings.CameraTransform.position, settings.CameraTransform.forward*settings.reach);
         Physics.Raycast(settings.CameraTransform.position, settings.CameraTransform.forward, out hit, settings.reach, settings.groundedMask);
         return hit;
     }
-
-    public Block BlockToBreak(bool place = false, float blockSkin = 0.2f) {
-        RaycastHit hit = GlobalPointingPoint();
-        if (hit.colliderInstanceID == 0) return null;
+    
+    public Chunk ChunkHit(RaycastHit hit) {
         string chunkName = hit.collider.transform.gameObject.name;
         string[] coord = chunkName.Split("(")[1].Split(")")[0].Split(",");
         int sideCoord = int.Parse(coord[0]);
         int xCoord = int.Parse(coord[1]);
         int zCoord = int.Parse(coord[2]);
-        //Debug.Log("Just hit: " + chunkName);
+
         Chunk chunk = chunkLoader.GetCurrentPlanet().chunks[sideCoord, xCoord, zCoord];
+        return chunk;
+    }
+
+    public Vector3Int BlockIndexToBreak(RaycastHit hit, Chunk chunk, bool place = false, float blockSkin = 0.2f) {
         if (place == false) {
             return BlockToClosestTo(hit.point - blockSkin*hit.normal, chunk);
         }
@@ -43,7 +51,7 @@ public class PointingTo : MonoBehaviour {
         }
     }
 
-    public Block BlockToClosestTo(Vector3 point, Chunk chunk) {
+    public Vector3Int BlockToClosestTo(Vector3 point, Chunk chunk) {
         int sideCoord = chunk.GetSideCoord();
         Vector3 sideXaxis = TerrainGenerationConstants.sideXaxisList[sideCoord]; 
         Vector3 sideYaxis = TerrainGenerationConstants.sideYaxisList[sideCoord]; 
@@ -72,13 +80,19 @@ public class PointingTo : MonoBehaviour {
         xBlock /= mult; 
         zBlock /= mult; 
 
-        return chunk.blocks[xBlock, hBlock, zBlock];
+        return new Vector3Int(xBlock, hBlock, zBlock);
     }
 
-    void Start() {
-        inventory = gameObject.GetComponent<Inventory>();
-        settings = GetComponent<ControllerSettings>();
-        pointingTo = new GameObject("Pointing Wireframe", typeof(MeshFilter), typeof(MeshRenderer));
+    public Block BlockToBreak(bool place = false) {
+        RaycastHit hit = RaycastFromCamera();
+        if (hit.colliderInstanceID == 0) return null;
+        Chunk chunk = ChunkHit(hit);
+        Vector3Int blockIndex = BlockIndexToBreak(hit, chunk, place);
+        if (place && chunk.blocks[blockIndex.x, blockIndex.y, blockIndex.z] == null) {
+            BlockType type = BlockTypeEnum.GetBlockTypeByName("invalid"); 
+            chunk.blocks[blockIndex.x, blockIndex.y, blockIndex.z] = new Block(blockIndex, type, chunk);
+        }
+        return chunk.blocks[blockIndex.x, blockIndex.y, blockIndex.z];
     }
 
 
@@ -92,38 +106,55 @@ public class PointingTo : MonoBehaviour {
         pointingTo.GetComponent<MeshRenderer>().material = wireframeMaterial;
     }
 
+    public void Mine() {
+        Block blockPointed = BlockToBreak();
+        if (blockPointed != null && blockPointed.GetBlockType().GetName() == "air") {
+            Debug.LogWarning("BUG Want to break a air");
+        }
+        else if (blockPointed != null && blockPointed.GetBlockType().GetName() != "bedrock") { 
+            Chunk chunkPointed = blockPointed.GetChunk();
+            Vector3Int blockIndex = blockPointed.GetInChunkIndex();
+            int x = blockIndex.x;
+            int y = blockIndex.y;
+            int z = blockIndex.z;
+            chunkPointed.blocks[x,y,z] = null;
+            SuccessfulChange(chunkPointed);
+        }
+    }
+    public void Place() {
+        Block blockPointed = BlockToBreak(true);
+        string blockTypeName = blockPointed.GetBlockType().GetName();
+        if (blockTypeName != "air" && blockTypeName != "invalid") {
+            Debug.LogWarning("BUG Want to place something in a non-air");
+            return;
+        }
+        Chunk chunkPointed = blockPointed.GetChunk();
+        if ((blockPointed.GetBlockPosition() - character.position).magnitude < 2) {
+            Vector3Int blockIndex = blockPointed.GetInChunkIndex();
+            int x = blockIndex.x;
+            int y = blockIndex.y;
+            int z = blockIndex.z;
+            chunkPointed.blocks[x,y,z] = null;
+            return;
+        }
+        BlockType type = inventory.GetSlot(inventory.GetSelectedSlotIndex()).GetBlockType();
+        blockPointed.SetBlockType(type); 
+        SuccessfulChange(chunkPointed);
+    
+    }
+    void SuccessfulChange(Chunk chunkPointed) {
+        chunkLoader.RegenerateChunkMesh(chunkLoader.GetCurrentPlanet(), chunkPointed.GetSideCoord(), chunkPointed.GetXCoord(), chunkPointed.GetZCoord());
+        timeDelayActions = 0;
+    }
+
     void MineAndPlace() {
-        bool success = false;
         bool wantToBreak = Input.GetButton("Fire1");
         bool wantToPlace = Input.GetButton("Fire2");
-        Chunk chunkPointed = null;
         if (wantToBreak && timeDelayActions > thresholdTime) {
-            Block blockPointed = BlockToBreak();
-            if (blockPointed != null && blockPointed.GetBlockType().GetName() == "air") {
-                Debug.LogWarning("BUG Want to break a air");
-            }
-            else if (blockPointed != null && blockPointed.GetBlockType().GetName() != "bedrock") { 
-                chunkPointed = blockPointed.GetChunk();
-                blockPointed.SetBlockType(BlockTypeEnum.GetBlockTypeByName("air"));
-                success = true;
-            }
+            Mine();
         }
         else if (wantToPlace && timeDelayActions > thresholdTime) {
-            Block blockPointed = BlockToBreak(true);
-            if (blockPointed != null && blockPointed.GetBlockType().GetName() != "air") {
-                Debug.LogWarning("BUG Want to place something in a non-air");
-            }
-            else if (blockPointed != null) { 
-                chunkPointed = blockPointed.GetChunk();
-                BlockType type = inventory.GetSlot(inventory.GetSelectedSlotIndex()).GetBlockType();
-                blockPointed.SetBlockType(type);
-                success = true;
-            }
-        }
-
-        if (success) {
-            chunkLoader.RegenerateChunkMesh(chunkLoader.GetCurrentPlanet(), chunkPointed.GetSideCoord(), chunkPointed.GetXCoord(), chunkPointed.GetZCoord());
-            timeDelayActions = 0;
+            Place();
         }
     }
 

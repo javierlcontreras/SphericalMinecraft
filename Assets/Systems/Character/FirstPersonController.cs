@@ -44,11 +44,15 @@ public class FirstPersonController : MonoBehaviour {
 		
 		Vector3 radialDirection = characterTransform.position.normalized;
 		Vector3 p1 = characterTransform.TransformPoint(settings.lowPoint);
+		Vector3 p2 = characterTransform.TransformPoint(settings.highPoint);
 		int tries = 10;
 		while (tries > 0) {
 			tries--;
 			RaycastHit hit;
 			if (Physics.Raycast(p1, finalMove, out hit, finalMove.magnitude+settings.skinWidth, settings.groundedMask)) {
+				finalMove -= Vector3.Dot(finalMove, hit.normal)*hit.normal;
+			}
+			else if (Physics.Raycast(p2, finalMove, out hit, finalMove.magnitude+settings.skinWidth, settings.groundedMask)) {
 				finalMove -= Vector3.Dot(finalMove, hit.normal)*hit.normal;
 			}
 			else {
