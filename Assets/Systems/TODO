@@ -15,6 +15,7 @@ Creative Mode on one single ultra flat planet with custom radius and custom laye
             Free RAM with old chunks to memory
             Create, load and save chunks asyncronously
     DONE
+        - i can clip to mesh by using the middle of my body
         - bedrock level is not exact, there is some bug with minHeight
         - max fall speed on the player, so that it doesnt pierce the mesh on falls
         - Change of width layers are still wonky. Some more geometry needs to be done

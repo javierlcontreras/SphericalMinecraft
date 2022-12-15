@@ -14,6 +14,7 @@ public class ControllerSettings : MonoBehaviour {
 	public Transform CharacterTransform;
 	
     public Vector3 lowPoint = new Vector3(0, -0.25f, 0);
+    public Vector3 midPoint = new Vector3(0, 0, 0);
     public Vector3 highPoint = new Vector3(0, 0.25f, 0);
 	public float skinWidth = 0.25f;
 
