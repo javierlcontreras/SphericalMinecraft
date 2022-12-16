@@ -38,7 +38,7 @@ public class FirstPersonController : MonoBehaviour {
 		cameraController.MoveCamera(mouseY * settings.mouseSensitivityY);
 		
 		Vector3 moveAmount = tangencialController.AmountToMoveWithTarget(inputX, inputY);
-		float verticalVelocity = normalController.VerticalVelocity(wantToJump, wantToShift);
+		float verticalVelocity = normalController.UpdateVerticalVelocity(wantToJump, wantToShift, Time.fixedDeltaTime);
 
 		Vector3 finalMove = characterTransform.TransformDirection(moveAmount + Vector3.up*verticalVelocity) * Time.fixedDeltaTime;
 		
@@ -65,5 +65,8 @@ public class FirstPersonController : MonoBehaviour {
 		}
 
 		characterTransform.Translate(characterTransform.InverseTransformDirection(finalMove));
+	}
+	public float GetVerticalVelocity() {
+		return normalController.GetVerticalVelocity();
 	}
 }

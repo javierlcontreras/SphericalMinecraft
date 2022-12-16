@@ -9,8 +9,6 @@ public class PlanetTerrain : MonoBehaviour {
     public Material GetSurfaceTexturesMaterial() {
         return surfaceTexturesMaterial;
     }
-    public string[] terrainLayersTypes;    
-    public float[] terrainLayersHeights;    
     public Chunk[,,] chunks;
     
     private int chunkHeight;
@@ -29,7 +27,19 @@ public class PlanetTerrain : MonoBehaviour {
     public PlanetMeshGenerator GetPlanetMeshGenerator() {
         return planetMeshGenerator;
     }
-    
+    public NoiseGeneratorSettings heightMap;
+    public float GetHeightMapAt(Vector3 samplingDirection) {
+        return heightMap.GetNoiseAt(samplingDirection);
+    }
+    public BiomeManager biomeManager;
+    public Biome GetBiome(Vector3 samplingDirection) {
+        return biomeManager.GetBiome(samplingDirection);
+    }
+    public CaveManager caveManager;
+    public bool GetCave(Vector3 samplingDirection, float height) {
+        return caveManager.GetCave(samplingDirection*height);
+    }
+
     public void Awake() {
         if (!isPowerOf2(chunkSize) || !isPowerOf2(chunksPerSide)) {
             Debug.LogWarning("chunkSize and chunksPerSide MUST be powers of 2");

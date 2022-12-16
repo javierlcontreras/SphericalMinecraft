@@ -11,7 +11,7 @@ public class Inventory : MonoBehaviour
 
     void Awake()
     {
-        toolbarmanager = GameObject.Find("Toolbar").GetComponent<ToolbarManager>();
+        toolbarmanager = GameObject.Find("Player/UI/HUD/Toolbar").GetComponent<ToolbarManager>();
         slots[0] = new InventorySlot(64, BlockTypeEnum.GetBlockTypeByName("grass"));
         slots[1] = new InventorySlot(64, BlockTypeEnum.GetBlockTypeByName("dirt"));
         slots[2] = new InventorySlot(64, BlockTypeEnum.GetBlockTypeByName("sand"));

@@ -26,7 +26,7 @@ public class PointingTo : MonoBehaviour {
     
     public RaycastHit RaycastFromCamera(){
         RaycastHit hit;
-        Debug.DrawRay(settings.CameraTransform.position, settings.CameraTransform.forward*settings.reach);
+        //Debug.DrawRay(settings.CameraTransform.position, settings.CameraTransform.forward*settings.reach);
         Physics.Raycast(settings.CameraTransform.position, settings.CameraTransform.forward, out hit, settings.reach, settings.groundedMask);
         return hit;
     }

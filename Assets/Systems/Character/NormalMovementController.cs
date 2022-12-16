@@ -3,46 +3,52 @@ using UnityEngine;
 class NormalMovementController {
     //bool grounded;
 	//bool jumping;
-	float verticalVelocity;
-	float shiftAndJumpVelocities = 6f;
-    Transform character;
+	private float verticalVelocity;
+    
+    private bool jumping = false;
+    private float timeSinceJump = 0;
+	Transform character;
     ControllerSettings settings;
-	private float feetSkinWidth;
-	private Vector3 feetPoint;
-
-    private float maxVerticalVelocity;
-    private LayerMask groundedMask;
+	
     public NormalMovementController(ControllerSettings _settings) {	
         verticalVelocity = 0;
         settings = _settings;
-        groundedMask = settings.groundedMask;
-        feetSkinWidth = settings.feetSkinWidth;
-        feetPoint = settings.feetPoint;
         character = settings.CharacterTransform;
-        maxVerticalVelocity = settings.maxVerticalVelocity;
     }
 
-    public float VerticalVelocity(bool wantToJump, bool wantToShift) {
-		float addedVel = 0;
-		if (wantToJump) addedVel += shiftAndJumpVelocities;
-		if (wantToShift) addedVel -= shiftAndJumpVelocities;
-		
+	public float GetVerticalVelocity() {
+		return verticalVelocity;
+	}
+
+    public float UpdateVerticalVelocity(bool wantToJump, bool wantToShift, float deltaTime) {
+        timeSinceJump += deltaTime;
+        if (timeSinceJump > settings.jumpTimer) {
+            jumping = false;
+        }
+        
+
         if (!Grounded()) {
-            verticalVelocity -= 9.8f*Time.fixedDeltaTime;
+//            Debug.Log("NOT grounded");
+            verticalVelocity -= settings.gravitationalPull*deltaTime;
         } 
         else {
-            verticalVelocity = 0;
+            if (timeSinceJump > settings.jumpTimer) verticalVelocity = 0;
+            if (wantToJump && !jumping) {
+                verticalVelocity += settings.jumpStrength;
+                jumping = true;
+                timeSinceJump = 0;
+            }
         }
-        if (verticalVelocity > maxVerticalVelocity) verticalVelocity = maxVerticalVelocity;
-        if (verticalVelocity < -maxVerticalVelocity) verticalVelocity = -maxVerticalVelocity;
-        return verticalVelocity + addedVel;
+        if (verticalVelocity > settings.maxVerticalVelocity) verticalVelocity = settings.maxVerticalVelocity;
+        if (verticalVelocity < -settings.maxVerticalVelocity) verticalVelocity = -settings.maxVerticalVelocity;
+        return verticalVelocity;
     }
 
     public bool Grounded() {
-		Ray rayDown = new Ray(character.TransformPoint(feetPoint), -character.up);
-		RaycastHit hit;
-		if (Physics.Raycast(rayDown, out hit, feetSkinWidth, groundedMask)) return true;
+		Ray rayDown = new Ray(character.TransformPoint(settings.lowPoint), -character.up);
+		Debug.DrawRay(character.TransformPoint(settings.lowPoint), -character.up*settings.feetWidth, Color.red  );
+        RaycastHit hit;
+		if (Physics.Raycast(rayDown, out hit, settings.feetWidth, settings.groundedMask)) return true;
 		return false;
-	
     }
 }

@@ -3,29 +3,28 @@ using UnityEngine;
 [RequireComponent (typeof(Transform))]
 public class ControllerSettings : MonoBehaviour {
     // public vars
-	public float mouseSensitivityX = 1;
-	public float mouseSensitivityY = 1;
-	public float walkSpeed = 6;
-	public float jumpForce = 220;
-	public float flySpeed = 6;
+	public float mouseSensitivityX;
+	public float mouseSensitivityY;
+	public float walkSpeed;
+	public float jumpForce;
+	public float flySpeed;
 	public LayerMask groundedMask;
 
 	public Transform CameraTransform;
 	public Transform CharacterTransform;
 	
-    public Vector3 lowPoint = new Vector3(0, -0.25f, 0);
-    public Vector3 midPoint = new Vector3(0, 0, 0);
-    public Vector3 highPoint = new Vector3(0, 0.25f, 0);
-	public float skinWidth = 0.25f;
+    public Vector3 lowPoint;
+    public Vector3 midPoint;
+    public Vector3 highPoint;
+	public float skinWidth;
+	public float feetWidth;
 
-	public Vector3 characterShape = new Vector3(0.6f, 1.8f, 0.4f)*0.8f;
+	public float reach;
+	public float maxVerticalVelocity;
 
-	public float reach = 5;
-
-	public Vector3 feetPoint = new Vector3(0, -0.25f, 0);
-	public float feetSkinWidth = 0.5f;
-	
-	public float maxVerticalVelocity = 10;
+	public float gravitationalPull;
+	public float jumpStrength;
+	public float jumpTimer;
 
 	private ChunkLoader chunkLoader;
 	public void Awake() {

@@ -4,9 +4,7 @@ Creative Mode on one single ultra flat planet with custom radius and custom laye
         - Shadow casting is broken, lower parts of blocks in the night area are bright. Also caves are bright
             I HAVE NO IDEA HOW TO FIX
         - clouds and atmosphere are manually placed, they dont take the planet radius automatically
-        - Leaves should be transparent when placed as blocks. How does minecraft do this?
         - Placing a block in a chunk by clicking on the one close to it in another chunk is broken, needs better adjacency functions
-        - floating point kakes textures wonky at a distance. Make everything with shifts
     FEATURES
         - Augment block palette
         - make creative controller be creative, not spectator
@@ -15,6 +13,9 @@ Creative Mode on one single ultra flat planet with custom radius and custom laye
             Free RAM with old chunks to memory
             Create, load and save chunks asyncronously
     DONE
+        - eficiency, pick out duplicated blocks!
+            You cannot do that if you are using UVs and UVs are assigned to vertices
+        - floating point kakes textures wonky at a distance. Make everything with shifts
         - i can clip to mesh by using the middle of my body
         - bedrock level is not exact, there is some bug with minHeight
         - max fall speed on the player, so that it doesnt pierce the mesh on falls
@@ -32,6 +33,8 @@ IN GENERAL (Forget them for now!)
     BUGS
         - celestial mechanics (and planet rotation) makes ChunkCloseEnough broken, need to consider planet rotation
         - Should have a new Planet class, should have Planet Terrain and other properties
+        - Leaves should be transparent when placed as blocks. How does minecraft do this?
+            THATS NOT EASY TO DO, FORGET FOR NOW
     FEATURES
         1) Terrain Generation needs improvement
             Temperature and humidity

@@ -36,11 +36,13 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets/Systems/NoiseGeneration/SmoothNoise.cs" />
      <Compile Include="Assets/Systems/Terrain/ChunkLoader.cs" />
      <Compile Include="Assets/Systems/Clouds/Scripts/Noise/WorleyNoiseSettings.cs" />
      <Compile Include="Assets/Systems/Terrain/Block.cs" />
      <Compile Include="Assets/Systems/HUD/ToolbarManager.cs" />
      <Compile Include="Assets/Systems/Character/NormalMovementController.cs" />
+     <Compile Include="Assets/Systems/Character/FirstPersonControllerEditor.cs" />
      <Compile Include="Assets/Systems/Helper/Compute Helper/Processing/GaussianBlur.cs" />
      <Compile Include="Assets/Systems/CelestialMechanics/OrbitManager.cs" />
      <Compile Include="Assets/Systems/Clouds/Scripts/CloudManager.cs" />
@@ -50,30 +52,36 @@
      <Compile Include="Assets/Systems/Clouds/Scripts/Noise/NoiseGenerator.cs" />
      <Compile Include="Assets/Systems/Terrain/TerrainGenerationConstants.cs" />
      <Compile Include="Assets/Systems/MiningPlacing/InventorySlot.cs" />
-     <Compile Include="Assets/Systems/Terrain/NoiseGenerator.cs" />
+     <Compile Include="Assets/Systems/Terrain/Caves/CaveManager.cs" />
+     <Compile Include="Assets/Systems/NoiseGeneration/NoiseGeneratorSettings.cs" />
      <Compile Include="Assets/Systems/CelestialMechanics/CelestialBody.cs" />
      <Compile Include="Assets/Systems/Terrain/BlockType.cs" />
      <Compile Include="Assets/Systems/Terrain/ChunkAdjancenyCalculator.cs" />
      <Compile Include="Assets/Systems/Terrain/PlanetDataGenerator.cs" />
-     <Compile Include="Assets/Systems/Terrain/PerlinNoise.cs" />
+     <Compile Include="Assets/Systems/NoiseGeneration/NoiseGenerationSettingsEditor.cs" />
      <Compile Include="Assets/Systems/Terrain/BlockSideTriangle.cs" />
      <Compile Include="Assets/Systems/Helper/Compute Helper/Channel.cs" />
      <Compile Include="Assets/Systems/Terrain/BlockAdjacency.cs" />
      <Compile Include="Assets/Systems/Effects/EffectManager.cs" />
      <Compile Include="Assets/Systems/Character/CameraController.cs" />
      <Compile Include="Assets/Systems/Terrain/ChunkDataGenerator.cs" />
+     <Compile Include="Assets/Systems/NoiseGeneration/PerlinNoise.cs" />
      <Compile Include="Assets/Systems/Terrain/PlanetChunkLoader.cs" />
      <Compile Include="Assets/Systems/Character/TangencialMovementController.cs" />
      <Compile Include="Assets/Systems/Character/FirstPersonController.cs" />
+     <Compile Include="Assets/Systems/Terrain/Biomes/Biome.cs" />
      <Compile Include="Assets/Systems/Terrain/PlanetTerrain.cs" />
      <Compile Include="Assets/Systems/Terrain/PlanetMeshGenerator.cs" />
      <Compile Include="Assets/Systems/Character/CreativeModeController.cs" />
      <Compile Include="Assets/Systems/Helper/Compute Helper/ComputeHelper.cs" />
      <Compile Include="Assets/Systems/Terrain/Chunk.cs" />
      <Compile Include="Assets/Systems/Effects/FXAA/FXAAEffect.cs" />
+     <Compile Include="Assets/Systems/OpeningMenu/ButtonClicks.cs" />
      <Compile Include="Assets/Systems/Clouds/Scripts/Noise/NoiseSettings.cs" />
      <Compile Include="Assets/Systems/MiningPlacing/Inventory.cs" />
+     <Compile Include="Assets/Systems/Terrain/Biomes/BiomeManager.cs" />
      <Compile Include="Assets/Systems/Atmosphere/Scripts/AtmosphereSettings.cs" />
+     <Compile Include="Assets/Systems/PauseScreen/EscScreen.cs" />
      <Compile Include="Assets/Systems/Character/ControllerSettings.cs" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />

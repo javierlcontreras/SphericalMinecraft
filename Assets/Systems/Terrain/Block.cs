@@ -4,21 +4,67 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Block {
     private BlockType type;
-
     private Vector3Int inChunkIndex;
-    private Vector3 globalPosition;
     private Chunk chunk;
 
-    public Vector3[] vertexPositions;
+
+    private Vector3?[] vertexPositions;
     private BlockSide[] sides;
+    private Vector3? globalPosition;
+
     public Block(Vector3Int _inChunkIndex, BlockType _type, Chunk _chunk) {
         inChunkIndex = _inChunkIndex;
         type = _type;
         chunk = _chunk;
 
-        vertexPositions = computeVertexPositions();
-        globalPosition = averageOf(vertexPositions);
+        vertexPositions = new Vector3?[8];
         sides = new BlockSide[6];
+    }
+
+    public Vector3 GetVertex(int index, bool memo = true) {
+        if (memo && vertexPositions[index] != null) {
+            return (Vector3) vertexPositions[index] !;
+        }
+        int option = 3*index;
+        int dx = TerrainGenerationConstants.vertexOptions[option];
+        int dy = TerrainGenerationConstants.vertexOptions[option+1];
+        int dz = TerrainGenerationConstants.vertexOptions[option+2];
+        int vertexX = inChunkIndex.x + dx;
+        int vertexY = inChunkIndex.y + (dy - 1);
+        int vertexZ = inChunkIndex.z + dz;
+        
+        Vector3 vertex;
+        int blocks = chunk.GetPlanet().NumBlocksAtHeight(inChunkIndex.y);
+        int blocksNextTo = chunk.GetPlanet().NumBlocksAtHeight(vertexY);
+        PlanetTerrain planet = chunk.GetPlanet();
+        if (blocksNextTo < blocks && vertexY >= planet.GetMinHeight()) {
+            float radius = (1 + planet.HeightAtBottomOfLayer(vertexY));
+            float height = radius;
+            if (vertexX%2 != 0 && vertexZ%2 != 0) {
+                Vector3 pos0 = chunkIndexToGlobalPosition(vertexX-1, inChunkIndex.y, vertexZ-1).normalized * radius; 
+                Vector3 pos1 = chunkIndexToGlobalPosition(vertexX-1, inChunkIndex.y, vertexZ+1).normalized * radius; 
+                Vector3 pos2 = chunkIndexToGlobalPosition(vertexX+1, inChunkIndex.y, vertexZ-1).normalized * radius; 
+                Vector3 pos3 = chunkIndexToGlobalPosition(vertexX+1, inChunkIndex.y, vertexZ+1).normalized * radius; 
+                height = (0.25f*(pos0+pos1+pos2+pos3)).magnitude; 
+            }
+            else if (vertexX%2 != 0) {
+                Vector3 pos0 = chunkIndexToGlobalPosition(vertexX-1, inChunkIndex.y, vertexZ).normalized * radius; 
+                Vector3 pos1 = chunkIndexToGlobalPosition(vertexX+1, inChunkIndex.y, vertexZ).normalized * radius; 
+                height = (0.5f*(pos0+pos1)).magnitude; 
+            }
+            else if (vertexZ%2 != 0) {
+                Vector3 pos0 = chunkIndexToGlobalPosition(vertexX, inChunkIndex.y, vertexZ-1).normalized * radius; 
+                Vector3 pos1 = chunkIndexToGlobalPosition(vertexX, inChunkIndex.y, vertexZ+1).normalized * radius; 
+                height = (0.5f*(pos0+pos1)).magnitude; 
+            } 
+            Vector3 pos = chunkIndexToGlobalPosition(vertexX, inChunkIndex.y, vertexZ).normalized * height;
+            vertex = pos;
+        }
+        else {
+            vertex = chunkIndexToGlobalPosition(vertexX, vertexY, vertexZ);
+        } 
+        if (memo) vertexPositions[index] = vertex;
+        return vertex;
     }
 
     public BlockSide GetSide(int index, bool memo = true) {
@@ -33,10 +79,10 @@ public class Block {
         int vertex3 = TerrainGenerationConstants.sideOptions[option+2];
         int vertex4 = TerrainGenerationConstants.sideOptions[option+3];
         Vector3[] vertices = new Vector3[] {
-            vertexPositions[vertex1],    
-            vertexPositions[vertex2],    
-            vertexPositions[vertex3],    
-            vertexPositions[vertex4]    
+            GetVertex(vertex1, memo),    
+            GetVertex(vertex2, memo),    
+            GetVertex(vertex3, memo),
+            GetVertex(vertex4, memo)    
         };
 
         string sideName = TerrainGenerationConstants.sideNameList[chunk.GetSideCoord()];
@@ -46,6 +92,19 @@ public class Block {
         }
         return blockSide;
     }
+
+    public Vector3 GetBlockPosition(bool memo = true) {
+        if (memo && globalPosition != null) return (Vector3) globalPosition;
+
+        Vector3 res = Vector3.zero;
+        for (int i=0; i<8; i++) {
+            res += GetVertex(i, memo) / 8f;
+        }
+
+        if (memo) globalPosition = res;
+        return res;
+    }
+
 
     public BlockType GetBlockType() {
         return type;
@@ -60,70 +119,13 @@ public class Block {
     public Chunk GetChunk() {
         return chunk;
     }
-    private Vector3[] computeVertexPositions() {
-        Vector3[] vertices = new Vector3[8];
-       
-        for (int option=0; option < 8*3; option += 3) {
-            int dx = TerrainGenerationConstants.vertexOptions[option];
-            int dy = TerrainGenerationConstants.vertexOptions[option+1];
-            int dz = TerrainGenerationConstants.vertexOptions[option+2];
-            int vertexX = inChunkIndex.x + dx;
-            int vertexY = inChunkIndex.y + (dy - 1);
-            int vertexZ = inChunkIndex.z + dz;
-            
 
-            int blocks = chunk.GetPlanet().NumBlocksAtHeight(inChunkIndex.y);
-            int blocksNextTo = chunk.GetPlanet().NumBlocksAtHeight(vertexY);
-            if (blocksNextTo < blocks) {
-                PlanetTerrain planet = chunk.GetPlanet();
-                float radius = (1 + planet.HeightAtBottomOfLayer(vertexY));
-                float height = radius;
-                if (vertexX%2 != 0 && vertexZ%2 != 0) {
-                    Vector3 pos0 = chunkIndexToGlobalPosition(vertexX-1, inChunkIndex.y, vertexZ-1).normalized * radius; 
-                    Vector3 pos1 = chunkIndexToGlobalPosition(vertexX-1, inChunkIndex.y, vertexZ+1).normalized * radius; 
-                    Vector3 pos2 = chunkIndexToGlobalPosition(vertexX+1, inChunkIndex.y, vertexZ-1).normalized * radius; 
-                    Vector3 pos3 = chunkIndexToGlobalPosition(vertexX+1, inChunkIndex.y, vertexZ+1).normalized * radius; 
-                    height = (0.25f*(pos0+pos1+pos2+pos3)).magnitude; 
-                }
-                else if (vertexX%2 != 0) {
-                    Vector3 pos0 = chunkIndexToGlobalPosition(vertexX-1, inChunkIndex.y, vertexZ).normalized * radius; 
-                    Vector3 pos1 = chunkIndexToGlobalPosition(vertexX+1, inChunkIndex.y, vertexZ).normalized * radius; 
-                    height = (0.5f*(pos0+pos1)).magnitude; 
-                }
-                else if (vertexZ%2 != 0) {
-                    Vector3 pos0 = chunkIndexToGlobalPosition(vertexX, inChunkIndex.y, vertexZ-1).normalized * radius; 
-                    Vector3 pos1 = chunkIndexToGlobalPosition(vertexX, inChunkIndex.y, vertexZ+1).normalized * radius; 
-                    height = (0.5f*(pos0+pos1)).magnitude; 
-                } 
-                Vector3 pos = chunkIndexToGlobalPosition(vertexX, inChunkIndex.y, vertexZ).normalized * height;
-                vertices[option/3] = pos;
-            }
-            else {
-                vertices[option/3] = chunkIndexToGlobalPosition(vertexX, vertexY, vertexZ);
-            } 
-
-        }
-        return vertices;
-    }
     private Vector3 chunkIndexToGlobalPosition(int vertexX, int vertexY, int vertexZ) {
         int chunkSide = chunk.GetSideCoord();
         int chunkX = chunk.GetXCoord();
         int chunkZ = chunk.GetZCoord();
         PlanetTerrain planet = chunk.GetPlanet();
         return planet.BaseVector(chunkSide, chunkX, chunkZ, vertexX, vertexY, vertexZ) * (1 + planet.HeightAtBottomOfLayer(vertexY));
-    }
-
-    private Vector3 averageOf(Vector3[] list) {
-        Vector3 res = Vector3.zero;
-        int n = list.Length;
-        for (int i=0; i<n; i++) {
-            res += list[i] / (1f*n);
-        }
-        return res;
-    }
-
-    public Vector3 GetBlockPosition() {
-        return globalPosition;
     }
 
     public Mesh ComputeOutline(float overlineRatio = 1.05f) {
@@ -133,7 +135,8 @@ public class Block {
             Vector3[] vertices = side.GetVertices();
             Vector3[] newVertices = new Vector3[4];
             for (int i=0; i<4; i++) {
-                newVertices[i] = globalPosition + (vertices[i] - globalPosition)*overlineRatio; 
+                Vector3 pos = GetBlockPosition();
+                newVertices[i] = pos + (vertices[i] - pos)*overlineRatio; 
             }
             side.SetVertices(newVertices);
             listSides.Add(side);

@@ -15,9 +15,9 @@ public class ChunkDataGenerator {
             int numSides = planet.NumBlocksAtHeightPerChunk(y);
             for (int x = 0; x < numSides; x++) {
                 for (int z = 0; z < numSides; z++) { 
-                    float height = 0.5f * planet.GetHeight()/2;//TerrainHeightFromNoise(x,y,z);
-                    
-                    BlockType type = FillDirtUpToHeight(y, height);
+                    Vector3 samplingDirection = planet.BaseVector(chunk.GetSideCoord(), chunk.GetXCoord(), chunk.GetZCoord(), x, y, z);
+                    float height = TerrainHeightFromNoise(samplingDirection); //
+                    BlockType type = FillDirtUpToHeight(samplingDirection, y, height);
                     Vector3Int inChunkIndex = new Vector3Int(x, y, z);
                     if (type.GetName() != "air") chunk.blocks[x, y, z] = new Block(inChunkIndex, type, chunk);
                 }
@@ -25,14 +25,17 @@ public class ChunkDataGenerator {
         }
     }
  
-    public BlockType FillDirtUpToHeight(int y, float height) {
+    public BlockType FillDirtUpToHeight(Vector3 samplingDirection, int y, float height) {
         PlanetTerrain planet = chunk.GetPlanet();
         if (y <= planet.GetMinHeight()) {
             return BlockTypeEnum.GetBlockTypeByName("bedrock");
         }
-        string[] terrainLayerTypes = planet.terrainLayersTypes;
-        float[] terrainLayerHeights = planet.terrainLayersHeights;
+        bool cave = planet.GetCave(samplingDirection, 1f*y);
+        if (cave) return BlockTypeEnum.GetBlockTypeByName("air");
 
+        Biome biome = planet.GetBiome(samplingDirection);
+        string[] terrainLayerTypes = biome.GetTerrainLayersType();
+        float[] terrainLayerHeights = biome.GetTerrainLayersHeight();
         for (int i=0; i<terrainLayerTypes.Length; i++) {
             if (y < terrainLayerHeights[i] * height) {
                 return BlockTypeEnum.GetBlockTypeByName(terrainLayerTypes[i]);
@@ -41,16 +44,10 @@ public class ChunkDataGenerator {
         return BlockTypeEnum.GetBlockTypeByName("air");
     }
 
-    public float TerrainHeightFromNoise(int x, int y, int z) {
-        Vector3 samplingDirection = chunk.GetPlanet().BaseVector(chunk.GetSideCoord(), chunk.GetXCoord(), chunk.GetZCoord(), x, y, z);
-        
-        float terrainHeight = PerlinNoise.get3DPerlinNoise(samplingDirection, 1);
-        terrainHeight += 0.7f*PerlinNoise.get3DPerlinNoise(samplingDirection, 2);
-        terrainHeight += 0.45f*PerlinNoise.get3DPerlinNoise(samplingDirection, 4);
-        terrainHeight /= 1.75f;
-        terrainHeight *= (chunk.GetPlanet().GetHeight() - 2)/2f;
-        terrainHeight += 1f; 
-
+    public float TerrainHeightFromNoise(Vector3 samplingDirection) {
+        PlanetTerrain planet = chunk.GetPlanet();
+        float terrainHeight = planet.GetHeightMapAt(samplingDirection);
+        terrainHeight *= 0.7f*(planet.GetHeight() - 2);
         return terrainHeight;
     }
 }
