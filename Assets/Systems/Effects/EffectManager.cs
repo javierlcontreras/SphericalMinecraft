@@ -94,7 +94,7 @@ public class EffectManager : MonoBehaviour
 
 		// -------- Clouds ---------
 		RenderTexture cloudComposite = RenderTexture.GetTemporary(source.descriptor);
-		RenderClouds(atmosphereComposite, cloudComposite);
+		RenderClouds(atmosphereComposite, target);
 
 		// -------- Underwater --------
 		//RenderTexture underwaterComposite = RenderTexture.GetTemporary(source.descriptor);
@@ -112,7 +112,7 @@ public class EffectManager : MonoBehaviour
 		}*/
 
 		// -------- HUD --------
-		Graphics.Blit(cloudComposite, target, hudMat);
+		//Graphics.Blit(cloudComposite, target, hudMat);
 
 		// -------- Release --------
 		RenderTexture.ReleaseTemporary(atmosphereComposite);

@@ -53,7 +53,7 @@ public class PlanetMeshGenerator {
             for (int i=0; i<realChunkSize; i++) {
                 for (int j=0; j<realChunkSize; j++) {
 
-                    Block block  = chunk.blocks[i,h,j];
+                    Block block  = chunk.GetBlock(i,h,j);
                     if (block == null) continue;
                     string blockTypeName = block.GetBlockType().GetName();
                     //Debug.Log("Block type check: " + blockTypeName);

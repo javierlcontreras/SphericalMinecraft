@@ -88,11 +88,11 @@ public class PointingTo : MonoBehaviour {
         if (hit.colliderInstanceID == 0) return null;
         Chunk chunk = ChunkHit(hit);
         Vector3Int blockIndex = BlockIndexToBreak(hit, chunk, place);
-        if (place && chunk.blocks[blockIndex.x, blockIndex.y, blockIndex.z] == null) {
+        if (place && chunk.GetBlock(blockIndex.x, blockIndex.y, blockIndex.z) == null) {
             BlockType type = BlockTypeEnum.GetBlockTypeByName("invalid"); 
-            chunk.blocks[blockIndex.x, blockIndex.y, blockIndex.z] = new Block(blockIndex, type, chunk);
+            chunk.SetBlock(blockIndex.x, blockIndex.y, blockIndex.z, new Block(blockIndex, type, chunk));
         }
-        return chunk.blocks[blockIndex.x, blockIndex.y, blockIndex.z];
+        return chunk.GetBlock(blockIndex.x, blockIndex.y, blockIndex.z);
     }
 
 
@@ -117,7 +117,7 @@ public class PointingTo : MonoBehaviour {
             int x = blockIndex.x;
             int y = blockIndex.y;
             int z = blockIndex.z;
-            chunkPointed.blocks[x,y,z] = null;
+            chunkPointed.SetBlock(x,y,z,null);
             SuccessfulChange(chunkPointed);
         }
     }
@@ -134,7 +134,7 @@ public class PointingTo : MonoBehaviour {
             int x = blockIndex.x;
             int y = blockIndex.y;
             int z = blockIndex.z;
-            chunkPointed.blocks[x,y,z] = null;
+            chunkPointed.SetBlock(x,y,z,null);
             return;
         }
         BlockType type = inventory.GetSlot(inventory.GetSelectedSlotIndex()).GetBlockType();

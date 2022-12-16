@@ -6,12 +6,14 @@ using UnityEngine.SceneManagement;
 public class EscScreen : MonoBehaviour
 {
     GameObject pauseScreen;
+    GameObject hudScreen;
     GameObject player;
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.Find("Player");
-        pauseScreen = player.transform.Find("UI").Find("PauseScreen").gameObject;
+        pauseScreen = player.transform.Find("UI/PauseScreen").gameObject;
+        hudScreen = player.transform.Find("UI/HUD").gameObject;
     }
 
     // Update is called once per frame
@@ -31,6 +33,10 @@ public class EscScreen : MonoBehaviour
                 Cursor.lockState = CursorLockMode.None;
 		        Cursor.visible = true;	
             }
+        }
+        if (Input.GetKeyDown(KeyCode.F2)) { 
+            bool active = hudScreen.activeSelf;
+            hudScreen.SetActive(!active);
         }
     }
 

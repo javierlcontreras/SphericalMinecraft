@@ -19,7 +19,7 @@ public class ChunkDataGenerator {
                     float height = TerrainHeightFromNoise(samplingDirection); //
                     BlockType type = FillDirtUpToHeight(samplingDirection, y, height);
                     Vector3Int inChunkIndex = new Vector3Int(x, y, z);
-                    if (type.GetName() != "air") chunk.blocks[x, y, z] = new Block(inChunkIndex, type, chunk);
+                    if (type.GetName() != "air") chunk.SetBlock(x, y, z, new Block(inChunkIndex, type, chunk));
                 }
             }
         }
@@ -30,16 +30,21 @@ public class ChunkDataGenerator {
         if (y <= planet.GetMinHeight()) {
             return BlockTypeEnum.GetBlockTypeByName("bedrock");
         }
-        bool cave = planet.GetCave(samplingDirection, 1f*y);
+        bool cave = planet.GetCaveAt(samplingDirection, 1f*y);
         if (cave) return BlockTypeEnum.GetBlockTypeByName("air");
 
-        Biome biome = planet.GetBiome(samplingDirection);
+        Biome biome = planet.GetBiomeAt(samplingDirection);
         string[] terrainLayerTypes = biome.GetTerrainLayersType();
         float[] terrainLayerHeights = biome.GetTerrainLayersHeight();
         for (int i=0; i<terrainLayerTypes.Length; i++) {
             if (y < terrainLayerHeights[i] * height) {
                 return BlockTypeEnum.GetBlockTypeByName(terrainLayerTypes[i]);
             }
+        }
+        if (biome.GetBiomeName() == "forest" && planet.GetTreeAt(samplingDirection)) {
+            float treeHeight = terrainLayerHeights[terrainLayerHeights.Length-1]*height + 5;
+            if (y < treeHeight-1) return BlockTypeEnum.GetBlockTypeByName("wood");
+            else if (y < treeHeight) return BlockTypeEnum.GetBlockTypeByName("leaves");
         }
         return BlockTypeEnum.GetBlockTypeByName("air");
     }

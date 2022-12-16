@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Biome : MonoBehaviour
 {
+    public string biomeName;
+    public bool trees;
     public string[] terrainLayersType;    
     public float[] terrainLayersHeight;    
 
@@ -12,5 +14,8 @@ public class Biome : MonoBehaviour
     }
     public float[] GetTerrainLayersHeight() {
         return terrainLayersHeight;
+    }
+    public string GetBiomeName() {
+        return biomeName;
     }
 }

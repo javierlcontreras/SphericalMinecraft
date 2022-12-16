@@ -44,7 +44,7 @@ public class ChunkAdjacencyCalculator {
             if (!inRange(nextX/2, 0, nextRealChunkSize) || !inRange(nextZ/2, 0, nextRealChunkSize)) {
                 return null;
             }
-            Block block = planet.chunks[sideCoord, chunkX, chunkZ].blocks[nextX/2,nextY,nextZ/2];
+            Block block = planet.chunks[sideCoord, chunkX, chunkZ].GetBlock(nextX/2,nextY,nextZ/2);
             return new BlockAdjacency(block);
         }
         else if (nextRealChunkSize > realChunkSize) {
@@ -52,10 +52,10 @@ public class ChunkAdjacencyCalculator {
                 return null;
             }
             Block[] blocks = new Block[4]{
-                planet.chunks[sideCoord, chunkX, chunkZ].blocks[2*nextX,nextY,2*nextZ],
-                planet.chunks[sideCoord, chunkX, chunkZ].blocks[2*nextX,nextY,2*nextZ+1],
-                planet.chunks[sideCoord, chunkX, chunkZ].blocks[2*nextX+1,nextY,2*nextZ],
-                planet.chunks[sideCoord, chunkX, chunkZ].blocks[2*nextX+1,nextY,2*nextZ+1],
+                planet.chunks[sideCoord, chunkX, chunkZ].GetBlock(2*nextX,nextY,2*nextZ),
+                planet.chunks[sideCoord, chunkX, chunkZ].GetBlock(2*nextX,nextY,2*nextZ+1),
+                planet.chunks[sideCoord, chunkX, chunkZ].GetBlock(2*nextX+1,nextY,2*nextZ),
+                planet.chunks[sideCoord, chunkX, chunkZ].GetBlock(2*nextX+1,nextY,2*nextZ+1),
             };
             return new BlockAdjacency(blocks);
         }
@@ -63,7 +63,7 @@ public class ChunkAdjacencyCalculator {
             if (!inRange(nextX, 0, nextRealChunkSize) || !inRange(nextZ, 0, nextRealChunkSize)) {
                 return null;
             }
-            Block block = planet.chunks[sideCoord, chunkX, chunkZ].blocks[nextX,nextY,nextZ];
+            Block block = planet.chunks[sideCoord, chunkX, chunkZ].GetBlock(nextX,nextY,nextZ);
             return new BlockAdjacency(block);
         }
     }        

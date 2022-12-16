@@ -36,7 +36,9 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets/Editor/FirstPersonControllerEditor.cs" />
      <Compile Include="Assets/Systems/Clouds/Scripts/Editor/NoiseGenEditor.cs" />
+     <Compile Include="Assets/Editor/NoiseGenerationSettingsEditor.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/home/jlcontreras/Unity/Hub/Editor/2021.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

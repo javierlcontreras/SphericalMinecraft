@@ -1,5 +1,7 @@
 using System.Text;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class Chunk {
     private int chunkSize, chunkHeight;
@@ -10,7 +12,20 @@ public class Chunk {
     public int GetXCoord() { return xCoord; }
     public int GetZCoord() { return zCoord; }
     
-    public Block[,,] blocks;
+    //private Block[,,] blocks;
+    private Dictionary<Vector3Int, Block> blocks;
+    public Block GetBlock(int x, int y, int z) {
+        Vector3Int pos = new Vector3Int(x, y, z);
+        if (blocks.ContainsKey(pos)) return blocks[pos];
+        return null;
+    }
+    public void SetBlock(int x, int y, int z, Block block) {
+        Vector3Int pos = new Vector3Int(x, y, z);
+        if (block == null) {
+            blocks.Remove(pos);
+        }
+        else blocks[pos] = block;
+    } 
     private PlanetTerrain planet;
     public PlanetTerrain GetPlanet() { return planet; }
     
@@ -27,7 +42,7 @@ public class Chunk {
         planet = _planet;
         chunkSize = planet.GetChunkSize();
         chunkHeight = planet.GetHeight();
-        blocks = new Block[chunkSize, chunkHeight, chunkSize];
+        blocks = new Dictionary<Vector3Int, Block>();
         chunkDataGenerator = new ChunkDataGenerator(this);
     }
 
@@ -41,20 +56,6 @@ public class Chunk {
 
         return (base1 - base2).magnitude;
     }
-/*
-    public void DebugChunkDataAtHeight(int y) {
-        var builder = new StringBuilder();
-        int numSides = planet.NumBlocksAtHeightPerChunk(y);
-        Debug.Log("Real chunkSize " + numSides); 
-        for (int x = 0; x < numSides; x++) {
-            for (int z = 0; z < numSides; z++) { 
-                BlockType type = blocks[x, y, z].GetBlockType();
-                builder.Append(type.GetName()[0]);
-            }
-            builder.Append("\n");
-        }
-        Debug.Log(builder.ToString());
-    }*/
 
     public Quaternion ChunkToGlobal() {
         Vector3 sideNormal = TerrainGenerationConstants.sideYaxisList[sideCoord];

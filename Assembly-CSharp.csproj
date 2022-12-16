@@ -42,7 +42,6 @@
      <Compile Include="Assets/Systems/Terrain/Block.cs" />
      <Compile Include="Assets/Systems/HUD/ToolbarManager.cs" />
      <Compile Include="Assets/Systems/Character/NormalMovementController.cs" />
-     <Compile Include="Assets/Systems/Character/FirstPersonControllerEditor.cs" />
      <Compile Include="Assets/Systems/Helper/Compute Helper/Processing/GaussianBlur.cs" />
      <Compile Include="Assets/Systems/CelestialMechanics/OrbitManager.cs" />
      <Compile Include="Assets/Systems/Clouds/Scripts/CloudManager.cs" />
@@ -58,7 +57,6 @@
      <Compile Include="Assets/Systems/Terrain/BlockType.cs" />
      <Compile Include="Assets/Systems/Terrain/ChunkAdjancenyCalculator.cs" />
      <Compile Include="Assets/Systems/Terrain/PlanetDataGenerator.cs" />
-     <Compile Include="Assets/Systems/NoiseGeneration/NoiseGenerationSettingsEditor.cs" />
      <Compile Include="Assets/Systems/Terrain/BlockSideTriangle.cs" />
      <Compile Include="Assets/Systems/Helper/Compute Helper/Channel.cs" />
      <Compile Include="Assets/Systems/Terrain/BlockAdjacency.cs" />

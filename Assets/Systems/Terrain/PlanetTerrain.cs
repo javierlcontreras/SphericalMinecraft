@@ -32,11 +32,14 @@ public class PlanetTerrain : MonoBehaviour {
         return heightMap.GetNoiseAt(samplingDirection);
     }
     public BiomeManager biomeManager;
-    public Biome GetBiome(Vector3 samplingDirection) {
+    public Biome GetBiomeAt(Vector3 samplingDirection) {
         return biomeManager.GetBiome(samplingDirection);
     }
+    public bool GetTreeAt(Vector3 samplingDirection) {
+        return biomeManager.GetTree(samplingDirection);
+    }
     public CaveManager caveManager;
-    public bool GetCave(Vector3 samplingDirection, float height) {
+    public bool GetCaveAt(Vector3 samplingDirection, float height) {
         return caveManager.GetCave(samplingDirection*height);
     }
 
