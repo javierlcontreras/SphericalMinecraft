@@ -9,13 +9,14 @@ public class CameraEffect : MonoBehaviour
 	void OnRenderImage(RenderTexture source, RenderTexture target)
 	{
 		Init();
+		
 
 		if (effectManager != null)
 		{
 			effectManager.HandleEffects(source, target);
 		}
-		else
-		{
+		else {
+
 			Graphics.Blit(source, target);
 		}
 	}

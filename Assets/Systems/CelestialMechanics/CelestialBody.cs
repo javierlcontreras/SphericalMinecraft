@@ -5,6 +5,7 @@ using UnityEngine;
 public class CelestialBody : MonoBehaviour
 {
     public float mass;
+    public float rotationalSpeed;
     public float GetMass() {
         return mass;
     }
@@ -15,7 +16,9 @@ public class CelestialBody : MonoBehaviour
 
     public void UpdatePosition(float deltaTime) {
         transform.position += deltaTime*velocity;
-        transform.Rotate(transform.position.normalized*90*deltaTime);
+    }
+    public void UpdateRotation(float deltaTime) {
+        transform.Rotate(transform.up*90*deltaTime*rotationalSpeed);
     }
     public void UpdateVelocity(float deltaTime, Vector3 force) {
         velocity += deltaTime * (force / mass);

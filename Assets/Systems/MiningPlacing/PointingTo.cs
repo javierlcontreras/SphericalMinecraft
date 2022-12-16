@@ -17,7 +17,7 @@ public class PointingTo : MonoBehaviour {
 	private ChunkLoader chunkLoader;
 	
     void Start() {
-		chunkLoader = GameObject.Find("ChunkLoader").GetComponent<ChunkLoader>();
+		chunkLoader = gameObject.GetComponent<ChunkLoader>();
         character = transform;
         inventory = gameObject.GetComponent<Inventory>();
         settings = GetComponent<ControllerSettings>();
@@ -38,7 +38,7 @@ public class PointingTo : MonoBehaviour {
         int xCoord = int.Parse(coord[1]);
         int zCoord = int.Parse(coord[2]);
 
-        Chunk chunk = chunkLoader.GetCurrentPlanet().chunks[sideCoord, xCoord, zCoord];
+        Chunk chunk = chunkLoader.GetCurrentPlanetTerrain().chunks[sideCoord, xCoord, zCoord];
         return chunk;
     }
 
@@ -52,19 +52,21 @@ public class PointingTo : MonoBehaviour {
     }
 
     public Vector3Int BlockToClosestTo(Vector3 point, Chunk chunk) {
+        Vector3 pointFromPlanetRef = chunkLoader.GetCurrentPlanet().transform.InverseTransformPoint(point);
+
         int sideCoord = chunk.GetSideCoord();
         Vector3 sideXaxis = TerrainGenerationConstants.sideXaxisList[sideCoord]; 
         Vector3 sideYaxis = TerrainGenerationConstants.sideYaxisList[sideCoord]; 
         Vector3 sideZaxis = TerrainGenerationConstants.sideZaxisList[sideCoord]; 
-        PlanetTerrain planet = chunkLoader.GetCurrentPlanet();
+        PlanetTerrain planet = chunkLoader.GetCurrentPlanetTerrain();
         int chunkSize = planet.GetChunkSize();
         int chunksPerSide = planet.GetChunksPerSide();
         
-        float height = point.magnitude;
+        float height = pointFromPlanetRef.magnitude;
         int hBlock = (int)(height - TerrainGenerationConstants.GetCoreRadius());
         int realChunkSize = Mathf.Max(1, planet.NumBlocksAtHeightPerChunk(hBlock));
         int mult = chunkSize / realChunkSize;
-        Vector3 dir = point.normalized;
+        Vector3 dir = pointFromPlanetRef.normalized;
         float normInf = Mathf.Max(Mathf.Abs(dir.x), Mathf.Abs(dir.y), Mathf.Abs(dir.z)); 
         Vector3 cubeDir = dir / normInf;
 
@@ -104,6 +106,9 @@ public class PointingTo : MonoBehaviour {
         }
         pointingTo.GetComponent<MeshFilter>().mesh = mesh;
         pointingTo.GetComponent<MeshRenderer>().material = wireframeMaterial;
+        GameObject planet = chunkLoader.GetCurrentPlanet();
+        pointingTo.transform.position = planet.transform.position;
+        pointingTo.transform.rotation = planet.transform.rotation;
     }
 
     public void Mine() {
@@ -143,7 +148,10 @@ public class PointingTo : MonoBehaviour {
     
     }
     void SuccessfulChange(Chunk chunkPointed) {
-        chunkLoader.RegenerateChunkMesh(chunkLoader.GetCurrentPlanet(), chunkPointed.GetSideCoord(), chunkPointed.GetXCoord(), chunkPointed.GetZCoord());
+        chunkLoader.RegenerateChunkMesh(chunkLoader.GetCurrentPlanetTerrain(), 
+                                        chunkPointed.GetSideCoord(), 
+                                        chunkPointed.GetXCoord(), 
+                                        chunkPointed.GetZCoord());
         timeDelayActions = 0;
     }
 

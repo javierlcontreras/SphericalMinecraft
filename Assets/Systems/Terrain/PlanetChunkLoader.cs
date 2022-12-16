@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
 public class PlanetChunkLoader {
     private PlanetTerrain planet;
     private GameObject[,,] currentChunksLoaded;
@@ -41,17 +42,7 @@ public class PlanetChunkLoader {
                 //Debug.Log("Creating chunk data!");
             }
 
-            string chunkName = "(" + sideCoord + "," + xCoord + "," + zCoord + ")";
-            Mesh mesh = planet.GetPlanetMeshGenerator().GenerateChunkMesh(sideCoord, xCoord, zCoord);
-            GameObject chunkMesh = new GameObject(planet.GetPlanetName() + ": "+ chunkName, typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
-            int TerrainLayer = LayerMask.NameToLayer("Terrain");
-            chunkMesh.layer = TerrainLayer;
-            chunkMesh.GetComponent<MeshFilter>().mesh = mesh;
-            chunkMesh.GetComponent<MeshRenderer>().material = planet.GetSurfaceTexturesMaterial();
-            chunkMesh.GetComponent<MeshCollider>().sharedMesh = mesh;
-            chunkMesh.transform.position = planet.GetPlanetPosition();
-            chunkMesh.transform.SetParent(planet.transform);
-            currentChunksLoaded[sideCoord, xCoord, zCoord] = chunkMesh;
+            GenerateChunkMeshNow(sideCoord, xCoord, zCoord);
         }
         yield return null;
     }
@@ -66,6 +57,7 @@ public class PlanetChunkLoader {
         chunkMesh.GetComponent<MeshRenderer>().material = planet.GetSurfaceTexturesMaterial();
         chunkMesh.GetComponent<MeshCollider>().sharedMesh = mesh;
         chunkMesh.transform.position = planet.GetPlanetPosition();
+        chunkMesh.transform.rotation = planet.GetPlanetRotation();
         chunkMesh.transform.SetParent(planet.transform);
         currentChunksLoaded[sideCoord, xCoord, zCoord] = chunkMesh;
     }

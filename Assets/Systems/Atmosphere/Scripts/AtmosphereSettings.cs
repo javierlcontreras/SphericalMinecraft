@@ -1,12 +1,9 @@
 using UnityEngine;
 using static UnityEngine.Mathf;
 
-[CreateAssetMenu(menuName = "Atmosphere")]
-public class AtmosphereSettings : ScriptableObject
+public class AtmosphereSettings : MonoBehaviour
 {
-
 	public Shader shader;
-	public Shader atmosphereShader;
 	public ComputeShader opticalDepthCompute;
 	public int textureSize = 256;
 
@@ -20,10 +17,8 @@ public class AtmosphereSettings : ScriptableObject
 	public float scatteringStrength = 20;
 	public float intensity = 1;
 
-
-
-	public float planetRadius;
-	public float atmosphereRadius;
+	private float planetRadius;
+	private float atmosphereRadius;
 
 	[Header("Dither")]
 	public float ditherStrength = 0.8f;
@@ -39,6 +34,12 @@ public class AtmosphereSettings : ScriptableObject
 
 	RenderTexture opticalDepthTexture;
 	bool settingsUpToDate;
+
+	public void Start() {
+		PlanetTerrain planetTerrain = gameObject.GetComponent<PlanetTerrain>();
+		planetRadius = 0.2f*planetTerrain.GetHeight();
+		atmosphereRadius = 0.7f*planetTerrain.GetHeight();
+	}
 
 	public void FlagForUpdate()
 	{

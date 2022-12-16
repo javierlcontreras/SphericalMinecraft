@@ -37,7 +37,6 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets/Systems/NoiseGeneration/SmoothNoise.cs" />
-     <Compile Include="Assets/Systems/Terrain/ChunkLoader.cs" />
      <Compile Include="Assets/Systems/Clouds/Scripts/Noise/WorleyNoiseSettings.cs" />
      <Compile Include="Assets/Systems/Terrain/Block.cs" />
      <Compile Include="Assets/Systems/HUD/ToolbarManager.cs" />
@@ -81,6 +80,7 @@
      <Compile Include="Assets/Systems/Atmosphere/Scripts/AtmosphereSettings.cs" />
      <Compile Include="Assets/Systems/PauseScreen/EscScreen.cs" />
      <Compile Include="Assets/Systems/Character/ControllerSettings.cs" />
+     <Compile Include="Assets/Systems/ChunkLoader/ChunkLoader.cs" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets/Systems/HUD/HUD.shader" />

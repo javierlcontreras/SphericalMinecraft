@@ -52,7 +52,7 @@ public class ChunkDataGenerator {
     public float TerrainHeightFromNoise(Vector3 samplingDirection) {
         PlanetTerrain planet = chunk.GetPlanet();
         float terrainHeight = planet.GetHeightMapAt(samplingDirection);
-        terrainHeight *= 0.7f*(planet.GetHeight() - 2);
+        terrainHeight *= (planet.GetHeight() - 2);
         return terrainHeight;
     }
 }

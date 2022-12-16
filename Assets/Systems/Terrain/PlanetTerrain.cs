@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(CelestialBody))]
 public class PlanetTerrain : MonoBehaviour {
     public int chunksPerSide = 1;
     public int chunkSize = 16;
@@ -40,6 +41,7 @@ public class PlanetTerrain : MonoBehaviour {
     }
     public CaveManager caveManager;
     public bool GetCaveAt(Vector3 samplingDirection, float height) {
+        if (caveManager == null) return false;
         return caveManager.GetCave(samplingDirection*height);
     }
 
@@ -71,7 +73,9 @@ public class PlanetTerrain : MonoBehaviour {
     public Vector3 GetPlanetPosition() {
         return transform.position;
     }
-
+    public Quaternion GetPlanetRotation() {
+        return transform.rotation;
+    }
     public Vector3 BaseVector(int side, int chunkX, int chunkZ, int cornerX, int cornerY, int cornerZ) {
         Vector3 normal = TerrainGenerationConstants.sideYaxisList[side];
         Vector3 xAxis = TerrainGenerationConstants.sideXaxisList[side];

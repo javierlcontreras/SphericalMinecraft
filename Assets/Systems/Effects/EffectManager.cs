@@ -9,7 +9,7 @@ public class EffectManager : MonoBehaviour
 	public bool cloudsEnabled = true;
 	//public bool underwaterEnabled = true;
 	public bool antiAliasingEnabled = true;
-	public AtmosphereSettings atmosphereSettings;
+	private AtmosphereSettings atmosphereSettings;
 	//Water waterSettings;
 
 	//public Shader depthShader;
@@ -34,11 +34,17 @@ public class EffectManager : MonoBehaviour
 		sunTransform = GameObject.FindWithTag("Sun").transform;
 		//Camera.main.depthTextureMode = DepthTextureMode.Depth;
 
-		atmosphereSettings.FlagForUpdate();
 		//waterDepthCam.depthTextureMode = DepthTextureMode.Depth;
 
 		gaussianBlur = new ComputeShaderUtility.GaussianBlur();
-
+	}
+	void Start() {
+		GameObject player = transform.parent.gameObject;
+		Debug.Log(player);
+		GameObject planet = player.GetComponent<ChunkLoader>().GetCurrentPlanet();
+		atmosphereSettings = planet.GetComponent<AtmosphereSettings>();
+		if (atmosphereSettings == null) return;
+		atmosphereSettings.FlagForUpdate();
 	}
 
 	void RenderAtmosphere(RenderTexture source, RenderTexture target)
@@ -86,6 +92,10 @@ public class EffectManager : MonoBehaviour
 
 	public void HandleEffects(RenderTexture source, RenderTexture target)
 	{
+		if (atmosphereSettings == null) {
+			Graphics.Blit(source, target);
+			return;
+		}
 		Init();
 
 		// -------- Atmosphere --------
