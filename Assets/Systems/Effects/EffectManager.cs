@@ -40,7 +40,7 @@ public class EffectManager : MonoBehaviour
 	}
 	void Start() {
 		GameObject player = transform.parent.gameObject;
-		Debug.Log(player);
+//		Debug.Log(player);
 		GameObject planet = player.GetComponent<ChunkLoader>().GetCurrentPlanet();
 		atmosphereSettings = planet.GetComponent<AtmosphereSettings>();
 		if (atmosphereSettings == null) return;

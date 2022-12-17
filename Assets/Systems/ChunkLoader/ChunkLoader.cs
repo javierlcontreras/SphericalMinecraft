@@ -35,11 +35,20 @@ public class ChunkLoader : MonoBehaviour {
     }
 
     public GameObject GetCurrentPlanet() {
-        return planets[0];
+        float minDist = float.PositiveInfinity;
+        GameObject planet = null;
+        for (int planetIndex=0; planetIndex<planets.Length; planetIndex++) {
+            float dist = (planets[planetIndex].transform.position - transform.position).magnitude;
+            if (dist < minDist) {
+                minDist = dist;
+                planet = planets[planetIndex];
+            }
+        }
+        return planet;
     }
 
     public PlanetTerrain GetCurrentPlanetTerrain() {
-        return planets[0].GetComponent<PlanetTerrain>();
+        return GetCurrentPlanet().GetComponent<PlanetTerrain>();
     }
 
     public float GetRadiusOfLoad() {
@@ -52,8 +61,8 @@ public class ChunkLoader : MonoBehaviour {
     bool coroutineFinished = true;
     public IEnumerator UpdatePlanetMeshes() {
         if (!dontRenderChunks) {
-            for (int index=0; index<chunkList.Count; index++) {
-                Vector4 vec = chunkList[index];
+            for (int chunkIndex=0; chunkIndex<chunkList.Count; chunkIndex++) {
+                Vector4 vec = chunkList[chunkIndex];
                 int side = (int)vec.x;
                 int chunkX = (int)vec.y;
                 int chunkZ = (int)vec.z;

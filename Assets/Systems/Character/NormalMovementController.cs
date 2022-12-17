@@ -19,6 +19,9 @@ class NormalMovementController {
 	public float GetVerticalVelocity() {
 		return verticalVelocity;
 	}
+    public void SetVerticalVelocity(float _verticalVelocity) {
+        verticalVelocity = _verticalVelocity;
+    }
 
     public float UpdateVerticalVelocity(bool wantToJump, bool wantToShift, float deltaTime) {
         timeSinceJump += deltaTime;

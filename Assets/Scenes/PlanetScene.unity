@@ -645,7 +645,7 @@ GameObject:
   - component: {fileID: 166101078}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -657,7 +657,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166101062}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6535ce5181cc6bfa6a405d81091ba9a4, type: 3}
   m_Name: 
@@ -737,7 +737,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166101062}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3299c457f6f930ed5842a5bfa18dabb7, type: 3}
   m_Name: 
@@ -756,9 +756,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseSensitivityX: 3
   mouseSensitivityY: 3
-  walkSpeed: 6
+  walkSpeed: 16
   jumpForce: 220
-  flySpeed: 0.3
+  flySpeed: 16
   groundedMask:
     serializedVersion: 2
     m_Bits: 64
@@ -823,7 +823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ba9f265044bc9e9b61fb2388d53641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radiusOfLoad: 6400
+  radiusOfLoad: 128
   radiusOfSave: 128
   dontRenderChunks: 0
 --- !u!1 &207234743

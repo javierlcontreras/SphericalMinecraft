@@ -11,6 +11,7 @@ public class FirstPersonController : MonoBehaviour {
 	private CameraController cameraController;
 	
 	private Transform characterTransform;
+	private bool flyingMode;
 	void Awake() {
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;	
@@ -20,8 +21,18 @@ public class FirstPersonController : MonoBehaviour {
 		normalController = new NormalMovementController(settings);
 		cameraController = new CameraController(settings.CameraTransform);
         characterTransform = settings.CharacterTransform;	
+		flyingMode = false;
+	}
+	void Update() {
+		if (Input.GetKeyDown(KeyCode.C)) {
+			if (flyingMode) {
+				normalController.SetVerticalVelocity(0);
+			}
+			flyingMode = !flyingMode;
+		}
 	}
 	void FixedUpdate() {
+
 		characterTransform.rotation = settings.RadialCharacterOrientation();
 		//float scalingFactor = ScalePlayerWithHeight();
 		//characterTransform.localScale = settings.characterShape * scalingFactor;
@@ -39,7 +50,11 @@ public class FirstPersonController : MonoBehaviour {
 		
 		Vector3 moveAmount = tangencialController.AmountToMoveWithTarget(inputX, inputY);
 		float verticalVelocity = normalController.UpdateVerticalVelocity(wantToJump, wantToShift, Time.fixedDeltaTime);
-
+		if (flyingMode) {
+			verticalVelocity = 0;
+			if (wantToJump) verticalVelocity += settings.flySpeed;
+			if (wantToShift) verticalVelocity -= settings.flySpeed;
+		}
 		Vector3 finalMove = characterTransform.TransformDirection(moveAmount + Vector3.up*verticalVelocity) * Time.fixedDeltaTime;
 		
 		Vector3 radialDirection = characterTransform.position.normalized;
