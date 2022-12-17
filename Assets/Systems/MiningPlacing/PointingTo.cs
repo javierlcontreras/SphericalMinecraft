@@ -109,6 +109,7 @@ public class PointingTo : MonoBehaviour {
         GameObject planet = chunkLoader.GetCurrentPlanet();
         pointingTo.transform.position = planet.transform.position;
         pointingTo.transform.rotation = planet.transform.rotation;
+        pointingTo.transform.SetParent(planet.transform);
     }
 
     public void Mine() {

@@ -29,4 +29,10 @@ public class CelestialBody : MonoBehaviour
         player.transform.Rotate(player.transform.up*90*deltaTime*rotationalSpeed);
         player.position += deltaTime *  velocity;
     }
+    public void LocalToGlobal(Transform obj) {
+        obj.position = transform.TransformPoint(obj.position);
+        Debug.Log("Planet rotation " + transform.rotation + " Obj rot " + obj.rotation);
+        obj.rotation = transform.rotation * obj.rotation;
+        Debug.Log("Planet rotation " + transform.rotation + " Obj rot " + obj.rotation);
+    }
 }
