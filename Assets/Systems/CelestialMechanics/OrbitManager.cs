@@ -7,13 +7,12 @@ public class OrbitManager : MonoBehaviour
     public float gravitationalConstant;
     private CelestialBody earth;
     private CelestialBody moon;
-    private void Awake() {
-        earth = GameObject.Find("Earth").GetComponent<CelestialBody>();
-        moon = GameObject.Find("Moon").GetComponent<CelestialBody>();
-    }
 
     void FixedUpdate()
     {
+        earth = GameObject.Find("Earth").GetComponent<CelestialBody>();
+        moon = GameObject.Find("Moon").GetComponent<CelestialBody>();
+
         Vector3 direction = (earth.GetPosition() - moon.GetPosition());
         float distance = direction.magnitude;
         float strength = gravitationalConstant * earth.GetMass()*moon.GetMass() /  distance / distance;

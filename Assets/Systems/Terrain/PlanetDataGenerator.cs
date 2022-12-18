@@ -13,7 +13,7 @@ public class PlanetDataGenerator {
         planet = _planet;
         chunkSize = planet.GetChunkSize();
         chunksPerSide = planet.GetChunksPerSide();
-        height = planet.GetHeight();
+        height = planet.GetChunkHeight();
     }
 
     /*public void Generate() {
@@ -28,10 +28,10 @@ public class PlanetDataGenerator {
         //AddTrees(planet);
     }*/
 
-    public void GenerateChunk(int sideCoord, int xCoord, int zCoord) {
-        Chunk chunk = new Chunk(sideCoord, xCoord, zCoord, planet);
+    public void GenerateChunk(Vector3Int chunkCoord) {
+        Chunk chunk = new Chunk(chunkCoord, planet);
         chunk.GetChunkDataGenerator().CreateChunkData();
-        planet.SetChunk(sideCoord, xCoord, zCoord, chunk);
+        planet.SetChunk(chunkCoord, chunk);
     }
 
 /*  

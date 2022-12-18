@@ -21,7 +21,11 @@ public class ToolbarManager : MonoBehaviour
             slots[i] = GameObject.Find("Slot " + (i+1));
         }
         originalColor = new Color(1f, 1f, 1f, 0.2f);
-        player = GameObject.Find("Player");
+        Transform possiblePlayer = gameObject.transform.parent;
+        while (possiblePlayer.gameObject.tag != "Player") {
+            possiblePlayer = possiblePlayer.parent;
+        }
+        player = possiblePlayer.gameObject;
         inventory = player.GetComponent<Inventory>();
         RecolorSlots();
         FillSlotsWithInventoryItems();

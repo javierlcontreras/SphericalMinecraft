@@ -135,7 +135,7 @@ public class PointingTo : MonoBehaviour {
             return;
         }
         Chunk chunkPointed = blockPointed.GetChunk();
-        if ((blockPointed.GetBlockPosition() - character.position).magnitude < 2) {
+        if ((blockPointed.GetBlockGlobalPosition() - character.position).magnitude < 1.5f) {
             Vector3Int blockIndex = blockPointed.GetInChunkIndex();
             int x = blockIndex.x;
             int y = blockIndex.y;

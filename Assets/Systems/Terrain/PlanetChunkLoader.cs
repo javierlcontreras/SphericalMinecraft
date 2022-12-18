@@ -35,14 +35,18 @@ public class PlanetChunkLoader {
             oldMesh.SetActive(true);
         }
         else {
-            Chunk chunk = planet.chunks[sideCoord, xCoord, zCoord];
-            if (chunk == null) { // this is here to delay terrain generation until it is really necessary
-                planet.GetPlanetDataGenerator().GenerateChunk(sideCoord, xCoord, zCoord);
-                yield return null;
-                //Debug.Log("Creating chunk data!");
-            }
+            // DEBUG planet shoud never be null in prod.
+            if (planet.chunks != null) {
+                Chunk chunk = planet.chunks[sideCoord, xCoord, zCoord];
+                if (chunk == null) { // this is here to delay terrain generation until it is really necessary
+                    Vector3Int chunkCoord = new Vector3Int(sideCoord, xCoord, zCoord); 
+                    planet.GetPlanetDataGenerator().GenerateChunk(chunkCoord);
+                    yield return null;
+                    //Debug.Log("Creating chunk data!");
+                }
 
-            GenerateChunkMeshNow(sideCoord, xCoord, zCoord);
+                GenerateChunkMeshNow(sideCoord, xCoord, zCoord);
+            }
         }
         yield return null;
     }

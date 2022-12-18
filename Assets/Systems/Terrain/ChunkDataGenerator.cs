@@ -10,8 +10,8 @@ public class ChunkDataGenerator {
 
     public void CreateChunkData() {
         PlanetTerrain planet = chunk.GetPlanet();
-        int maxNumSides = planet.NumBlocksAtHeightPerChunk(planet.GetHeight()-1); 
-        for (int y = 0; y<planet.GetHeight(); y++) {
+        int maxNumSides = planet.NumBlocksAtHeightPerChunk(planet.GetChunkHeight()-1); 
+        for (int y = 0; y<planet.GetChunkHeight(); y++) {
             int numSides = planet.NumBlocksAtHeightPerChunk(y);
             for (int x = 0; x < numSides; x++) {
                 for (int z = 0; z < numSides; z++) { 
@@ -27,7 +27,7 @@ public class ChunkDataGenerator {
  
     public BlockType FillDirtUpToHeight(Vector3 samplingDirection, int y, float height) {
         PlanetTerrain planet = chunk.GetPlanet();
-        if (y <= planet.GetMinHeight()) {
+        if (y <= planet.GetChunkMinHeight()) {
             return BlockTypeEnum.GetBlockTypeByName("bedrock");
         }
         bool cave = planet.GetCaveAt(samplingDirection, 1f*y);
@@ -52,7 +52,7 @@ public class ChunkDataGenerator {
     public float TerrainHeightFromNoise(Vector3 samplingDirection) {
         PlanetTerrain planet = chunk.GetPlanet();
         float terrainHeight = planet.GetHeightMapAt(samplingDirection);
-        terrainHeight *= (planet.GetHeight() - 2);
+        terrainHeight *= (planet.GetChunkHeight() - 2);
         return terrainHeight;
     }
 }

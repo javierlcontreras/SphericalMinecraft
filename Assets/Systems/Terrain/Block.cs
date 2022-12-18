@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
+
+[System.Serializable]
 public class Block {
-    private BlockType type;
+    [SerializeField] private BlockType type;
     private Vector3Int inChunkIndex;
     private Chunk chunk;
 
 
     private Vector3?[] vertexPositions;
     private BlockSide[] sides;
-    private Vector3? globalPosition;
+    private Vector3? blockPositionFromPlanetReference;
 
     public Block(Vector3Int _inChunkIndex, BlockType _type, Chunk _chunk) {
         inChunkIndex = _inChunkIndex;
@@ -37,7 +38,7 @@ public class Block {
         int blocks = chunk.GetPlanet().NumBlocksAtHeight(inChunkIndex.y);
         int blocksNextTo = chunk.GetPlanet().NumBlocksAtHeight(vertexY);
         PlanetTerrain planet = chunk.GetPlanet();
-        if (blocksNextTo < blocks && vertexY >= planet.GetMinHeight()) {
+        if (blocksNextTo < blocks && vertexY >= planet.GetChunkMinHeight()) {
             float radius = (1 + planet.HeightAtBottomOfLayer(vertexY));
             float height = radius;
             if (vertexX%2 != 0 && vertexZ%2 != 0) {
@@ -94,15 +95,20 @@ public class Block {
     }
 
     public Vector3 GetBlockPosition(bool memo = true) {
-        if (memo && globalPosition != null) return (Vector3) globalPosition;
+        if (memo && blockPositionFromPlanetReference != null) return (Vector3) blockPositionFromPlanetReference;
 
         Vector3 res = Vector3.zero;
         for (int i=0; i<8; i++) {
             res += GetVertex(i, memo) / 8f;
         }
 
-        if (memo) globalPosition = res;
+        if (memo) blockPositionFromPlanetReference = res;
         return res;
+    }
+
+    public Vector3 GetBlockGlobalPosition(bool memo = true) {
+        Vector3 position = GetBlockPosition(memo);
+        return chunk.GetPlanet().gameObject.transform.TransformPoint(position);
     }
 
 

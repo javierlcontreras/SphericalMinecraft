@@ -37,8 +37,8 @@ public class AtmosphereSettings : MonoBehaviour
 
 	public void Start() {
 		PlanetTerrain planetTerrain = gameObject.GetComponent<PlanetTerrain>();
-		planetRadius = 0.2f*planetTerrain.GetHeight();
-		atmosphereRadius = 0.7f*planetTerrain.GetHeight();
+		planetRadius = 0.2f*planetTerrain.GetChunkHeight();
+		atmosphereRadius = 0.7f*planetTerrain.GetChunkHeight();
 	}
 
 	public void FlagForUpdate()

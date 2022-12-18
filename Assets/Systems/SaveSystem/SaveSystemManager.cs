@@ -1,52 +1,45 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerDataPersistence)), RequireComponent(typeof(PlanetDataPersistence))]
 public class SaveSystemManager : MonoBehaviour {
     public static string DATA_FOLDER_NAME = "GameData";
+   
     private string worldName;
-    
+    private string userId;
+    private PlayerDataPersistence playerDataPersistence;
+    private PlanetDataPersistence planetDataPersistence;
+
     public void NewGame() {
+        planetDataPersistence.NewPlanet(worldName, "Earth");
+        planetDataPersistence.NewPlanet(worldName, "Moon");
+
+        playerDataPersistence.NewPlayer(worldName, userId);
     }
 
     public void LoadGame() {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        PlayerDataPersitence playerDataPersitence = new PlayerDataPersitence(worldName);
-        foreach (GameObject player in players) {
-            GameObject empty = playerDataPersitence.LoadPlayer(player.name);
-            // TODO Make the prefab instantiation here
-            player.transform.position = empty.transform.position;
-            player.transform.rotation = empty.transform.rotation;
-            Destroy(empty);
-        }
+        planetDataPersistence.LoadPlanet(worldName, "Earth");
+        planetDataPersistence.LoadPlanet(worldName, "Moon");
 
-        GameObject[] planets = GameObject.FindGameObjectsWithTag("Planet");
-        PlanetDataPersitence planetDataPersitence = new PlanetDataPersitence(worldName);
-        foreach (GameObject planet in planets) {
-            GameObject empty = planetDataPersitence.LoadPlanet(planet.name);
-            // TODO Make the prefab instantiation here
-            planet.transform.position = empty.transform.position;
-            planet.transform.rotation = empty.transform.rotation;
-            planet.GetComponent<CelestialBody>().SetVelocity(empty.GetComponent<CelestialBody>().GetVelocity());
-            Destroy(empty);
-        }
+        playerDataPersistence.LoadPlayer(worldName, userId);
     }
     
     public void SaveGame() {
-        PlayerDataPersitence playerDataPersitence = new PlayerDataPersitence(worldName);
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player"); 
-        foreach (GameObject player in players) {
-            playerDataPersitence.SavePlayer(player);
-        } 
-        PlanetDataPersitence planetDataPersistence = new PlanetDataPersitence(worldName); 
         GameObject[] planets = GameObject.FindGameObjectsWithTag("Planet"); 
         foreach (GameObject planet in planets) {
-            planetDataPersistence.SavePlanet(planet);
+            planetDataPersistence.SavePlanet(worldName, planet);
+        } 
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player"); 
+        foreach (GameObject player in players) {
+            playerDataPersistence.SavePlayer(worldName, player);
         } 
     }
 
     private void DEBUG_START() {
         Debug.LogWarning("DEBUGGING TRICK. Must delete for prod. You are overwritting worldName and seed in PlayerPrefs for DEBUG.");
         PlayerPrefs.SetInt("newWorld", 0);
-        PlayerPrefs.SetString("worldName", "New World!");
+        PlayerPrefs.SetString("userId", "Player");
+        PlayerPrefs.SetString("worldName", "aaa");
         PlayerPrefs.SetString("seed", "Javier");   
     }
 
@@ -54,6 +47,11 @@ public class SaveSystemManager : MonoBehaviour {
     public void Awake() {
         //DEBUG_START();
         worldName = PlayerPrefs.GetString("worldName");
+        userId = PlayerPrefs.GetString("userId");
+        
+        planetDataPersistence = gameObject.GetComponent<PlanetDataPersistence>();
+        playerDataPersistence = gameObject.GetComponent<PlayerDataPersistence>();
+        
         bool newWorld = (PlayerPrefs.GetInt("newWorld") == 1);
         if (newWorld) {
             string seed = PlayerPrefs.GetString("seed");

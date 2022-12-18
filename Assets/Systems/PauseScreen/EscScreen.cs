@@ -11,7 +11,7 @@ public class EscScreen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("Player");
+        player = gameObject;
         pauseScreen = player.transform.Find("UI/PauseScreen").gameObject;
         hudScreen = player.transform.Find("UI/HUD").gameObject;
     }

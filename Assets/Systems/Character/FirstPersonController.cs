@@ -11,7 +11,7 @@ public class FirstPersonController : MonoBehaviour {
 	private CameraController cameraController;
 	
 	private Transform characterTransform;
-	private bool flyingMode;
+	private bool isFlying;
 	void Awake() {
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;	
@@ -21,14 +21,14 @@ public class FirstPersonController : MonoBehaviour {
 		normalController = new NormalMovementController(settings);
 		cameraController = new CameraController(settings.CameraTransform);
         characterTransform = settings.CharacterTransform;	
-		flyingMode = false;
+		isFlying = false;
 	}
 	void Update() {
 		if (Input.GetKeyDown(KeyCode.C)) {
-			if (flyingMode) {
+			if (isFlying) {
 				normalController.SetVerticalVelocity(0);
 			}
-			flyingMode = !flyingMode;
+			isFlying  = !isFlying ;
 		}
 	}
 	void FixedUpdate() {
@@ -50,7 +50,7 @@ public class FirstPersonController : MonoBehaviour {
 		
 		Vector3 moveAmount = tangencialController.AmountToMoveWithTarget(inputX, inputY);
 		float verticalVelocity = normalController.UpdateVerticalVelocity(wantToJump, wantToShift, Time.fixedDeltaTime);
-		if (flyingMode) {
+		if (isFlying) {
 			verticalVelocity = 0;
 			if (wantToJump) verticalVelocity += settings.flySpeed;
 			if (wantToShift) verticalVelocity -= settings.flySpeed;
@@ -83,5 +83,14 @@ public class FirstPersonController : MonoBehaviour {
 	}
 	public float GetVerticalVelocity() {
 		return normalController.GetVerticalVelocity();
+	}
+	public void SetVerticalVelocity(float verticalVelocity) {
+		normalController.SetVerticalVelocity(verticalVelocity);
+	}
+	public bool GetIsFlying() {
+		return isFlying;
+	}
+	public void SetIsFlying(bool _isFlying) {
+		isFlying = _isFlying;
 	}
 }

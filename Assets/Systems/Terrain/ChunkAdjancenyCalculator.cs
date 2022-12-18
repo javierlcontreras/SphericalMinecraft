@@ -14,7 +14,7 @@ public class ChunkAdjacencyCalculator {
     public ChunkAdjacencyCalculator(PlanetTerrain _planet) {
         planet = _planet;
         chunkSize = planet.GetChunkSize();
-        chunkHeight = planet.GetHeight();
+        chunkHeight = planet.GetChunkHeight();
         chunksPerSide = planet.GetChunksPerSide();
         sideXaxisList = TerrainGenerationConstants.sideXaxisList;
         sideYaxisList = TerrainGenerationConstants.sideYaxisList;

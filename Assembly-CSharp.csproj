@@ -74,7 +74,6 @@
      <Compile Include="Assets/Systems/Helper/Compute Helper/ComputeHelper.cs" />
      <Compile Include="Assets/Systems/Terrain/Chunk.cs" />
      <Compile Include="Assets/Systems/Effects/FXAA/FXAAEffect.cs" />
-     <Compile Include="Assets/Systems/OpeningMenu/ButtonClicks.cs" />
      <Compile Include="Assets/Systems/Clouds/Scripts/Noise/NoiseSettings.cs" />
      <Compile Include="Assets/Systems/MiningPlacing/Inventory.cs" />
      <Compile Include="Assets/Systems/Terrain/Biomes/BiomeManager.cs" />
@@ -82,9 +81,13 @@
      <Compile Include="Assets/Systems/PauseScreen/EscScreen.cs" />
      <Compile Include="Assets/Systems/Character/ControllerSettings.cs" />
      <Compile Include="Assets/Systems/SaveSystem/SaveSystemManager.cs" />
-     <Compile Include="Assets/Systems/SaveSystem/PlayerDataPersitence.cs" />
      <Compile Include="Assets/Systems/SaveSystem/FileManager.cs" />
-     <Compile Include="Assets/Systems/SaveSystem/PlanetDataPersitence.cs" />
+     <Compile Include="Assets/Systems/SaveSystem/PlanetDataPersistence.cs" />
+     <Compile Include="Assets/Systems/SaveSystem/PlayerDataPersistence.cs" />
+     <Compile Include="Assets/Systems/OpeningMenu/OpeningMenuManager.cs" />
+     <Compile Include="Assets/Systems/SaveSystem/DataType/PlanetData.cs" />
+     <Compile Include="Assets/Systems/SaveSystem/SerializableTypes/SerializableDictionary.cs" />
+     <Compile Include="Assets/Systems/SaveSystem/DataType/PlayerData.cs" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets/Systems/HUD/HUD.shader" />

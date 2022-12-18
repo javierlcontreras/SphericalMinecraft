@@ -13,7 +13,7 @@ public class PlanetTerrain : MonoBehaviour {
     public Chunk[,,] chunks;
     
     private int chunkHeight;
-    private int minChunkHeight;
+    private int chunkMinHeight;
     private int[] blocksAtHeight;
 
     private PlanetChunkLoader planetChunkLoader;
@@ -45,31 +45,33 @@ public class PlanetTerrain : MonoBehaviour {
         return caveManager.GetCave(samplingDirection*height);
     }
 
-    public void Awake() {
-        if (!isPowerOf2(chunkSize) || !isPowerOf2(chunksPerSide)) {
-            Debug.LogWarning("chunkSize and chunksPerSide MUST be powers of 2");
-        }
-
+    public void InitTerrainSizes() {
         chunks = new Chunk[6, chunksPerSide, chunksPerSide];
         
         chunkHeight = PrecomputeHeight(4*GetChunkSize()*GetChunksPerSide())+1;
-        minChunkHeight = PrecomputeHeight(2*GetChunksPerSide())+1;
-        blocksAtHeight = new int[chunkHeight+10];
-        for (int h=0; h<chunkHeight+10; h++) {
-            blocksAtHeight[h] = PrecomputeNumBlocksAtHeight(h);
-            //Debug.Log("Blocks at height " + h + ": " + blocksAtHeight[h]);
-        }
+        chunkMinHeight = PrecomputeHeight(2*GetChunksPerSide())+1;
+        TerrainSizePrecomputations();
+        InitSubsystems();
+    }
+
+    public void InitSubsystems() {
         planetChunkLoader = new PlanetChunkLoader(this);
         planetDataGenerator = new PlanetDataGenerator(this);
         planetMeshGenerator = new PlanetMeshGenerator(this);
     }
 
-    public int GetHeight() {
-        return chunkHeight;
+    public void TerrainSizePrecomputations() {
+        if (!isPowerOf2(chunkSize) || !isPowerOf2(chunksPerSide)) {
+            Debug.LogWarning("chunkSize and chunksPerSide MUST be powers of 2");
+        }
+        
+        blocksAtHeight = new int[chunkHeight+10];
+        for (int h=0; h<chunkHeight+10; h++) {
+            blocksAtHeight[h] = PrecomputeNumBlocksAtHeight(h);
+        }
     }
-    public int GetMinHeight() {
-        return minChunkHeight;
-    }
+
+
     public Vector3 BaseVector(int side, int chunkX, int chunkZ, int cornerX, int cornerY, int cornerZ) {
         Vector3 normal = TerrainGenerationConstants.sideYaxisList[side];
         Vector3 xAxis = TerrainGenerationConstants.sideXaxisList[side];
@@ -91,7 +93,7 @@ public class PlanetTerrain : MonoBehaviour {
 
     public Vector3 BaseVectorAtCenter(int side, int chunkX, int chunkZ) {
         int center = GetChunkSize()/2;
-        return BaseVector(side, chunkX, chunkZ, center, GetHeight()-1, center);
+        return BaseVector(side, chunkX, chunkZ, center, GetChunkHeight()-1, center);
     }
     
     public float HeightAtBottomOfLayer(int h) {
@@ -142,8 +144,11 @@ public class PlanetTerrain : MonoBehaviour {
         return numSides;
     }
 
-    public void SetChunk(int sideCoord, int xCoord, int yCoord, Chunk chunk) {
-        chunks[sideCoord, xCoord, yCoord] = chunk;
+    public void SetChunk(Vector3Int chunkCoord, Chunk chunk) {
+        int sideCoord = chunkCoord.x; 
+        int xCoord = chunkCoord.y; 
+        int zCoord = chunkCoord.z;
+        chunks[sideCoord, xCoord, zCoord] = chunk;
     }
 
     private bool isPowerOf2(int n) {
@@ -154,8 +159,30 @@ public class PlanetTerrain : MonoBehaviour {
     public int GetChunkSize() {
         return chunkSize;
     }
+    public void SetChunkSize(int _chunkSize) {
+        chunkSize = _chunkSize;
+        InitSubsystems();
+    }
     public int GetChunksPerSide() {
         return chunksPerSide;
+    }
+    public void SetChunksPerSide(int _chunksPerSide) {
+        chunksPerSide = _chunksPerSide;
+        InitSubsystems();
+    }
+    public int GetChunkHeight() {
+        return chunkHeight;
+    }
+    public void SetChunkHeight(int _chunkHeight) {
+        chunkHeight = _chunkHeight;
+        InitSubsystems();
+    }
+    public int GetChunkMinHeight() {
+        return chunkMinHeight;
+    }
+    public void SetChunkMinHeight(int _chunkMinHeight) {
+        chunkMinHeight = _chunkMinHeight;
+        InitSubsystems();
     }
     public string GetPlanetName() {
         return transform.name;

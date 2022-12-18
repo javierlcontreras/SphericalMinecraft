@@ -12,8 +12,6 @@ public class ChunkLoader : MonoBehaviour {
 
     private void Awake() {
         currentPosition = gameObject.transform;
-    }
-    private void Start() {
         planets = GameObject.FindGameObjectsWithTag("Planet");
         InitChunkList();
     }

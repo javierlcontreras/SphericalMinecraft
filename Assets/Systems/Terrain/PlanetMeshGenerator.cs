@@ -26,7 +26,7 @@ public class PlanetMeshGenerator {
         
         chunkSize = planet.GetChunkSize();
         chunksPerSide = planet.GetChunksPerSide();
-        chunkHeight = planet.GetHeight();
+        chunkHeight = planet.GetChunkHeight();
         
         chunkAdjCalculator = new ChunkAdjacencyCalculator(planet);
     }

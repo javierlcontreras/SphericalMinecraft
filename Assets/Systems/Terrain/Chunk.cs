@@ -13,7 +13,7 @@ public class Chunk {
     public int GetZCoord() { return zCoord; }
     
     //private Block[,,] blocks;
-    private Dictionary<Vector3Int, Block> blocks;
+    public Dictionary<Vector3Int, Block> blocks;
     public Block GetBlock(int x, int y, int z) {
         Vector3Int pos = new Vector3Int(x, y, z);
         if (blocks.ContainsKey(pos)) return blocks[pos];
@@ -34,14 +34,14 @@ public class Chunk {
         return chunkDataGenerator;
     }
 
-    public Chunk(int _sideCoord, int _xCoord, int _zCoord, PlanetTerrain _planet) {
-        sideCoord = _sideCoord;
-        xCoord = _xCoord;
-        zCoord = _zCoord;
+    public Chunk(Vector3Int chunkCoord, PlanetTerrain _planet) {
+        sideCoord = chunkCoord.x;
+        xCoord = chunkCoord.y;
+        zCoord = chunkCoord.z;
 
         planet = _planet;
         chunkSize = planet.GetChunkSize();
-        chunkHeight = planet.GetHeight();
+        chunkHeight = planet.GetChunkHeight();
         blocks = new Dictionary<Vector3Int, Block>();
         chunkDataGenerator = new ChunkDataGenerator(this);
     }
