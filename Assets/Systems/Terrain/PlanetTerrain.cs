@@ -70,12 +70,6 @@ public class PlanetTerrain : MonoBehaviour {
     public int GetMinHeight() {
         return minChunkHeight;
     }
-    public Vector3 GetPlanetPosition() {
-        return transform.position;
-    }
-    public Quaternion GetPlanetRotation() {
-        return transform.rotation;
-    }
     public Vector3 BaseVector(int side, int chunkX, int chunkZ, int cornerX, int cornerY, int cornerZ) {
         Vector3 normal = TerrainGenerationConstants.sideYaxisList[side];
         Vector3 xAxis = TerrainGenerationConstants.sideXaxisList[side];

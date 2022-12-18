@@ -34,7 +34,8 @@ public class ControllerSettings : MonoBehaviour {
     public Quaternion RadialCharacterOrientation() {
         Vector3 globalForward = CharacterTransform.TransformDirection(Vector3.forward);
 		
-        Vector3 properUp = (CharacterTransform.position - chunkLoader.GetCurrentPlanetTerrain().GetPlanetPosition()).normalized;
+		CelestialBody currentPlanetBody = chunkLoader.GetCurrentPlanet().GetComponent<CelestialBody>();
+        Vector3 properUp = (CharacterTransform.position - currentPlanetBody.GetPosition()).normalized;
         Vector3 properForward = Vector3.Cross(Vector3.Cross(properUp, globalForward), properUp);
         Quaternion playerOrientation = Quaternion.LookRotation(properForward, properUp);
         

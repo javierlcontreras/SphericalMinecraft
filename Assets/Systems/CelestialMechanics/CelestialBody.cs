@@ -13,7 +13,15 @@ public class CelestialBody : MonoBehaviour
     public Vector3 GetPosition() {
         return transform.position;
     }
-
+    public Vector3 GetVelocity() {
+        return velocity;
+    }
+    public void SetVelocity(Vector3 _velocity) {
+        velocity = _velocity;
+    }
+    public Quaternion GetRotation() {
+        return transform.rotation;
+    }
     public void UpdatePosition(float deltaTime) {
         transform.position += deltaTime*velocity;
     }

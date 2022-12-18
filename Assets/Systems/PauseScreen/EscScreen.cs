@@ -48,6 +48,8 @@ public class EscScreen : MonoBehaviour
     }
 
     public void OnClickSaveAndQuit() {
+        SaveSystemManager save = GameObject.Find("SaveSystemManager").GetComponent<SaveSystemManager>();
+        save.SaveGame();
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
 }

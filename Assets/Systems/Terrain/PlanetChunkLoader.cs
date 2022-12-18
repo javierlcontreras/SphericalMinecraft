@@ -56,9 +56,10 @@ public class PlanetChunkLoader {
         chunkMesh.GetComponent<MeshFilter>().mesh = mesh;
         chunkMesh.GetComponent<MeshRenderer>().material = planet.GetSurfaceTexturesMaterial();
         chunkMesh.GetComponent<MeshCollider>().sharedMesh = mesh;
-        chunkMesh.transform.position = planet.GetPlanetPosition();
-        chunkMesh.transform.rotation = planet.GetPlanetRotation();
-        chunkMesh.transform.SetParent(planet.transform);
+        CelestialBody planetBody = planet.gameObject.GetComponent<CelestialBody>();
+        chunkMesh.transform.position = planetBody.GetPosition();
+        chunkMesh.transform.rotation = planetBody.GetRotation();
+        chunkMesh.transform.SetParent(planetBody.transform);
         currentChunksLoaded[sideCoord, xCoord, zCoord] = chunkMesh;
     }
 }

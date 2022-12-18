@@ -81,6 +81,10 @@
      <Compile Include="Assets/Systems/Atmosphere/Scripts/AtmosphereSettings.cs" />
      <Compile Include="Assets/Systems/PauseScreen/EscScreen.cs" />
      <Compile Include="Assets/Systems/Character/ControllerSettings.cs" />
+     <Compile Include="Assets/Systems/SaveSystem/SaveSystemManager.cs" />
+     <Compile Include="Assets/Systems/SaveSystem/PlayerDataPersitence.cs" />
+     <Compile Include="Assets/Systems/SaveSystem/FileManager.cs" />
+     <Compile Include="Assets/Systems/SaveSystem/PlanetDataPersitence.cs" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets/Systems/HUD/HUD.shader" />

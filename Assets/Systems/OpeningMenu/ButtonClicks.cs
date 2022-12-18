@@ -35,12 +35,17 @@ public class ButtonClicks : MonoBehaviour
         string worldName = newWorldScreen.transform.Find("InputWorldName").gameObject.GetComponent<TMP_InputField>().text;
         string seed = newWorldScreen.transform.Find("InputSeed").gameObject.GetComponent<TMP_InputField>().text;
         if (worldName == "") return;
-        SceneManager.LoadScene("PlanetScene", LoadSceneMode.Single);
+        PlayerPrefs.SetInt("newWorld", 1);
+        PlayerPrefs.SetString("worldName", worldName);
+        PlayerPrefs.SetString("seed", seed);
+        SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
     }
     public void OnClickLoadLoadWorld() {
         string worldName = loadWorldScreen.transform.Find("InputWorldName").gameObject.GetComponent<TMP_InputField>().text;
         if (worldName == "") return;
-        Debug.Log(worldName);
+        PlayerPrefs.SetInt("newWorld", 0);
+        PlayerPrefs.SetString("worldName", worldName);
+        SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
     }
     public void OnClickBack() {
         indexScreen.SetActive(true);
