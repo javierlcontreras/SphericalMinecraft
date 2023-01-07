@@ -37,15 +37,16 @@ public class SaveSystemManager : MonoBehaviour {
 
     private void DEBUG_START() {
         Debug.LogWarning("DEBUGGING TRICK. Must delete for prod. You are overwritting worldName and seed in PlayerPrefs for DEBUG.");
-        PlayerPrefs.SetInt("newWorld", 0);
-        PlayerPrefs.SetString("userId", "Player");
-        PlayerPrefs.SetString("worldName", "aaa");
+        PlayerPrefs.SetInt("newWorld", 1);
+        PlayerPrefs.SetString("userId", "javierlcontreras");
+        PlayerPrefs.SetString("worldName", "lala<3javier");
         PlayerPrefs.SetString("seed", "Javier");   
     }
 
 
     public void Awake() {
-        //DEBUG_START();
+        DEBUG_START();
+        
         worldName = PlayerPrefs.GetString("worldName");
         userId = PlayerPrefs.GetString("userId");
         

@@ -63,7 +63,7 @@ public class PointingTo : MonoBehaviour {
         int chunksPerSide = planet.GetChunksPerSide();
         
         float height = pointFromPlanetRef.magnitude;
-        int hBlock = (int)(height - TerrainGenerationConstants.GetCoreRadius());
+        int hBlock = (int)((height - TerrainGenerationConstants.GetCoreRadius()) / TerrainGenerationConstants.GetBlockHeight());
         int realChunkSize = Mathf.Max(1, planet.NumBlocksAtHeightPerChunk(hBlock));
         int mult = chunkSize / realChunkSize;
         Vector3 dir = pointFromPlanetRef.normalized;

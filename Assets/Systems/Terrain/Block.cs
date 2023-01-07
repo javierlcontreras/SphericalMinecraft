@@ -39,7 +39,7 @@ public class Block {
         int blocksNextTo = chunk.GetPlanet().NumBlocksAtHeight(vertexY);
         PlanetTerrain planet = chunk.GetPlanet();
         if (blocksNextTo < blocks && vertexY >= planet.GetChunkMinHeight()) {
-            float radius = (1 + planet.HeightAtBottomOfLayer(vertexY));
+            float radius = (TerrainGenerationConstants.GetBlockHeight() + planet.HeightAtBottomOfLayer(vertexY));
             float height = radius;
             if (vertexX%2 != 0 && vertexZ%2 != 0) {
                 Vector3 pos0 = chunkIndexToGlobalPosition(vertexX-1, inChunkIndex.y, vertexZ-1).normalized * radius; 
@@ -131,7 +131,8 @@ public class Block {
         int chunkX = chunk.GetXCoord();
         int chunkZ = chunk.GetZCoord();
         PlanetTerrain planet = chunk.GetPlanet();
-        return planet.BaseVector(chunkSide, chunkX, chunkZ, vertexX, vertexY, vertexZ) * (1 + planet.HeightAtBottomOfLayer(vertexY));
+        return planet.BaseVector(chunkSide, chunkX, chunkZ, vertexX, vertexY, vertexZ) * 
+                    (TerrainGenerationConstants.GetBlockHeight() + planet.HeightAtBottomOfLayer(vertexY));
     }
 
     public Mesh ComputeOutline(float overlineRatio = 1.05f) {

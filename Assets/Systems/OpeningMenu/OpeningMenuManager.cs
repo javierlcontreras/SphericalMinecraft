@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class OpeningMenuManager : MonoBehaviour
 {
     // TODO: Temporal fixed user id. Show be modificiable from init menu
-    string userId = "javierlcontreras";
+    string userId;
     GameObject screens;
     GameObject indexScreen;
     GameObject newWorldScreen;
@@ -26,10 +26,14 @@ public class OpeningMenuManager : MonoBehaviour
     }
 
     public void OnClickNewWorld() {
+        userId = indexScreen.transform.Find("InputUserId").gameObject.GetComponent<TMP_InputField>().text;
+        if (userId == "") return;
         indexScreen.SetActive(false);
         newWorldScreen.SetActive(true);
     }
     public void OnClickLoadWorld() {
+        userId = indexScreen.transform.Find("InputUserId").gameObject.GetComponent<TMP_InputField>().text;
+        if (userId == "") return;
         indexScreen.SetActive(false);
         loadWorldScreen.SetActive(true);
     }

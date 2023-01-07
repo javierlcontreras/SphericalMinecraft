@@ -2,6 +2,8 @@ using UnityEngine;
 
 [RequireComponent(typeof(CelestialBody))]
 public class PlanetTerrain : MonoBehaviour {
+
+    
     public int chunksPerSide = 1;
     public int chunkSize = 16;
     public int maxHeight = 32;
@@ -43,6 +45,10 @@ public class PlanetTerrain : MonoBehaviour {
     public bool GetCaveAt(Vector3 samplingDirection, float height) {
         if (caveManager == null) return false;
         return caveManager.GetCave(samplingDirection*height);
+    }
+
+    public void Awake() {
+        InitTerrainSizes();
     }
 
     public void InitTerrainSizes() {
@@ -97,7 +103,7 @@ public class PlanetTerrain : MonoBehaviour {
     }
     
     public float HeightAtBottomOfLayer(int h) {
-        return h + TerrainGenerationConstants.GetCoreRadius();
+        return TerrainGenerationConstants.GetBlockHeight()*h + TerrainGenerationConstants.GetCoreRadius();
     }    
 
     public int PrecomputeHeight(int polygonSides) {  
@@ -107,7 +113,9 @@ public class PlanetTerrain : MonoBehaviour {
         for (int h = 0; h < maxHeight; h++) {
             float radius = HeightAtBottomOfLayer(h);
             float sideLength  = 2.0f * radius * Mathf.Sin(Mathf.PI / polygonSides);
-            if (1 <= sideLength && sideLength < 2) {
+            float blockSize = TerrainGenerationConstants.GetBlockSize();
+//            Debug.Log(blockSize + " " + sideLength);
+            if (sideLength < 2*blockSize) {
                 resultHeight = h;
             }
             else if (resultHeight != -1) {
@@ -135,7 +143,7 @@ public class PlanetTerrain : MonoBehaviour {
         int power = 4;
         for (int exponent=2; ; exponent++) {
             float sideLength = 2f * radius * Mathf.Sin(Mathf.PI / power);
-            if (sideLength < 2) {
+            if (sideLength < 2*TerrainGenerationConstants.GetBlockSize()) {
                 numSides = power;
                 break;
             }

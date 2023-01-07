@@ -58,6 +58,15 @@ public class TerrainGenerationConstants {
         return 0.5f*0.5f*Mathf.Sqrt(2.0f);
     }
 
+    private static float blockSize = 0.5f; 
+    private static float blockHeight = 0.8f; 
+    public static float GetBlockSize() {
+        return blockSize;
+    }
+    public static float GetBlockHeight() {
+        return blockHeight;
+    }
+
     private static int textureBlockSize = 128;
     private static int textureAtlasSize = 2048;
     public static float GetTextureBlockSize() {
