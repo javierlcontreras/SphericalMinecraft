@@ -58,8 +58,8 @@ public class TerrainGenerationConstants {
         return 0.5f*0.5f*Mathf.Sqrt(2.0f);
     }
 
-    private static float blockSize = 0.5f; 
-    private static float blockHeight = 0.8f; 
+    private static float blockSize = 1; 
+    private static float blockHeight = 1; 
     public static float GetBlockSize() {
         return blockSize;
     }
@@ -67,20 +67,21 @@ public class TerrainGenerationConstants {
         return blockHeight;
     }
 
-    private static int textureBlockSize = 128;
-    private static int textureAtlasSize = 2048;
+    private static int textureBlockSize = 1;
+    private static int textureAtlasSize = 16;
     public static float GetTextureBlockSize() {
         return 1f*textureBlockSize/textureAtlasSize;
     }
-    public static float GetTextureBlockSmallSize() {
-        return 1f*(textureBlockSize-4)/textureAtlasSize;
+    public static float GetTextureBlockMargin() {
+        return 1f*(textureBlockSize-1f/32f)/textureAtlasSize;
     }
 
     public static Vector2[] ComputeUVsFromAtlasCoord(Vector2Int atlasCoord) {
         float s = GetTextureBlockSize();
-        float f = GetTextureBlockSmallSize();
-        float x = atlasCoord.x*s + 2f/textureAtlasSize;
-        float y = 1 - atlasCoord.y*s - 2f/textureAtlasSize;
+        float m = GetTextureBlockMargin();
+        float f = s - 2*m;
+        float x = atlasCoord.x*s + m;
+        float y = 1 - atlasCoord.y*s - m;
         return new Vector2[] {
             new Vector2(x, y-f),
             new Vector2(x+f, y-f),

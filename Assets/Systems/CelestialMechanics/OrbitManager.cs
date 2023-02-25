@@ -23,7 +23,7 @@ public class OrbitManager : MonoBehaviour
             chunkLoader.GetCurrentPlanet().GetComponent<CelestialBody>().SnapPlayer(player.transform, Time.fixedDeltaTime);
         }
 
-        //earth.UpdateVelocity(Time.fixedDeltaTime, -direction.normalized * strength);
+        earth.UpdateVelocity(Time.fixedDeltaTime, -direction.normalized * strength);
         moon.UpdateRotation(Time.fixedDeltaTime);
         moon.UpdatePosition(Time.fixedDeltaTime);
         moon.UpdateVelocity(Time.fixedDeltaTime, direction.normalized * strength);

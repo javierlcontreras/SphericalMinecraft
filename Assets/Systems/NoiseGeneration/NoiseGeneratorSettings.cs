@@ -15,6 +15,9 @@ public class NoiseGeneratorSettings : MonoBehaviour
     public int blocksSampled;
     public bool debugInSphere = true;
 
+    public bool ultraFlat = false;
+    public float ultraFlatLevel;
+
     public Texture2D DebugTexture() {
         float debugZoom = 1;
         if (debugInSphere) debugZoom = 1f/blocksSampled;
@@ -32,6 +35,8 @@ public class NoiseGeneratorSettings : MonoBehaviour
     }
 
     public float GetNoiseAt(Vector3 samplingPoint) {
+        if (ultraFlat) return ultraFlatLevel;
+        
         int layers = frequencies.Length;
         float noise = 0;
         float maxNoise = 0;
