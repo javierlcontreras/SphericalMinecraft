@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,7 +42,7 @@ public class PointingTo : MonoBehaviour {
         Chunk chunk = chunkLoader.GetCurrentPlanetTerrain().chunks[sideCoord, xCoord, zCoord];
         return chunk;
     }
-
+    
     public Vector3Int BlockIndexToBreak(RaycastHit hit, Chunk chunk, bool place = false, float blockSkin = 0.2f) {
         if (place == false) {
             return BlockToClosestTo(hit.point - blockSkin*hit.normal, chunk);
@@ -51,6 +52,8 @@ public class PointingTo : MonoBehaviour {
         }
     }
 
+    // IMPORTANT! Chunk is the chunk that was interesect. not necessarily the chunk where the block im placing is. May be
+    // in adjacent
     public Vector3Int BlockToClosestTo(Vector3 point, Chunk chunk) {
         Vector3 pointFromPlanetRef = chunkLoader.GetCurrentPlanet().transform.InverseTransformPoint(point);
 
@@ -77,6 +80,11 @@ public class PointingTo : MonoBehaviour {
         int xGlobal = (int) (xPointOnPlane * chunkSize*chunksPerSide);
         int zGlobal = (int) (zPointOnPlane * chunkSize*chunksPerSide);
 
+        if (xGlobal <= -1 || zGlobal <= -1 || xGlobal >= chunkSize || zGlobal >= chunkSize)
+        {
+            Debug.LogWarning("Placing block at the edge of a chunk");
+        }
+
         int xBlock = xGlobal % chunkSize;
         int zBlock = zGlobal % chunkSize;
         xBlock /= mult; 
@@ -91,7 +99,7 @@ public class PointingTo : MonoBehaviour {
         Chunk chunk = ChunkHit(hit);
         Vector3Int blockIndex = BlockIndexToBreak(hit, chunk, place);
         if (place && chunk.GetBlock(blockIndex.x, blockIndex.y, blockIndex.z) == null) {
-            BlockType type = BlockTypeEnum.GetBlockTypeByName("invalid"); 
+            BlockType type = BlockTypeEnum.GetByName("invalid"); 
             chunk.SetBlock(blockIndex.x, blockIndex.y, blockIndex.z, new Block(blockIndex, type, chunk));
         }
         return chunk.GetBlock(blockIndex.x, blockIndex.y, blockIndex.z);
@@ -129,6 +137,11 @@ public class PointingTo : MonoBehaviour {
     }
     public void Place() {
         Block blockPointed = BlockToBreak(true);
+        if (blockPointed == null)
+        {
+            return;
+        }
+
         string blockTypeName = blockPointed.GetBlockType().GetName();
         if (blockTypeName != "air" && blockTypeName != "invalid") {
             Debug.LogWarning("BUG Want to place something in a non-air");

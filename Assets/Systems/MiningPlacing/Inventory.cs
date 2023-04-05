@@ -12,14 +12,14 @@ public class Inventory : MonoBehaviour
     void Awake()
     {
         toolbarmanager = gameObject.transform.Find("UI/HUD/Toolbar").GetComponent<ToolbarManager>();
-        slots[0] = new InventorySlot(64, BlockTypeEnum.GetBlockTypeByName("grass"));
-        slots[1] = new InventorySlot(64, BlockTypeEnum.GetBlockTypeByName("dirt"));
-        slots[2] = new InventorySlot(64, BlockTypeEnum.GetBlockTypeByName("sand"));
-        slots[3] = new InventorySlot(32, BlockTypeEnum.GetBlockTypeByName("stone"));
-        slots[4] = new InventorySlot(64, BlockTypeEnum.GetBlockTypeByName("cobblestone"));
-        slots[5] = new InventorySlot(64, BlockTypeEnum.GetBlockTypeByName("gravel"));
-        slots[6] = new InventorySlot(64, BlockTypeEnum.GetBlockTypeByName("wood"));
-        slots[7] = new InventorySlot(64, BlockTypeEnum.GetBlockTypeByName("leaves"));
+        slots[0] = new InventorySlot(64, BlockTypeEnum.GetByName("grass"));
+        slots[1] = new InventorySlot(64, BlockTypeEnum.GetByName("dirt"));
+        slots[2] = new InventorySlot(64, BlockTypeEnum.GetByName("sand"));
+        slots[3] = new InventorySlot(32, BlockTypeEnum.GetByName("stone"));
+        slots[4] = new InventorySlot(64, BlockTypeEnum.GetByName("cobblestone"));
+        slots[5] = new InventorySlot(64, BlockTypeEnum.GetByName("gravel"));
+        slots[6] = new InventorySlot(64, BlockTypeEnum.GetByName("wood"));
+        slots[7] = new InventorySlot(64, BlockTypeEnum.GetByName("leaves"));
     }
 
     public InventorySlot GetSlot(int index) {

@@ -81,13 +81,13 @@ public class PlanetMeshGenerator {
         }
         return quads;
     }
-/*
+    
     private void spawnDebugBall(Vector3 vertexPosition, float size) {
         GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         ball.transform.position = vertexPosition;
         ball.transform.localScale *= size;           
     }
-*/
+
     public Mesh GenerateChunkMesh(int sideCoord, int xCoord, int yCoord) {
         Chunk chunk = planet.chunks[sideCoord, xCoord, yCoord];
         

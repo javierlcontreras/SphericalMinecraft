@@ -75,7 +75,7 @@ class PlanetData {
         if (chunkData == null) return null;
         Chunk chunk = new Chunk(chunkPosition, planetTerrain);
         foreach (KeyValuePair<Vector3Int, string> pair in chunkData) {
-            BlockType type = BlockTypeEnum.GetBlockTypeByName(pair.Value);
+            BlockType type = BlockTypeEnum.GetByName(pair.Value);
             chunk.blocks.Add(pair.Key, new Block(pair.Key, type, chunk));
         }
         return chunk;

@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dccf4e5fc47d18ba79827fb1abde0456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 174.47, y: 124, z: 2145}
+  offset: {x: 174.56, y: 124, z: 2145}
   frequencies:
   - 1
   amplitudes:
@@ -55,6 +55,8 @@ MonoBehaviour:
   threshold: 0.5
   blocksSampled: 128
   debugInSphere: 1
+  ultraFlat: 0
+  ultraFlatLevel: 0
 --- !u!1 &1280789417867050398
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,7 +219,6 @@ GameObject:
   - component: {fileID: 1280789418103153570}
   - component: {fileID: 1280789418103153569}
   - component: {fileID: 1280789418103153568}
-  - component: {fileID: 1280789418103153502}
   m_Layer: 0
   m_Name: Earth
   m_TagString: Planet
@@ -279,33 +280,6 @@ MonoBehaviour:
   heightMap: {fileID: 1280789419038826397}
   biomeManager: {fileID: 1280789418922911683}
   caveManager: {fileID: 1280789419356493661}
---- !u!114 &1280789418103153502
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1280789418103153572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97b231c6bd26d2c43b154e001426bd43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shader: {fileID: 4800000, guid: 3be442f47b3e6854fb1b163b80dbfadd, type: 3}
-  opticalDepthCompute: {fileID: 7200000, guid: 2329018262a196541968884b139f5f40, type: 3}
-  textureSize: 256
-  inScatteringPoints: 10
-  opticalDepthPoints: 10
-  densityFalloff: 1
-  wavelengths: {x: 700, y: 530, z: 460}
-  testParams: {x: 7, y: 1.26, z: 0.1, w: 3}
-  scatteringStrength: 10
-  intensity: 0.5
-  ditherStrength: 0.8
-  ditherScale: 4
-  blueNoise: {fileID: 2800000, guid: 47576d1b6857b6a4aac8945ad11ebed9, type: 3}
-  originalColourStrength: 180
-  overlayStrength: 0
 --- !u!1 &1280789418529012986
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,6 +339,8 @@ MonoBehaviour:
   threshold: 0.62
   blocksSampled: 128
   debugInSphere: 0
+  ultraFlat: 0
+  ultraFlatLevel: 0
 --- !u!1 &1280789418922911685
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,6 +458,8 @@ MonoBehaviour:
   threshold: 0.5
   blocksSampled: 128
   debugInSphere: 1
+  ultraFlat: 0
+  ultraFlatLevel: 0
 --- !u!1 &1280789419118268551
 GameObject:
   m_ObjectHideFlags: 0
@@ -742,6 +720,8 @@ MonoBehaviour:
   threshold: 0.5
   blocksSampled: 128
   debugInSphere: 1
+  ultraFlat: 0
+  ultraFlatLevel: 0
 --- !u!1 &1280789419356493663
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,3 +823,5 @@ MonoBehaviour:
   threshold: 0.76
   blocksSampled: 128
   debugInSphere: 1
+  ultraFlat: 0
+  ultraFlatLevel: 0

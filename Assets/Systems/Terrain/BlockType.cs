@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public interface BlockType {
@@ -158,7 +159,12 @@ public static class BlockTypeEnum {
         ["invalid"] = new Invalid()
     };
 
-    public static BlockType GetBlockTypeByName(string name) {
+    public static BlockType GetByName(string name) {
         return dict[name];
+    }
+
+    public static BlockType GetByIndex(int index)
+    {
+        return dict.Values.ToList()[index];
     }
 }

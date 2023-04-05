@@ -8,7 +8,6 @@ public class Block {
     private Vector3Int inChunkIndex;
     private Chunk chunk;
 
-
     private Vector3?[] vertexPositions;
     private BlockSide[] sides;
     private Vector3? blockPositionFromPlanetReference;

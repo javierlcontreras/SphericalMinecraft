@@ -51,10 +51,10 @@ public class BlockSide {
     }
 
     private int NumRotations(string side, string pointing) {
-        if (pointing == "right")           return 1;
-        if (pointing == "left")            return 3;
-        if (pointing == "forward")         return 2;
-        if (pointing == "back")            return 2;
+        if (pointing == "right")           return 3;
+        if (pointing == "left")            return 1;
+        if (pointing == "forward")         return 0;
+        if (pointing == "back")            return 0;
         return 0;
     }
 }
