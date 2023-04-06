@@ -19,6 +19,11 @@ public class Chunk {
         if (blocks.ContainsKey(pos)) return blocks[pos];
         return null;
     }
+
+    public Vector3Int GetChunkCoords()
+    {
+        return new Vector3Int(sideCoord, xCoord, zCoord);
+    }
     public void SetBlock(int x, int y, int z, Block block) {
         Vector3Int pos = new Vector3Int(x, y, z);
         if (block == null) {

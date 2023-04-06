@@ -135,8 +135,12 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1280789418103153568, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
+      propertyPath: chunkSize
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1280789418103153568, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
       propertyPath: chunksPerSide
-      value: 16
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1280789418103153570, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
       propertyPath: m_RootOrder
@@ -359,6 +363,14 @@ PrefabInstance:
     - target: {fileID: 2731718458191788710, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 2731718458191788712, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
+      propertyPath: flySpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2731718458191788712, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
+      propertyPath: walkSpeed
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2731718458191788717, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: m_RootOrder

@@ -82,7 +82,7 @@ public class PlanetTerrain : MonoBehaviour {
         Vector3 normal = TerrainGenerationConstants.sideYaxisList[side];
         Vector3 xAxis = TerrainGenerationConstants.sideXaxisList[side];
         Vector3 zAxis = TerrainGenerationConstants.sideZaxisList[side];
-
+        
         int numBlocks = GetChunksPerSide()*GetChunkSize();
         
         int mult = GetChunkSize() / Mathf.Max(1, NumBlocksAtHeightPerChunk(cornerY));

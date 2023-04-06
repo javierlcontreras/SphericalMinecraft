@@ -110,6 +110,12 @@ public class Block {
         return chunk.GetPlanet().gameObject.transform.TransformPoint(position);
     }
 
+    public float DistanceTo(Vector3 pointInGlobal)
+    {
+        Vector3 blockCenter = GetBlockGlobalPosition();
+        return (blockCenter - pointInGlobal).magnitude;
+    }
+
 
     public BlockType GetBlockType() {
         return type;

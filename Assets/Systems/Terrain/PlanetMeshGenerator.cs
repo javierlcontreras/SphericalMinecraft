@@ -6,14 +6,18 @@ using UnityEngine;
 public class PlanetMeshGenerator {
     private PlanetTerrain planet;
     private ChunkAdjacencyCalculator chunkAdjCalculator;
-    
+
+    public ChunkAdjacencyCalculator GetChunkAdjacencyCalculator()
+    {
+        return chunkAdjCalculator;
+    }
     private int chunksPerSide;
     private int chunkSize;
     private int chunkHeight;
     
-    private Vector3[] sideYaxisList;
-    private Vector3[] sideXaxisList;
-    private Vector3[] sideZaxisList;
+    private Vector3Int[] sideYaxisList;
+    private Vector3Int[] sideXaxisList;
+    private Vector3Int[] sideZaxisList;
     private string[] sideNameList;
 
     public PlanetMeshGenerator(PlanetTerrain _planet) {
@@ -57,24 +61,19 @@ public class PlanetMeshGenerator {
                     if (block == null) continue;
                     string blockTypeName = block.GetBlockType().GetName();
                     //Debug.Log("Block type check: " + blockTypeName);
-                    if (blockTypeName == "air" || blockTypeName == "invalid") {
-                        Debug.LogWarning("Block of type air/invalid is being saved");
+                    if (blockTypeName == "invalid") {
+                        Debug.LogWarning("Block of type invalid is being saved");
                         continue;
                     }
                     for (int nextTo=0; nextTo < 6; nextTo++) {
-                        Vector3 pointingTo = sideYaxisList[nextTo];
-                        Vector3 orientedToX = sideXaxisList[nextTo];
-                        Vector3 orientedToZ = sideZaxisList[nextTo];
-                        string faceDrawn = sideNameList[nextTo];
-                        
-                        Vector3 pos = new Vector3(i, h, j);
-                        Vector3 nextPos = pos + pointingTo;
-                        Vector3 pointingToGlobal = chunkToGlobal*pointingTo;
-
-                        BlockAdjacency blocksAdjacent = chunkAdjCalculator.BlockNextToMe(chunk, i, h, j, pointingTo, pointingToGlobal);
-                        if (blocksAdjacent != null && !blocksAdjacent.IsAnyAir()) continue;
-                        
-                        quads.Add(block.GetSide(nextTo));
+                        Vector3Int pointingTo = sideYaxisList[nextTo];
+                        Vector3Int pos = new Vector3Int(i, h, j);
+ 
+                        BlockAdjacency blocksAdjacent = chunkAdjCalculator.BlockNextToMe(chunk, pos, pointingTo);
+                        if (blocksAdjacent.IsAnyAir())
+                        {
+                            quads.Add(block.GetSide(nextTo));
+                        }
                     }
                 }
             }    

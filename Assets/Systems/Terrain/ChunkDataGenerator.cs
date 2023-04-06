@@ -10,8 +10,8 @@ public class ChunkDataGenerator {
 
     public void CreateChunkData()
     {
-        //CreateChunkTerrainData();
-        CreateChunkTestingData();
+        CreateChunkTerrainData();
+        //CreateChunkTestingData();
     }
 
     public void CreateChunkTestingData()
@@ -24,7 +24,7 @@ public class ChunkDataGenerator {
                 for (int z = 0; z < numSides; z++)
                 {
                     BlockType type = BlockTypeEnum.GetByName("air");
-                    if (y < 60) type = BlockTypeEnum.GetByIndex((chunk.GetXCoord() + 3*chunk.GetZCoord())%8+1);
+                    if (y < 14) type = BlockTypeEnum.GetByIndex((2*chunk.GetXCoord() + chunk.GetZCoord())%8+1);
                     Vector3Int inChunkIndex = new Vector3Int(x, y, z);
                     if (type.GetName() != "air") chunk.SetBlock(x, y, z, new Block(inChunkIndex, type, chunk));
                 }

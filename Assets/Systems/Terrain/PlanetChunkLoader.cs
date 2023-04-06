@@ -35,18 +35,34 @@ public class PlanetChunkLoader {
             oldMesh.SetActive(true);
         }
         else {
-            // DEBUG planet shoud never be null in prod.
-            if (planet.chunks != null) {
-                Chunk chunk = planet.chunks[sideCoord, xCoord, zCoord];
-                if (chunk == null) { // this is here to delay terrain generation until it is really necessary
-                    Vector3Int chunkCoord = new Vector3Int(sideCoord, xCoord, zCoord); 
-                    planet.GetPlanetDataGenerator().GenerateChunk(chunkCoord);
-                    yield return null;
-                    //Debug.Log("Creating chunk data!");
-                }
-
-                GenerateChunkMeshNow(sideCoord, xCoord, zCoord);
+            if (planet.chunks == null)
+            {
+                Debug.LogWarning("Planet is null at PlanetChunkLoader");
             }
+
+            for (int dx = -1; dx <= 1; dx += 1)
+            {
+                for (int dz = -1; dz <= 1; dz += 1)
+                {
+                    if (dx * dz != 0) continue;
+
+                    Vector3Int nextChunkCoord;
+                    if (dx == 0 && dz == 0)
+                    {
+                        nextChunkCoord = new Vector3Int(sideCoord, xCoord, zCoord);
+                    }
+                    else
+                    {
+                        nextChunkCoord = planet.GetPlanetMeshGenerator().GetChunkAdjacencyCalculator().ChunkNextToMe(sideCoord, xCoord, zCoord, dx, dz);
+                    }
+                    Chunk nextChunk = planet.chunks[nextChunkCoord.x, nextChunkCoord.y, nextChunkCoord.z];
+                    if (nextChunk == null) { // this is here to delay terrain generation until it is really necessary
+                        planet.GetPlanetDataGenerator().GenerateChunk(nextChunkCoord);
+                        yield return null;
+                    }
+                }
+            }
+            GenerateChunkMeshNow(sideCoord, xCoord, zCoord);
         }
         yield return null;
     }

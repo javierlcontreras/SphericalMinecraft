@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 [RequireComponent (typeof(ControllerSettings))]
 public class FirstPersonController : MonoBehaviour {
-
+	
 	private ControllerSettings settings;
 	
 	private TangencialMovementController tangencialController;

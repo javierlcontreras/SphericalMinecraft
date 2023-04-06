@@ -11,29 +11,29 @@ public class TerrainGenerationConstants {
         "forward",
         "back"
     };
-    public static readonly Vector3[] sideYaxisList = new Vector3[]{
-        Vector3.up,
-        Vector3.down,
-        Vector3.right,
-        Vector3.left,
-        Vector3.forward,
-        Vector3.back
+    public static readonly Vector3Int[] sideYaxisList = new Vector3Int[]{
+        Vector3Int.up,
+        Vector3Int.down,
+        Vector3Int.right,
+        Vector3Int.left,
+        Vector3Int.forward,
+        Vector3Int.back
     };
-    public static readonly Vector3[] sideXaxisList = new Vector3[]{
-        Vector3.forward,
-        Vector3.back,
-        Vector3.up,
-        Vector3.down,
-        Vector3.right,
-        Vector3.left
+    public static readonly Vector3Int[] sideXaxisList = new Vector3Int[]{
+        Vector3Int.forward,
+        Vector3Int.back,
+        Vector3Int.up,
+        Vector3Int.down,
+        Vector3Int.right,
+        Vector3Int.left
     };
-    public static readonly Vector3[] sideZaxisList = new Vector3[]{
-        Vector3.left,
-        Vector3.left,
-        Vector3.back,
-        Vector3.back,
-        Vector3.down,
-        Vector3.down
+    public static readonly Vector3Int[] sideZaxisList = new Vector3Int[]{
+        Vector3Int.left,
+        Vector3Int.left,
+        Vector3Int.back,
+        Vector3Int.back,
+        Vector3Int.down,
+        Vector3Int.down
     };
     public static readonly int[] vertexOptions = new int[] {
         0,0,0, // left-bot-back
