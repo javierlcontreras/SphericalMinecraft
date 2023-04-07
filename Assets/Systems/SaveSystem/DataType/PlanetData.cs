@@ -28,7 +28,7 @@ class PlanetData {
         chunkHeight = planetTerrain.GetChunkHeight();
         chunkMinHeight = planetTerrain.GetChunkMinHeight();
 
-        SerializeChunks(planetTerrain.chunks);
+        SerializeChunks(planetTerrain.GetAllChunks());
     }
 
     public void SerializeChunks(Chunk[,,] chunks) {
@@ -68,7 +68,7 @@ class PlanetData {
                 }
             }
         }
-        planetTerrain.chunks = chunks;
+        planetTerrain.SetAllChunks(chunks);
     }
     
     public Chunk GetChunk(SerializableDictionary<Vector3Int, string> chunkData, Vector3Int chunkPosition, PlanetTerrain planetTerrain) {

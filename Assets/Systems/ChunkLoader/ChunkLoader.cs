@@ -100,7 +100,27 @@ public class ChunkLoader : MonoBehaviour {
     public void RegenerateChunkMesh(PlanetTerrain planetTerrain, int side, int chunkX, int chunkZ) {
         planetTerrain.GetPlanetChunkLoader().RegenerateChunkMesh(side, chunkX, chunkZ);
     }
-        
+    
+    public void ReloadChunksAfterMineBuildChange(BlockCoordinateInformation blockChangedCoords) 
+    {
+
+        Vector3Int chunkCoords = blockChangedCoords.GetChunkCoords();
+        Vector3Int blockIndex = blockChangedCoords.GetBlockCoords();
+        PlanetTerrain planet = blockChangedCoords.GetPlanet();
+        SphericalBlockAdjacencyCalculator sphericalBlockAdjacencyCalculator = planet.GetPlanetMeshGenerator().GetChunkAdjacencyCalculator();
+        RegenerateChunkMesh(planet, chunkCoords);
+        int len = planet.NumBlocksAtHeightPerChunk(blockIndex.y);
+        if (blockIndex.x == 0) RegenerateChunkMesh(planet,sphericalBlockAdjacencyCalculator.ChunkNextToMe(chunkCoords,-1, 0));
+        if (blockIndex.z == 0) RegenerateChunkMesh(planet,sphericalBlockAdjacencyCalculator.ChunkNextToMe(chunkCoords,0, -1));
+        if (blockIndex.x == len-1) RegenerateChunkMesh(planet,sphericalBlockAdjacencyCalculator.ChunkNextToMe(chunkCoords,1, 0));
+        if (blockIndex.z == len-1) RegenerateChunkMesh(planet,sphericalBlockAdjacencyCalculator.ChunkNextToMe(chunkCoords,0, 1));
+    }
+    void RegenerateChunkMesh(PlanetTerrain planet, Vector3Int chunkCoord)
+    {
+        RegenerateChunkMesh(planet,
+            chunkCoord.x, chunkCoord.y, chunkCoord.z);
+    }
+    
     private void Update() {
         if (coroutineFinished) {
             Comp comp = new Comp(this, planets);

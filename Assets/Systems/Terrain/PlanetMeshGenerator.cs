@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class PlanetMeshGenerator {
     private PlanetTerrain planet;
-    private ChunkAdjacencyCalculator chunkAdjCalculator;
+    private SphericalBlockAdjacencyCalculator _sphericalBlockAdjCalculator;
 
-    public ChunkAdjacencyCalculator GetChunkAdjacencyCalculator()
+    public SphericalBlockAdjacencyCalculator GetChunkAdjacencyCalculator()
     {
-        return chunkAdjCalculator;
+        return _sphericalBlockAdjCalculator;
     }
     private int chunksPerSide;
     private int chunkSize;
@@ -32,7 +32,7 @@ public class PlanetMeshGenerator {
         chunksPerSide = planet.GetChunksPerSide();
         chunkHeight = planet.GetChunkHeight();
         
-        chunkAdjCalculator = new ChunkAdjacencyCalculator(planet);
+        _sphericalBlockAdjCalculator = new SphericalBlockAdjacencyCalculator(planet);
     }
 
     private List<BlockSide> GenerateListOfQuads(Chunk chunk) {
@@ -69,7 +69,7 @@ public class PlanetMeshGenerator {
                         Vector3Int pointingTo = sideYaxisList[nextTo];
                         Vector3Int pos = new Vector3Int(i, h, j);
  
-                        BlockAdjacency blocksAdjacent = chunkAdjCalculator.BlockNextToMe(chunk, pos, pointingTo);
+                        BlockAdjacency blocksAdjacent = _sphericalBlockAdjCalculator.BlockNextToMe(pos, chunk.GetChunkCoords(), pointingTo);
                         if (blocksAdjacent.IsAnyAir())
                         {
                             quads.Add(block.GetSide(nextTo));
@@ -87,8 +87,8 @@ public class PlanetMeshGenerator {
         ball.transform.localScale *= size;           
     }
 
-    public Mesh GenerateChunkMesh(int sideCoord, int xCoord, int yCoord) {
-        Chunk chunk = planet.chunks[sideCoord, xCoord, yCoord];
+    public Mesh GenerateChunkMesh(int sideCoord, int xCoord, int zCoord) {
+        Chunk chunk = planet.GetChunk(sideCoord, xCoord, zCoord);
         
         List<BlockSide> quads = GenerateListOfQuads(chunk);
         

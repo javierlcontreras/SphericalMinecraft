@@ -5,15 +5,15 @@ using UnityEngine;
 [System.Serializable]
 public class Block {
     [SerializeField] private BlockType type;
-    private Vector3Int inChunkIndex;
+    private BlockCoordinateInformation coords;
     private Chunk chunk;
-
+    
     private Vector3?[] vertexPositions;
     private BlockSide[] sides;
     private Vector3? blockPositionFromPlanetReference;
 
     public Block(Vector3Int _inChunkIndex, BlockType _type, Chunk _chunk) {
-        inChunkIndex = _inChunkIndex;
+        coords = new BlockCoordinateInformation(_inChunkIndex, _chunk.GetChunkCoords(), _chunk.GetPlanet());
         type = _type;
         chunk = _chunk;
 
@@ -29,6 +29,7 @@ public class Block {
         int dx = TerrainGenerationConstants.vertexOptions[option];
         int dy = TerrainGenerationConstants.vertexOptions[option+1];
         int dz = TerrainGenerationConstants.vertexOptions[option+2];
+        Vector3Int inChunkIndex = coords.GetBlockCoords();
         int vertexX = inChunkIndex.x + dx;
         int vertexY = inChunkIndex.y + (dy - 1);
         int vertexZ = inChunkIndex.z + dz;
@@ -125,7 +126,7 @@ public class Block {
         sides = new BlockSide[6];
     }
     public Vector3Int GetInChunkIndex() {
-        return inChunkIndex;
+        return coords.GetBlockCoords();
     }
     public Chunk GetChunk() {
         return chunk;

@@ -12,7 +12,7 @@ public class PlanetTerrain : MonoBehaviour {
     public Material GetSurfaceTexturesMaterial() {
         return surfaceTexturesMaterial;
     }
-    public Chunk[,,] chunks;
+    private Chunk[,,] chunks;
     
     private int chunkHeight;
     private int chunkMinHeight;
@@ -199,6 +199,25 @@ public class PlanetTerrain : MonoBehaviour {
         return maxHeight;
     }
 
+    public Chunk GetChunk(Vector3Int chunkCoord)
+    {
+        return chunks[chunkCoord.x, chunkCoord.y, chunkCoord.z];
+    }
+
+    public Chunk GetChunk(int chunkSide, int chunkX, int chunkZ)
+    {
+        return chunks[chunkSide, chunkX, chunkZ];
+    }
+
+    public Chunk[,,] GetAllChunks()
+    {
+        return chunks;
+    }
+
+    public void SetAllChunks(Chunk[,,] _chunks)
+    {
+        chunks = _chunks;
+    }
     public void DestroyChunkMesh(GameObject mesh) {
         Destroy(mesh);
     }

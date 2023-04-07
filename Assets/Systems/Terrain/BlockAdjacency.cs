@@ -2,36 +2,56 @@ using System.Linq;
 using UnityEngine;
 
 public class BlockAdjacency {
-    Block[] list;
+    private BlockCoordinateInformation[] blockCoords;
+    private bool outOfBounds = false;
 
     public BlockAdjacency()
     {
-        list = new Block[0];
+        outOfBounds = true;
     }
-    public BlockAdjacency(Block block) {
+    public BlockAdjacency(BlockCoordinateInformation block) {
         if (block == null)
         {
             Debug.LogWarning("Creating a blockadjacency to an inexistent block");
         }
-        list = new Block[1] {
+        blockCoords = new BlockCoordinateInformation[1] {
             block
         };
     }
 
-    public BlockAdjacency(Block[] _list) {
-        list = _list;
+    public BlockAdjacency(BlockCoordinateInformation[] _blockCoords) {
+        blockCoords = _blockCoords;
     }
 
-    public Block ClosestTo(Vector3 pointInGlobal)
+    public BlockCoordinateInformation ClosestTo(Vector3 pointInGlobal)
     {
-        float minDistance = list.Min(block => block.DistanceTo(pointInGlobal));
-        return list.First(block => block.DistanceTo(pointInGlobal) == minDistance);
+        float minDistance = float.PositiveInfinity;
+        BlockCoordinateInformation closestOption = null;
+        foreach (BlockCoordinateInformation blockCoord in blockCoords)
+        {
+            float distance = blockCoord.DistanceTo(pointInGlobal);
+            if (minDistance > distance)
+            {
+                minDistance = distance;
+                closestOption = blockCoord;
+            }
+        }
+        return closestOption;
     }
     
     public bool IsAnyAir ()
     {
-        if (list.Length == 0) return true;
-        foreach (Block block in list) {
+        if (outOfBounds) return true;
+        foreach (BlockCoordinateInformation blockCoord in blockCoords)
+        {
+            Chunk chunk = blockCoord.GetPlanet().GetChunk(blockCoord.GetChunkCoords());
+            if (chunk == null)
+            {
+                Debug.LogWarning("Asking for an adjancency of a chunk where data hasnt been loaded. This should not happen.");
+                return true;
+            }
+
+            Block block = chunk.GetBlock(blockCoord.GetBlockCoords());
             if (block == null || block.GetBlockType().GetName() == "air") return true; 
         }
         return false;

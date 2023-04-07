@@ -14,22 +14,32 @@ public class Chunk {
     
     //private Block[,,] blocks;
     public Dictionary<Vector3Int, Block> blocks;
-    public Block GetBlock(int x, int y, int z) {
-        Vector3Int pos = new Vector3Int(x, y, z);
-        if (blocks.ContainsKey(pos)) return blocks[pos];
+
+    public Block GetBlock(Vector3Int blockCoord)
+    {
+        if (blocks.ContainsKey(blockCoord)) return blocks[blockCoord];
         return null;
+    }
+    public Block GetBlock(int x, int y, int z) {
+        return GetBlock(new Vector3Int(x, y, z));
     }
 
     public Vector3Int GetChunkCoords()
     {
         return new Vector3Int(sideCoord, xCoord, zCoord);
     }
-    public void SetBlock(int x, int y, int z, Block block) {
-        Vector3Int pos = new Vector3Int(x, y, z);
+
+    public void SetBlock(Vector3Int blockCoord, Block block)
+    {
         if (block == null) {
-            blocks.Remove(pos);
+            blocks.Remove(blockCoord);
         }
-        else blocks[pos] = block;
+        else blocks[blockCoord] = block;
+    }
+    public void SetBlock(int x, int y, int z, Block block) {
+        Vector3Int blockCoord = new Vector3Int(x, y, z);
+        SetBlock(blockCoord, block);
+        
     } 
     private PlanetTerrain planet;
     public PlanetTerrain GetPlanet() { return planet; }

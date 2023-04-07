@@ -35,7 +35,7 @@ public class PlanetChunkLoader {
             oldMesh.SetActive(true);
         }
         else {
-            if (planet.chunks == null)
+            if (planet.GetAllChunks() == null)
             {
                 Debug.LogWarning("Planet is null at PlanetChunkLoader");
             }
@@ -55,7 +55,8 @@ public class PlanetChunkLoader {
                     {
                         nextChunkCoord = planet.GetPlanetMeshGenerator().GetChunkAdjacencyCalculator().ChunkNextToMe(sideCoord, xCoord, zCoord, dx, dz);
                     }
-                    Chunk nextChunk = planet.chunks[nextChunkCoord.x, nextChunkCoord.y, nextChunkCoord.z];
+
+                    Chunk nextChunk = planet.GetChunk(nextChunkCoord.x, nextChunkCoord.y, nextChunkCoord.z);
                     if (nextChunk == null) { // this is here to delay terrain generation until it is really necessary
                         planet.GetPlanetDataGenerator().GenerateChunk(nextChunkCoord);
                         yield return null;
@@ -67,7 +68,7 @@ public class PlanetChunkLoader {
         yield return null;
     }
     public void GenerateChunkMeshNow(int sideCoord, int xCoord, int zCoord) {
-        Chunk chunk = planet.chunks[sideCoord, xCoord, zCoord];
+        Chunk chunk = planet.GetChunk(sideCoord, xCoord, zCoord);
         string chunkName = "(" + sideCoord + "," + xCoord + "," + zCoord + ")";
         Mesh mesh = planet.GetPlanetMeshGenerator().GenerateChunkMesh(sideCoord, xCoord, zCoord);
         GameObject chunkMesh = new GameObject(planet.GetPlanetName() + ": "+ chunkName, typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));

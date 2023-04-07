@@ -1,59 +1,36 @@
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 using Vector3 = System.Numerics.Vector3;
 
-public class ChunkAdjacencyCalculator {
+public class SphericalBlockAdjacencyCalculator {
     private PlanetTerrain planet;
-    private int chunkSize;
-    private int chunksPerSide;
-    private int chunkHeight;
 
-    private Vector3Int[] sideXaxisList;
-    private Vector3Int[] sideYaxisList;
-    private Vector3Int[] sideZaxisList;
-    private string[] sideNameList;
-
-    public ChunkAdjacencyCalculator(PlanetTerrain _planet) {
+    public SphericalBlockAdjacencyCalculator(PlanetTerrain _planet) {
         planet = _planet;
-        chunkSize = planet.GetChunkSize();
-        chunkHeight = planet.GetChunkHeight();
-        chunksPerSide = planet.GetChunksPerSide();
-        sideXaxisList = TerrainGenerationConstants.sideXaxisList;
-        sideYaxisList = TerrainGenerationConstants.sideYaxisList;
-        sideZaxisList = TerrainGenerationConstants.sideZaxisList;
-        sideNameList = TerrainGenerationConstants.sideNameList;
     }
 
     // pointing to is in chunk coordinate space
     // This function doesnt do what I expect. It seemed to suffice with a easier implementation for chunking
     // but I now need adjacency for block placing
-    
     // pointing to can only be a cardinal direction
-    public BlockAdjacency BlockNextToMe(Chunk chunk, Vector3Int blockCoord, Vector3Int pointingTo)
+    public BlockAdjacency BlockNextToMe(Vector3Int blockCoord, Vector3Int chunkCoord, Vector3Int pointingTo)
     {
-        int sideCoord = chunk.GetSideCoord();
-        int chunkX = chunk.GetXCoord();
-        int chunkZ = chunk.GetZCoord();
-
-        int nextX = blockCoord.x + pointingTo.x;
-        int nextY = blockCoord.y + pointingTo.y;
-        int nextZ = blockCoord.z + pointingTo.z;
-
         if (pointingTo.y != 0)
         {
-            return BlockNextToMeVertically(chunk, blockCoord, pointingTo.y);
+            return BlockNextToMeVertically(blockCoord,chunkCoord, pointingTo.y);
         }
         else
         {
-            return BlockNextToMeHorizontally(chunk, blockCoord, pointingTo.x, pointingTo.z);
+            return BlockNextToMeHorizontally(blockCoord, chunkCoord, pointingTo.x, pointingTo.z);
         }
     }
 
-    public BlockAdjacency BlockNextToMeHorizontally(Chunk chunk, Vector3Int blockCoord, int dx, int dz)
+    public BlockAdjacency BlockNextToMeHorizontally(Vector3Int blockCoord, Vector3Int chunkCoord, int dx, int dz)
     {
-        int sideCoord = chunk.GetSideCoord();
-        int chunkX = chunk.GetXCoord();
-        int chunkZ = chunk.GetZCoord();
+        int sideCoord = chunkCoord.x;
+        int chunkX = chunkCoord.y;
+        int chunkZ = chunkCoord.z;
         
         int nextX = blockCoord.x + dx;
         int nextY = blockCoord.y;
@@ -62,24 +39,28 @@ public class ChunkAdjacencyCalculator {
         int realChunkSize = (int) Mathf.Max(1, planet.NumBlocksAtHeightPerChunk(blockCoord.y));
         if (inRange(nextX, 0, realChunkSize) && inRange(nextZ, 0, realChunkSize))
         {
-            return new BlockAdjacency(chunk.GetBlock(nextX, nextY, nextZ));
+            return new BlockAdjacency(new BlockCoordinateInformation(new Vector3Int(nextX, nextY, nextZ), chunkCoord, planet));
         }
         else
         {
             Vector3Int chunkNext = ChunkNextToMe(sideCoord, chunkX, chunkZ, dx, dz);
-            Vector3Int blockNext = BlockClosestToMeInChunk(blockCoord, new Vector3Int(sideCoord, chunkX, chunkZ), chunkNext);
+            Vector3Int blockNext = BlockClosestToMeInChunk(blockCoord, chunkCoord, chunkNext);
             int sideNextCoord = chunkNext.x;
             int chunkNextX = chunkNext.y;
             int chunkNextZ = chunkNext.z;
             nextX = blockNext.x;
             nextZ = blockNext.z;
 
-            if (planet.chunks[sideNextCoord, chunkNextX, chunkNextZ] == null)
+            if (planet.GetChunk(sideNextCoord, chunkNextX, chunkNextZ) == null)
             {
                 Debug.LogWarning("A chunk mesh is being created before its chunk neighbors data is computed!");
             }
                 
-            return new BlockAdjacency(planet.chunks[sideNextCoord, chunkNextX, chunkNextZ].GetBlock(nextX, nextY, nextZ));
+            return new BlockAdjacency(new BlockCoordinateInformation(
+                blockNext,
+                chunkNext,
+                planet
+                ));
         }
     }
 
@@ -138,22 +119,22 @@ public class ChunkAdjacencyCalculator {
 
     public Vector3Int BlockVectorOnCube(int realChunkSize, int side, int chunkX, int chunkZ, int x, int z)
     {
+        int chunksPerSide = planet.GetChunksPerSide();
         int radius = chunksPerSide * realChunkSize;
         int diffX = 2*(chunkX * realChunkSize + x) + 1 - radius;
         int diffZ = 2*(chunkZ * realChunkSize + z) + 1 - radius;
-        return sideYaxisList[side] * radius + sideXaxisList[side] * diffX + sideZaxisList[side] * diffZ;
+        return TerrainGenerationConstants.sideYaxisList[side] * radius 
+               + TerrainGenerationConstants.sideXaxisList[side] * diffX 
+               + TerrainGenerationConstants.sideZaxisList[side] * diffZ;
     }
     
-    public BlockAdjacency BlockNextToMeVertically(Chunk chunk, Vector3Int blockCoord, int dy)
+    public BlockAdjacency BlockNextToMeVertically(Vector3Int blockCoord, Vector3Int chunkCoord, int dy)
     {
-        int sideCoord = chunk.GetSideCoord();
-        int chunkX = chunk.GetXCoord();
-        int chunkZ = chunk.GetZCoord();
-        
         int nextX = blockCoord.x;
         int nextY = blockCoord.y + dy;
         int nextZ = blockCoord.z;
-        
+
+        int chunkHeight = planet.GetChunkHeight();
         if (!inRange(nextY, 0, chunkHeight))
         {
             return new BlockAdjacency();
@@ -168,24 +149,27 @@ public class ChunkAdjacencyCalculator {
                 return new BlockAdjacency();
             }
 
-            Block block = chunk.GetBlock(nextX / 2, nextY, nextZ / 2);
-            return new BlockAdjacency(block);
+            return new BlockAdjacency(new BlockCoordinateInformation(
+                new Vector3Int(nextX/2, nextY, nextZ/2),
+                chunkCoord,
+                planet
+                ));
         }
         else if (nextRealChunkSize > realChunkSize)
         {
             if (!inRange(2 * nextX + 1, 0, nextRealChunkSize) || !inRange(2 * nextZ + 1, 0, nextRealChunkSize))
             {
-                return null;
+                return new BlockAdjacency();
             }
 
-            Block[] blocks = new Block[4]
+            BlockCoordinateInformation[] blockCoords = new BlockCoordinateInformation[4]
             {
-                chunk.GetBlock(2 * nextX, nextY, 2 * nextZ),
-                chunk.GetBlock(2 * nextX, nextY, 2 * nextZ + 1),
-                chunk.GetBlock(2 * nextX + 1, nextY, 2 * nextZ),
-                chunk.GetBlock(2 * nextX + 1, nextY, 2 * nextZ + 1),
+                new BlockCoordinateInformation(new Vector3Int(2 * nextX, nextY, 2 * nextZ), chunkCoord, planet),
+                new BlockCoordinateInformation(new Vector3Int(2 * nextX + 1, nextY, 2 * nextZ), chunkCoord, planet),
+                new BlockCoordinateInformation(new Vector3Int(2 * nextX, nextY, 2 * nextZ + 1), chunkCoord, planet),
+                new BlockCoordinateInformation(new Vector3Int(2 * nextX + 1, nextY, 2 * nextZ + 1), chunkCoord, planet)
             };
-            return new BlockAdjacency(blocks);
+            return new BlockAdjacency(blockCoords);
         }
         else
         {
@@ -194,8 +178,11 @@ public class ChunkAdjacencyCalculator {
                 return null;
             }
 
-            Block block = chunk.GetBlock(nextX, nextY, nextZ);
-            return new BlockAdjacency(block);
+            return new BlockAdjacency(new BlockCoordinateInformation(
+                new Vector3Int(nextX, nextY, nextZ),
+                chunkCoord,
+                planet
+                ));
         }
     
     }
@@ -263,9 +250,10 @@ public class ChunkAdjacencyCalculator {
 
     public Vector3Int ChunkBaseVectorCube(int sideCoord, int chunkX, int chunkZ)
     {
-        return chunksPerSide * sideYaxisList[sideCoord] + 
-            (2*chunkX - chunksPerSide + 1) * sideXaxisList[sideCoord] +
-            (2*chunkZ - chunksPerSide + 1) * sideZaxisList[sideCoord];
+        int chunksPerSide = planet.GetChunksPerSide();
+        return chunksPerSide * TerrainGenerationConstants.sideYaxisList[sideCoord] + 
+            (2*chunkX - chunksPerSide + 1) * TerrainGenerationConstants.sideXaxisList[sideCoord] +
+            (2*chunkZ - chunksPerSide + 1) * TerrainGenerationConstants.sideZaxisList[sideCoord];
     }
     public int SideCoordNextToMe(int sideCoord, int dx, int dz)
     {
@@ -274,14 +262,16 @@ public class ChunkAdjacencyCalculator {
         {
             for (int s = 0; s < 6; s++)
             {
-                if (sideYaxisList[s] == dx * sideXaxisList[sideCoord]) side = s;
+                if (TerrainGenerationConstants.sideYaxisList[s] == 
+                    dx * TerrainGenerationConstants.sideXaxisList[sideCoord]) side = s;
             } 
         }
         else
         {
             for (int s = 0; s < 6; s++)
             {
-                if (sideYaxisList[s] == dz * sideZaxisList[sideCoord]) side = s;
+                if (TerrainGenerationConstants.sideYaxisList[s] == 
+                    dz * TerrainGenerationConstants.sideZaxisList[sideCoord]) side = s;
             } 
         }   
         return side;
