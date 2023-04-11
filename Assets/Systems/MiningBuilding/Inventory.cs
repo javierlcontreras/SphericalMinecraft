@@ -9,7 +9,7 @@ public class Inventory : MonoBehaviour
     int selectedSlotIndex = 0;
     ToolbarManager toolbarmanager;
 
-    void Awake()
+    public void DebugInit()
     {
         toolbarmanager = gameObject.transform.Find("UI/HUD/Toolbar").GetComponent<ToolbarManager>();
         slots[0] = new InventorySlot(64, BlockTypeManager.Instance.GetByName("grass"));

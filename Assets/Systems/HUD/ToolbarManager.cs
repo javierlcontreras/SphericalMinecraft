@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using System;
+using Unity.VisualScripting;
 
 public class ToolbarManager : MonoBehaviour
 {
@@ -27,10 +28,11 @@ public class ToolbarManager : MonoBehaviour
         }
         player = possiblePlayer.gameObject;
         inventory = player.GetComponent<Inventory>();
+        inventory.DebugInit();
         RecolorSlots();
         FillSlotsWithInventoryItems();
     }
-
+    
     public void RecolorSlots() {
         for (int i=0; i<9; i++) {
             slots[i].GetComponent<Image>().color = originalColor;

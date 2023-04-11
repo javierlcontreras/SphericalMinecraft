@@ -581,6 +581,10 @@ PrefabInstance:
       propertyPath: gravitationalPullDown
       value: 21
       objectReference: {fileID: 0}
+    - target: {fileID: 2731718458191788715, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2731718458191788717, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: m_RootOrder
       value: 1

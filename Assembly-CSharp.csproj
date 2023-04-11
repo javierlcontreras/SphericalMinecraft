@@ -58,6 +58,7 @@
      <Compile Include="Assets/Systems/SaveSystem/SerializableTypes/SerializableDictionary.cs" />
      <Compile Include="Assets/Systems/NoiseGeneration/NoiseGeneratorSettings.cs" />
      <Compile Include="Assets/Systems/CelestialMechanics/CelestialBody.cs" />
+     <Compile Include="Assets/Systems/Terrain/BlockTypeManager.cs" />
      <Compile Include="Assets/Systems/SaveSystem/PlanetDataPersistence.cs" />
      <Compile Include="Assets/Systems/Terrain/BlockType.cs" />
      <Compile Include="Assets/Systems/Terrain/BlockCoordinateInformation.cs" />
@@ -85,7 +86,6 @@
      <Compile Include="Assets/Systems/PauseScreen/EscScreen.cs" />
      <Compile Include="Assets/Systems/SaveSystem/DataType/PlanetData.cs" />
      <Compile Include="Assets/Systems/Character/ControllerSettings.cs" />
-     <Compile Include="Assets/Systems/Terrain/BlockTypeManager.cs" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets/Systems/HUD/HUD.shader" />
