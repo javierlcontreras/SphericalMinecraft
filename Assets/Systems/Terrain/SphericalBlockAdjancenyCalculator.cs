@@ -16,18 +16,31 @@ public class SphericalBlockAdjacencyCalculator {
     // pointing to can only be a cardinal direction
     public BlockAdjacency BlockNextToMe(Vector3Int blockCoord, Vector3Int chunkCoord, Vector3Int pointingTo)
     {
-        if (pointingTo.y != 0)
-        {
-            return BlockNextToMeVertically(blockCoord,chunkCoord, pointingTo.y);
-        }
-        else
-        {
-            return BlockNextToMeHorizontally(blockCoord, chunkCoord, pointingTo.x, pointingTo.z);
-        }
+        return BlockNextToMe(new BlockCoordinateInformation(blockCoord, chunkCoord, planet), pointingTo);
+    }
+    public BlockAdjacency BlockNextToMe(BlockCoordinateInformation blockCoordInfo, Vector3Int pointingTo)
+    {
+        BlockAdjacency adj = BlockNextToMeHorizontally(blockCoordInfo, pointingTo.x, pointingTo.z);
+        BlockCoordinateInformation adjBlock = adj.GetBlockIfUnique();
+        return BlockNextToMeVertically(adjBlock, pointingTo.y);
     }
 
-    public BlockAdjacency BlockNextToMeHorizontally(Vector3Int blockCoord, Vector3Int chunkCoord, int dx, int dz)
+    public BlockAdjacency BlockNextToMeHorizontally(BlockCoordinateInformation blockCoordInfo, int dx, int dz)
     {
+        if (dx == 0 && dz == 0)
+        {
+            return new BlockAdjacency(blockCoordInfo);
+        }
+        if (dx != 0 && dz != 0)
+        {
+            // TODO: this is terribly bugged because of holonomy. But its only used for ambient occlusion right now
+            BlockCoordinateInformation oneSide = BlockNextToMeHorizontally(blockCoordInfo, dx, 0).GetBlockIfUnique();
+            return BlockNextToMeHorizontally(oneSide, 0, dz);
+        }
+        
+        Vector3Int blockCoord = blockCoordInfo.GetBlockCoords();
+        Vector3Int chunkCoord = blockCoordInfo.GetChunkCoords();
+        
         int sideCoord = chunkCoord.x;
         int chunkX = chunkCoord.y;
         int chunkZ = chunkCoord.z;
@@ -128,8 +141,15 @@ public class SphericalBlockAdjacencyCalculator {
                + TerrainGenerationConstants.sideZaxisList[side] * diffZ;
     }
     
-    public BlockAdjacency BlockNextToMeVertically(Vector3Int blockCoord, Vector3Int chunkCoord, int dy)
+    public BlockAdjacency BlockNextToMeVertically(BlockCoordinateInformation blockCoordInfo, int dy)
     {
+        if (dy == 0)
+        {
+            return new BlockAdjacency(blockCoordInfo);
+        }
+        Vector3Int blockCoord = blockCoordInfo.GetBlockCoords();
+        Vector3Int chunkCoord = blockCoordInfo.GetChunkCoords();
+
         int nextX = blockCoord.x;
         int nextY = blockCoord.y + dy;
         int nextZ = blockCoord.z;
@@ -193,6 +213,17 @@ public class SphericalBlockAdjacencyCalculator {
     }
     public Vector3Int ChunkNextToMe(int sideCoord, int chunkX, int chunkZ, int dx, int dz)
     {
+        if (dx == 0 && dz == 0)
+        {
+            return new Vector3Int(sideCoord, chunkX, chunkZ);
+        }
+
+        if (dx != 0 && dz != 0)
+        {   
+            // TODO: this is terribly bugged because of holonomy. But its only used for ambient occlusion right now
+            Vector3Int sideOne = ChunkNextToMe(sideCoord, chunkX, chunkZ, dx, 0);
+            return ChunkNextToMe(sideOne.x, sideOne.y, sideOne.z, 0, dz);
+        }
         int nextChunkX = chunkX + dx;
         int nextChunkZ = chunkZ + dz;
         if (inRange(nextChunkX, 0, planet.GetChunksPerSide()) && inRange(nextChunkZ, 0, planet.GetChunksPerSide()))
@@ -235,7 +266,6 @@ public class SphericalBlockAdjacencyCalculator {
                 minOption.z = nextChunkZ; 
             }
         }
-        Debug.Log(sideCoord + " " + chunkX + " " +  chunkZ + " " +  minOption);
         return minOption;
     }
 
@@ -281,4 +311,21 @@ public class SphericalBlockAdjacencyCalculator {
         return l <= a && a < r;
     }
 
+    public BlockAdjacency[] BlocksTouchingAVertex(BlockCoordinateInformation block, Vector3Int corner)
+    {
+        int x = corner.x;
+        int y = corner.y;
+        int z = corner.z;
+        return new BlockAdjacency[8]
+        {
+            new BlockAdjacency(block),
+            BlockNextToMe(block, new Vector3Int(x, 0, 0)),
+            BlockNextToMe(block, new Vector3Int(0, y, 0)),
+            BlockNextToMe(block, new Vector3Int(0, 0, z)),
+            BlockNextToMe(block, new Vector3Int(x, y, 0)),
+            BlockNextToMe(block, new Vector3Int(x, 0, z)),
+            BlockNextToMe(block, new Vector3Int(0, y, z)),
+            BlockNextToMe(block, new Vector3Int(x, y, z)),
+        };
+    }
 }

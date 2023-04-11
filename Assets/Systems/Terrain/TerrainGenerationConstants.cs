@@ -11,6 +11,16 @@ public class TerrainGenerationConstants {
         "forward",
         "back"
     };
+
+    public static readonly Dictionary<string, int> sideNameToIndex = new Dictionary<string, int>
+    {
+        { "up", 0 },
+        { "down", 1 },
+        { "right", 2 },
+        { "left", 3 },
+        { "forward", 4 },
+        { "back", 5 }
+    };
     public static readonly Vector3Int[] sideYaxisList = new Vector3Int[]{
         Vector3Int.up,
         Vector3Int.down,
@@ -35,15 +45,15 @@ public class TerrainGenerationConstants {
         Vector3Int.down,
         Vector3Int.down
     };
-    public static readonly int[] vertexOptions = new int[] {
-        0,0,0, // left-bot-back
-        1,0,0, // right-bot-back
-        0,1,0, // left-top-back
-        1,1,0, // right-top-back
-        0,0,1, // left-bot-forw
-        1,0,1, // right-bot-forw
-        0,1,1, // left-top-forw
-        1,1,1  // right-top-forw
+    public static readonly Vector3Int[] vertexOptions = new Vector3Int[] {
+        new Vector3Int(-1,-1,-1), // left-bot-back
+        new Vector3Int(1,-1,-1), // right-bot-back
+        new Vector3Int(-1,1,-1), // left-top-back
+        new Vector3Int(1,1,-1), // right-top-back
+        new Vector3Int(-1,-1,1), // left-bot-forw
+        new Vector3Int(1,-1,1), // right-bot-forw
+        new Vector3Int(-1,1,1), // left-top-forw
+        new Vector3Int(1,1,1)  // right-top-forw
     };
     public static readonly int[] sideOptions = new int[] {
         6,7,3,2, // top
@@ -68,25 +78,46 @@ public class TerrainGenerationConstants {
     }
 
     private static int textureBlockSize = 1;
-    private static int textureAtlasSize = 16;
+    private static int textureAtlasSize = 32;
     public static float GetTextureBlockSize() {
-        return 1f*textureBlockSize/textureAtlasSize;
+        return 3f*textureBlockSize/textureAtlasSize;
     }
-    public static float GetTextureBlockMargin() {
-        return 1f*(textureBlockSize-1f/32f)/textureAtlasSize;
+    public static float GetTextureBlockMargin()
+    {
+        return 1f*textureBlockSize/textureAtlasSize;
+        //return 1f*(textureBlockSize-1f/32f)/textureAtlasSize;
     }
 
+    public static bool flipTextures = true;
     public static Vector2[] ComputeUVsFromAtlasCoord(Vector2Int atlasCoord) {
         float s = GetTextureBlockSize();
         float m = GetTextureBlockMargin();
         float f = s - 2*m;
         float x = atlasCoord.x*s + m;
         float y = 1 - atlasCoord.y*s - m;
+        if (flipTextures)
+        {
+            return new Vector2[] {
+                new Vector2(x, y),
+                new Vector2(x+f, y),
+                new Vector2(x+f, y-f),
+                new Vector2(x, y-f)
+            };            
+        }
         return new Vector2[] {
             new Vector2(x, y-f),
             new Vector2(x+f, y-f),
             new Vector2(x+f, y),
             new Vector2(x, y)
         };
+    }
+
+    // 0 to 8
+    static public float AmbientOcclusionPerCount(int count)
+    {
+        if (count == 7) return 0.5f;
+        if (count == 6) return 0.75f;
+        if (count == 5) return 0.8f;
+        return 1;
     }
 }

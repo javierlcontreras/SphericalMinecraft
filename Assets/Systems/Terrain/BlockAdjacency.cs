@@ -23,6 +23,17 @@ public class BlockAdjacency {
         blockCoords = _blockCoords;
     }
 
+    public BlockCoordinateInformation GetBlockIfUnique()
+    {
+        if (blockCoords.Length == 1) return blockCoords[0];
+        return null;
+    }
+
+    public BlockCoordinateInformation[] GetBlocks()
+    {
+        return blockCoords;
+    }
+    
     public BlockCoordinateInformation ClosestTo(Vector3 pointInGlobal)
     {
         float minDistance = float.PositiveInfinity;
@@ -52,8 +63,26 @@ public class BlockAdjacency {
             }
 
             Block block = chunk.GetBlock(blockCoord.GetBlockCoords());
-            if (block == null || block.GetBlockType().GetName() == "air") return true; 
+            if (block == null || block.GetBlockType().IsAir()) return true; 
         }
         return false;
+    }
+
+    public bool AreAllAir()
+    {
+        if (outOfBounds) return true;
+        foreach (BlockCoordinateInformation blockCoord in blockCoords)
+        {
+            Chunk chunk = blockCoord.GetPlanet().GetChunk(blockCoord.GetChunkCoords());
+            if (chunk == null)
+            {
+                Debug.LogWarning("Asking for an adjancency of a chunk where data hasnt been loaded. This should not happen.");
+                return true;
+            }
+
+            Block block = chunk.GetBlock(blockCoord.GetBlockCoords());
+            if (block != null && !block.GetBlockType().IsAir()) return false; 
+        }
+        return true;
     }
 }

@@ -1,4 +1,3 @@
-
 Shader "Voxel"
 {
 	Properties
@@ -58,35 +57,6 @@ Shader "Voxel"
 			float inverseLerp (int a,int b, float t) {
 				return (t - a) / (b - a);
 			}
-			int vertexAO(bool side1, bool side2, bool corner)
-			{
-				if(side1 && side2)
-				{
-					return 0;
-				}
-				return (3 - (side1+side2+corner));
-			}
-
-			float AOToOcclusion(int ao)
-			{
-				if(ao == 0)
-				{
-					return 0.5;
-				}
-				if(ao == 1)
-				{
-					return 0.75;
-				}
-				if(ao == 2)
-				{
-					return 0.8;
-				}
-				if(ao == 3)
-				{
-					return 1;
-				}
-				return 0;
-			}
 
 			v2f vertFunction (appdata v)
 			{
@@ -94,21 +64,6 @@ Shader "Voxel"
 
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
-				// o.light = v.light;
-				// o.sides = v.sides;
-
-				v.color = float4(1,1,1,1);
-				if(_LightingOn)
-				{
-					float4 lightColor = lightColors[(round(v.light.x) * 16 + round(v.light.y))];
-					v.color *= lightColor;
-				}
-
-				if(_AOOn)
-				{
-					v.color *= AOToOcclusion(vertexAO(v.sides.x, v.sides.y, v.sides.z));
-				}
-				
 				o.color = v.color;
 				return o;
 			}
@@ -124,9 +79,9 @@ Shader "Voxel"
 					col = fixed4(1,1,1,1);
 				}
 				
-				clip(col.a -1);
+				clip(col.a - 1);
 
-				col *= i.color;
+				if (_AOOn) col *= i.color;
 				
 				return col;
 			}

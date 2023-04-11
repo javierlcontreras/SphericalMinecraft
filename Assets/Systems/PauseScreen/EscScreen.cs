@@ -8,7 +8,6 @@ public class EscScreen : MonoBehaviour
     GameObject pauseScreen;
     GameObject hudScreen;
     GameObject player;
-    // Start is called before the first frame update
     void Start()
     {
         player = gameObject;
@@ -16,7 +15,6 @@ public class EscScreen : MonoBehaviour
         hudScreen = player.transform.Find("UI/HUD").gameObject;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) {

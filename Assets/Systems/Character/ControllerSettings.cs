@@ -22,7 +22,8 @@ public class ControllerSettings : MonoBehaviour {
 	public float reach;
 	public float maxVerticalVelocity;
 
-	public float gravitationalPull;
+	public float gravitationalPullDown;
+	public float gravitationalPullUp;
 	public float jumpStrength;
 	public float jumpTimer;
 

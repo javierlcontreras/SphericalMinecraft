@@ -9,8 +9,12 @@ public class Block {
     private Chunk chunk;
     
     private Vector3?[] vertexPositions;
+    private int[] vertexAmbientOcclusionCounts;
+    
     private BlockSide[] sides;
+    
     private Vector3? blockPositionFromPlanetReference;
+    private int[] ambientOcclusionCounts;
 
     public Block(Vector3Int _inChunkIndex, BlockType _type, Chunk _chunk) {
         coords = new BlockCoordinateInformation(_inChunkIndex, _chunk.GetChunkCoords(), _chunk.GetPlanet());
@@ -19,16 +23,39 @@ public class Block {
 
         vertexPositions = new Vector3?[8];
         sides = new BlockSide[6];
+        RecomputeAmbientOcclusions();
+    }
+
+    public int VertexAmbientOcclusionCount(int vertexIndex, bool memo = true)
+    {
+        if (memo && ambientOcclusionCounts[vertexIndex] != -1) return ambientOcclusionCounts[vertexIndex];
+        
+        BlockAdjacency[] sideBlocks = chunk.GetPlanet().GetPlanetMeshGenerator().GetChunkAdjacencyCalculator()
+            .BlocksTouchingAVertex(
+                coords, TerrainGenerationConstants.vertexOptions[vertexIndex]);
+
+        int count = 0;
+        foreach (BlockAdjacency adj in sideBlocks)
+        {
+            if (!adj.AreAllAir()) count += 1;
+        }
+        ambientOcclusionCounts[vertexIndex] = count;
+        return count;
+    }
+    
+    public void RecomputeAmbientOcclusions()
+    {
+        ambientOcclusionCounts = new int[8] { -1, -1, -1, -1, -1, -1, -1,-1 };
     }
 
     public Vector3 GetVertex(int index, bool memo = true) {
         if (memo && vertexPositions[index] != null) {
             return (Vector3) vertexPositions[index] !;
         }
-        int option = 3*index;
-        int dx = TerrainGenerationConstants.vertexOptions[option];
-        int dy = TerrainGenerationConstants.vertexOptions[option+1];
-        int dz = TerrainGenerationConstants.vertexOptions[option+2];
+        int dx = (1 + TerrainGenerationConstants.vertexOptions[index].x)/2;
+        int dy = (1 + TerrainGenerationConstants.vertexOptions[index].y)/2;
+        int dz = (1 + TerrainGenerationConstants.vertexOptions[index].z)/2;
+        
         Vector3Int inChunkIndex = coords.GetBlockCoords();
         int vertexX = inChunkIndex.x + dx;
         int vertexY = inChunkIndex.y + (dy - 1);
@@ -68,27 +95,46 @@ public class Block {
         return vertex;
     }
 
-    public BlockSide GetSide(int index, bool memo = true) {
-        if (memo && sides[index] != null) return sides[index];
-        Quaternion chunkToGlobal = chunk.ChunkToGlobal();
-        Quaternion globalToChunk = chunk.GlobalToChunk(); 
-
+    public BlockSide GetSide(int index, bool justOutline = false) {
         int option=index*4;
-        string faceDrawn = TerrainGenerationConstants.sideNameList[option/4];
         int vertex1 = TerrainGenerationConstants.sideOptions[option];
         int vertex2 = TerrainGenerationConstants.sideOptions[option+1];
         int vertex3 = TerrainGenerationConstants.sideOptions[option+2];
         int vertex4 = TerrainGenerationConstants.sideOptions[option+3];
+        int[] ambientOcclusionCount = new int[4] {0,0,0,0};
+        if (!justOutline)
+        {
+            ambientOcclusionCount = new int[4]
+            {
+                VertexAmbientOcclusionCount(vertex1),
+                VertexAmbientOcclusionCount(vertex2),
+                VertexAmbientOcclusionCount(vertex3),
+                VertexAmbientOcclusionCount(vertex4)
+            };
+        }
+
+        if (!justOutline && sides[index] != null)
+        {
+            sides[index].ResetAmbientOcclusionCounts(ambientOcclusionCount);
+            return sides[index];
+        }
+
+        string faceDrawn = TerrainGenerationConstants.sideNameList[option/4];
         Vector3[] vertices = new Vector3[] {
-            GetVertex(vertex1, memo),    
-            GetVertex(vertex2, memo),    
-            GetVertex(vertex3, memo),
-            GetVertex(vertex4, memo)    
+            GetVertex(vertex1, !justOutline),    
+            GetVertex(vertex2, !justOutline),    
+            GetVertex(vertex3, !justOutline),
+            GetVertex(vertex4, !justOutline)    
         };
 
         string sideName = TerrainGenerationConstants.sideNameList[chunk.GetSideCoord()];
-        BlockSide blockSide = new BlockSide(vertices, type.GetAtlasCoord(faceDrawn), sideName, faceDrawn);
-        if (memo) {
+        BlockSide blockSide = new BlockSide(
+            vertices, 
+            type.GetAtlasCoord(faceDrawn), 
+            sideName, 
+            faceDrawn,
+            ambientOcclusionCount);
+        if (!justOutline) {
             sides[index] = blockSide;
         }
         return blockSide;
@@ -144,7 +190,7 @@ public class Block {
     public Mesh ComputeOutline(float overlineRatio = 1.05f) {
         List<BlockSide> listSides = new List<BlockSide>();
         for (int sideIndex=0; sideIndex<6; sideIndex++) {
-            BlockSide side = GetSide(sideIndex, false);
+            BlockSide side = GetSide(sideIndex, true);
             Vector3[] vertices = side.GetVertices();
             Vector3[] newVertices = new Vector3[4];
             for (int i=0; i<4; i++) {

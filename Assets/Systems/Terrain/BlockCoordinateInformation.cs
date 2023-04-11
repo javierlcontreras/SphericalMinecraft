@@ -52,7 +52,7 @@ public class BlockCoordinateInformation
     {
         // TODO(jlcontreras): Reimplement this without actually creating a block would be nice
         Chunk chunk = planet.GetChunk(chunkCoord);
-        Block block = new Block(blockCoord, BlockTypeEnum.GetByName("air"), chunk);
+        Block block = new Block(blockCoord, BlockTypeManager.Instance.GetByName("air"), chunk);
         return block.GetBlockPosition();
     }
 
@@ -60,7 +60,7 @@ public class BlockCoordinateInformation
     {
         // TODO(jlcontreras): Reimplement this without actually creating a block would be nice
         Chunk chunk = planet.GetChunk(chunkCoord);
-        Block block = new Block(blockCoord, BlockTypeEnum.GetByName("air"), chunk);
+        Block block = new Block(blockCoord, BlockTypeManager.Instance.GetByName("air"), chunk);
         return block.GetBlockGlobalPosition();
     }
 
@@ -70,5 +70,23 @@ public class BlockCoordinateInformation
         return (position - point).magnitude;
     }
     
+    public void RecomputeAmbientOcclusionsOfAllNeighbors()
+    {
+        SphericalBlockAdjacencyCalculator adjCalc = planet.GetPlanetMeshGenerator().GetChunkAdjacencyCalculator();
+        for (int dx = -1; dx < 2; dx++) {
+            for (int dy = -1; dy < 2; dy++) {
+                for (int dz = -1; dz < 2; dz++)
+                {
+                    BlockAdjacency adj = adjCalc.BlockNextToMe(this, new Vector3Int(dx, dy, dz));
+                    if (adj == null || adj.GetBlocks() == null) continue;
+                    foreach (BlockCoordinateInformation blockCoord in adj.GetBlocks())
+                    {
+                        Block block = blockCoord.GetBlockIfExists();
+                        if (block != null) block.RecomputeAmbientOcclusions();
+                    }
+                }
+            }
+        }
+    }
     
 }

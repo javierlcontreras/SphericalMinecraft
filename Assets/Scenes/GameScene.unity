@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1307707555}
     m_Modifications:
+    - target: {fileID: 1280789418033084104, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1280789418103153502, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -139,8 +143,16 @@ PrefabInstance:
       value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1280789418103153568, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
+      propertyPath: maxHeight
+      value: 160
+      objectReference: {fileID: 0}
+    - target: {fileID: 1280789418103153568, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
+      propertyPath: minHeight
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1280789418103153568, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
       propertyPath: chunksPerSide
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1280789418103153570, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
       propertyPath: m_RootOrder
@@ -196,11 +208,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1280789419038826397, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
       propertyPath: ultraFlat
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1280789419038826397, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
       propertyPath: ultraFlatLevel
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1280789419038826398, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
+      propertyPath: m_Name
+      value: HeightMap
       objectReference: {fileID: 0}
     - target: {fileID: 1280789419038826398, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
       propertyPath: m_IsActive
@@ -217,6 +233,183 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1280789418103153570, guid: d32c19000e6539c3abcdbe088a585de8, type: 3}
   m_PrefabInstance: {fileID: 303530281}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &356456476
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 356456477}
+  m_Layer: 0
+  m_Name: Configuration Systems
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &356456477
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356456476}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1677775992}
+  - {fileID: 529562805}
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &529562804
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 529562805}
+  - component: {fileID: 529562806}
+  m_Layer: 0
+  m_Name: BlockTypeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &529562805
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529562804}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 356456477}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &529562806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529562804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77d59cc788c3495db8e72de4815c7e62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockTypesList:
+  - typeName: air
+    stackable: 0
+    air: 1
+    unimplemented: 0
+    stackSize: 0
+    atlasCoordinateUp: {x: -1, y: -1}
+    atlasCoordinateDown: {x: -1, y: -1}
+    atlasCoordinateRight: {x: -1, y: -1}
+    atlasCoordinateLeft: {x: -1, y: -1}
+    atlasCoordinateForward: {x: -1, y: -1}
+    atlasCoordinateBack: {x: -1, y: -1}
+  - typeName: grass
+    stackable: 1
+    air: 0
+    unimplemented: 0
+    stackSize: 64
+    atlasCoordinateUp: {x: 0, y: 0}
+    atlasCoordinateDown: {x: 0, y: 0}
+    atlasCoordinateRight: {x: 0, y: 0}
+    atlasCoordinateLeft: {x: 0, y: 0}
+    atlasCoordinateForward: {x: 0, y: 0}
+    atlasCoordinateBack: {x: 0, y: 0}
+  - typeName: dirt
+    stackable: 1
+    air: 0
+    unimplemented: 0
+    stackSize: 64
+    atlasCoordinateUp: {x: 1, y: 0}
+    atlasCoordinateDown: {x: 1, y: 0}
+    atlasCoordinateRight: {x: 1, y: 0}
+    atlasCoordinateLeft: {x: 1, y: 0}
+    atlasCoordinateForward: {x: 1, y: 0}
+    atlasCoordinateBack: {x: 1, y: 0}
+  - typeName: stone
+    stackable: 1
+    air: 0
+    unimplemented: 0
+    stackSize: 64
+    atlasCoordinateUp: {x: 2, y: 0}
+    atlasCoordinateDown: {x: 2, y: 0}
+    atlasCoordinateRight: {x: 2, y: 0}
+    atlasCoordinateLeft: {x: 2, y: 0}
+    atlasCoordinateForward: {x: 2, y: 0}
+    atlasCoordinateBack: {x: 2, y: 0}
+  - typeName: sand
+    stackable: 1
+    air: 0
+    unimplemented: 0
+    stackSize: 64
+    atlasCoordinateUp: {x: 3, y: 0}
+    atlasCoordinateDown: {x: 3, y: 0}
+    atlasCoordinateRight: {x: 3, y: 0}
+    atlasCoordinateLeft: {x: 3, y: 0}
+    atlasCoordinateForward: {x: 3, y: 0}
+    atlasCoordinateBack: {x: 3, y: 0}
+  - typeName: gravel
+    stackable: 1
+    air: 0
+    unimplemented: 0
+    stackSize: 64
+    atlasCoordinateUp: {x: 3, y: 1}
+    atlasCoordinateDown: {x: 3, y: 1}
+    atlasCoordinateRight: {x: 3, y: 1}
+    atlasCoordinateLeft: {x: 3, y: 1}
+    atlasCoordinateForward: {x: 3, y: 1}
+    atlasCoordinateBack: {x: 3, y: 1}
+  - typeName: wood
+    stackable: 1
+    air: 0
+    unimplemented: 0
+    stackSize: 64
+    atlasCoordinateUp: {x: 1, y: 2}
+    atlasCoordinateDown: {x: 1, y: 2}
+    atlasCoordinateRight: {x: 1, y: 2}
+    atlasCoordinateLeft: {x: 1, y: 2}
+    atlasCoordinateForward: {x: 1, y: 2}
+    atlasCoordinateBack: {x: 1, y: 2}
+  - typeName: leaves
+    stackable: 1
+    air: 0
+    unimplemented: 0
+    stackSize: 64
+    atlasCoordinateUp: {x: 0, y: 2}
+    atlasCoordinateDown: {x: 0, y: 2}
+    atlasCoordinateRight: {x: 0, y: 2}
+    atlasCoordinateLeft: {x: 0, y: 2}
+    atlasCoordinateForward: {x: 0, y: 2}
+    atlasCoordinateBack: {x: 0, y: 2}
+  - typeName: bedrock
+    stackable: 1
+    air: 0
+    unimplemented: 0
+    stackSize: 64
+    atlasCoordinateUp: {x: 4, y: 0}
+    atlasCoordinateDown: {x: 4, y: 0}
+    atlasCoordinateRight: {x: 4, y: 0}
+    atlasCoordinateLeft: {x: 4, y: 0}
+    atlasCoordinateForward: {x: 4, y: 0}
+    atlasCoordinateBack: {x: 4, y: 0}
 --- !u!1001 &602732907
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -296,6 +489,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 0.045
       objectReference: {fileID: 0}
+    - target: {fileID: 2731718457518994388, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
+      propertyPath: textureAtlasFile
+      value: 
+      objectReference: {fileID: 2800000, guid: eeb8be1bf5fefe67498d0661806e9f68, type: 3}
     - target: {fileID: 2731718457518994389, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: m_Pivot.x
       value: 1.5
@@ -354,11 +551,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2731718458191788709, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: radiusOfLoad
-      value: 64
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 2731718458191788709, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: radiusOfSave
-      value: 128
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 2731718458191788710, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: m_Name
@@ -366,19 +563,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2731718458191788712, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: flySpeed
-      value: 20
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2731718458191788712, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: walkSpeed
-      value: 20
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2731718458191788712, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
+      propertyPath: gravitationalPullUp
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 2731718458191788712, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: groundedMask.m_Bits
       value: 64
       objectReference: {fileID: 0}
+    - target: {fileID: 2731718458191788712, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
+      propertyPath: gravitationalPullDown
+      value: 21
+      objectReference: {fileID: 0}
     - target: {fileID: 2731718458191788717, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2731718458191788717, guid: e4bdd325cc04273b0a6ad824e51c6daa, type: 3}
       propertyPath: m_LocalPosition.x
@@ -541,7 +746,7 @@ Transform:
   - {fileID: 1853915333}
   - {fileID: 303530282}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1637547081
 GameObject:
@@ -626,12 +831,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1677775990}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 356456477}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1677775993

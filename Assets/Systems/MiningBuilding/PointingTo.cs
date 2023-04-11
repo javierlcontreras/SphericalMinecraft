@@ -125,7 +125,6 @@ public class PointingTo : MonoBehaviour {
         if (blockPointed == null)
         {
             wireframeGameObject.SetActive(false);
-            Debug.LogWarning("Wireframing an inexistent block");
             return;
         }
         Mesh mesh = blockPointed.ComputeOutline();
@@ -161,6 +160,7 @@ public class PointingTo : MonoBehaviour {
         {
             timeDelayActions = 0;
             chunkLoader.ReloadChunksAfterMineBuildChange(blockPointedCoords);
+            blockPointedCoords.RecomputeAmbientOcclusionsOfAllNeighbors();
         }
     }
 }

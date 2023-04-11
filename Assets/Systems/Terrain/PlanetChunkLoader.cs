@@ -40,12 +40,10 @@ public class PlanetChunkLoader {
                 Debug.LogWarning("Planet is null at PlanetChunkLoader");
             }
 
-            for (int dx = -1; dx <= 1; dx += 1)
+            for (int dx = -1; dx <= 1; dx++)
             {
-                for (int dz = -1; dz <= 1; dz += 1)
+                for (int dz = -1; dz <= 1; dz++)
                 {
-                    if (dx * dz != 0) continue;
-
                     Vector3Int nextChunkCoord;
                     if (dx == 0 && dz == 0)
                     {

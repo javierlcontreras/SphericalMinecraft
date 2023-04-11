@@ -32,7 +32,9 @@ class NormalMovementController {
 
         if (!Grounded()) {
 //            Debug.Log("NOT grounded");
-            verticalVelocity -= settings.gravitationalPull*deltaTime;
+            float gravity = settings.gravitationalPullDown;
+            if (verticalVelocity > 0) gravity = settings.gravitationalPullUp;
+            verticalVelocity -= gravity*deltaTime;
         } 
         else {
             if (timeSinceJump > settings.jumpTimer) verticalVelocity = 0;

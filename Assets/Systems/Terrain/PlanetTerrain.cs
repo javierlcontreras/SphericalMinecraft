@@ -7,6 +7,7 @@ public class PlanetTerrain : MonoBehaviour {
     public int chunksPerSide = 1;
     public int chunkSize = 16;
     public int maxHeight = 32;
+    public int minHeight = 4;
 
     public Material surfaceTexturesMaterial;
     public Material GetSurfaceTexturesMaterial() {
@@ -55,7 +56,7 @@ public class PlanetTerrain : MonoBehaviour {
         chunks = new Chunk[6, chunksPerSide, chunksPerSide];
         
         chunkHeight = PrecomputeHeight(4*GetChunkSize()*GetChunksPerSide())+1;
-        chunkMinHeight = PrecomputeHeight(2*GetChunksPerSide())+1;
+        chunkMinHeight = Mathf.Max(minHeight, PrecomputeHeight(2*GetChunksPerSide())+1);
         TerrainSizePrecomputations();
         InitSubsystems();
     }

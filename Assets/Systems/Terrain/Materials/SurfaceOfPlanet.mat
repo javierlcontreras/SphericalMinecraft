@@ -8,9 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SurfaceOfPlanet
-  m_Shader: {fileID: 4800000, guid: a9068e4913da41767bd720819d92bd92, type: 3}
+  m_Shader: {fileID: 4800000, guid: 16bc4a2311fdcdf33a1cd6ae10b0c4e1, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords:
+  - _AOON_ON
   - _GLOSSYREFLECTIONS_OFF
   - _TEXTUREON_ON
   m_LightmapFlags: 4
@@ -51,7 +52,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: cf467f64fdada14f8a1a0758465503ca, type: 3}
+        m_Texture: {fileID: 2800000, guid: eeb8be1bf5fefe67498d0661806e9f68, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -77,7 +78,7 @@ Material:
     m_Ints: []
     m_Floats:
     - PixelSnap: 0
-    - _AOOn: 0
+    - _AOOn: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1

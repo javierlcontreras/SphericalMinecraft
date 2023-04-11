@@ -11,7 +11,7 @@ public class SaveSystemManager : MonoBehaviour {
 
     public void NewGame() {
         planetDataPersistence.NewPlanet(worldName, "Earth");
-        planetDataPersistence.NewPlanet(worldName, "Moon");
+        //planetDataPersistence.NewPlanet(worldName, "Moon");
 
         playerDataPersistence.NewPlayer(worldName, userId);
     }

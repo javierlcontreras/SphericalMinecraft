@@ -29,16 +29,24 @@ public class Chunk {
         return new Vector3Int(sideCoord, xCoord, zCoord);
     }
 
-    public void SetBlock(Vector3Int blockCoord, Block block)
+    public void SetBlock(Vector3Int blockCoord, Block block, bool bypassHeightLimits = false)
     {
         if (block == null) {
             blocks.Remove(blockCoord);
+            return;
         }
-        else blocks[blockCoord] = block;
+
+        if (!bypassHeightLimits)
+        {
+            if (block.GetInChunkIndex().y >= chunkHeight) return;
+            if (block.GetInChunkIndex().y <= planet.GetChunkMinHeight()) return;
+        }
+        
+        blocks[blockCoord] = block;
     }
-    public void SetBlock(int x, int y, int z, Block block) {
+    public void SetBlock(int x, int y, int z, Block block, bool bypassHeightLimits = false) {
         Vector3Int blockCoord = new Vector3Int(x, y, z);
-        SetBlock(blockCoord, block);
+        SetBlock(blockCoord, block, bypassHeightLimits);
         
     } 
     private PlanetTerrain planet;

@@ -15,7 +15,6 @@ public class MineManager
 
         Block blockPointed = blockPointedCoords.GetBlockIfExists();
         if (blockPointed == null) {
-            Debug.LogWarning("BUG Want to break a air");
             return false;
         }
 
