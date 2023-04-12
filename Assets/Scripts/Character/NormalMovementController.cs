@@ -31,9 +31,9 @@ class NormalMovementController {
         
 
         if (!Grounded()) {
-//            Debug.Log("NOT grounded");
             float gravity = settings.gravitationalPullDown;
             if (verticalVelocity > 0) gravity = settings.gravitationalPullUp;
+            // TODO: this  modification of velocity should be done server side, this is why client just falls do the void
             verticalVelocity -= gravity*deltaTime;
         } 
         else {
@@ -53,7 +53,11 @@ class NormalMovementController {
 		Ray rayDown = new Ray(character.TransformPoint(settings.lowPoint), -character.up);
 		Debug.DrawRay(character.TransformPoint(settings.lowPoint), -character.up*settings.feetWidth, Color.red  );
         RaycastHit hit;
-		if (Physics.Raycast(rayDown, out hit, settings.feetWidth, settings.groundedMask)) return true;
+        if (Physics.Raycast(rayDown, out hit, settings.feetWidth, settings.groundedMask))
+        {
+            Debug.Log("THIS IS GROUNDED!");
+            return true;
+        }
 		return false;
     }
 }

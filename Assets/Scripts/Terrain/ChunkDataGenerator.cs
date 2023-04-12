@@ -33,11 +33,11 @@ public class ChunkDataGenerator {
                     if (Mathf.Abs(cubeDirUnit.y) > thickness) corner += 1;
                     if (Mathf.Abs(cubeDirUnit.z) > thickness) corner += 1;
                     
-                    BlockType type = BlockTypeManager.Instance.GetByName("air");
+                    BlockType type = BlockTypeManager.Singleton.GetByName("air");
                     float dist = (cubeDir - height * baseVector).magnitude;
                     if (dist < 1 && corner >= 2)
                     {
-                        type = BlockTypeManager.Instance.GetByName("stone");
+                        type = BlockTypeManager.Singleton.GetByName("stone");
                     }
                     
                     Vector3Int inChunkIndex = new Vector3Int(x, y, z);
@@ -56,8 +56,8 @@ public class ChunkDataGenerator {
             for (int x = 0; x < numSides; x++) {
                 for (int z = 0; z < numSides; z++)
                 {
-                    BlockType type = BlockTypeManager.Instance.GetByName("air");
-                    if (y < 14) type = BlockTypeManager.Instance.GetByName("grass");
+                    BlockType type = BlockTypeManager.Singleton.GetByName("air");
+                    if (y < 14) type = BlockTypeManager.Singleton.GetByName("grass");
                     Vector3Int inChunkIndex = new Vector3Int(x, y, z);
                     if (type.GetName() != "air") chunk.SetBlock(x, y, z, new Block(inChunkIndex, type, chunk), true);
                 }
@@ -87,20 +87,20 @@ public class ChunkDataGenerator {
         PlanetTerrain planet = chunk.GetPlanet();
         if (y < planet.GetChunkMinHeight())
         {
-            return BlockTypeManager.Instance.GetByName("air");;
+            return BlockTypeManager.Singleton.GetByName("air");;
         }
         if (y == planet.GetChunkMinHeight()) {
-            return BlockTypeManager.Instance.GetByName("bedrock");
+            return BlockTypeManager.Singleton.GetByName("bedrock");
         }
         bool cave = planet.GetCaveAt(samplingDirection, 1f*y);
-        if (cave) return BlockTypeManager.Instance.GetByName("air");
+        if (cave) return BlockTypeManager.Singleton.GetByName("air");
 
         Biome biome = planet.GetBiomeAt(samplingDirection);
         string[] terrainLayerTypes = biome.GetTerrainLayersType();
         float[] terrainLayerHeights = biome.GetTerrainLayersHeight();
         for (int i=0; i<terrainLayerTypes.Length; i++) {
             if (y < terrainLayerHeights[i] * height) {
-                return BlockTypeManager.Instance.GetByName(terrainLayerTypes[i]);
+                return BlockTypeManager.Singleton.GetByName(terrainLayerTypes[i]);
             }
         }
         /*if (biome.GetBiomeName() == "forest" && planet.GetTreeAt(samplingDirection)) {
@@ -108,7 +108,7 @@ public class ChunkDataGenerator {
             if (y < treeHeight-1) return BlockTypeManager.Instance.GetByName("wood");
             else if (y < treeHeight) return BlockTypeManager.Instance.GetByName("leaves");
         }*/
-        return BlockTypeManager.Instance.GetByName("air");
+        return BlockTypeManager.Singleton.GetByName("air");
     }
 
     public float TerrainHeightFromNoise(Vector3 samplingDirection) {

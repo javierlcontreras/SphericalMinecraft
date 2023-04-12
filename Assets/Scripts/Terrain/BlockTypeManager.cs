@@ -11,15 +11,15 @@ public class BlockTypeManager : MonoBehaviour
     private List<BlockType> blockTypesList;
     private Dictionary<string, BlockType> blockTypes;
 
-    public static BlockTypeManager Instance { get; private set; }
+    public static BlockTypeManager Singleton { get; private set; }
     private void Awake() { 
-        if (Instance != null && Instance != this) 
+        if (Singleton != null && Singleton != this) 
         { 
             Destroy(this); 
         } 
         else 
         { 
-            Instance = this; 
+            Singleton = this; 
         }
 
         // Init dictioary

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Unity.Netcode;
 
 [RequireComponent (typeof(ControllerSettings))]
-public class FirstPersonController : NetworkBehaviour {
-	
+public class FirstPersonController : NetworkBehaviour
+{
+
 	private ControllerSettings settings;
 	
 	private TangencialMovementController tangencialController;
@@ -13,7 +14,9 @@ public class FirstPersonController : NetworkBehaviour {
 	
 	private Transform characterTransform;
 	private bool isFlying;
-	void Awake() {
+
+	
+	public override void OnNetworkSpawn() {
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;	
 		settings = GetComponent<ControllerSettings>();
@@ -23,10 +26,14 @@ public class FirstPersonController : NetworkBehaviour {
 		cameraController = new CameraController(settings.CameraTransform);
         characterTransform = settings.CharacterTransform;	
 		isFlying = false;
+
+		characterTransform.position = settings.initialPosition;
 	}
+	
 	void FixedUpdate()
 	{
 		if (!IsOwner) return;
+		
 		if (Input.GetKeyDown(KeyCode.C)) {
 			if (isFlying) {
 				normalController.SetVerticalVelocity(0);
@@ -79,8 +86,16 @@ public class FirstPersonController : NetworkBehaviour {
 			}
 		}
 
-		characterTransform.Translate(characterTransform.InverseTransformDirection(finalMove));
+		Vector3 finalMoveInGlobal = characterTransform.InverseTransformDirection(finalMove);
+		float dx = finalMoveInGlobal.x;
+		float dy = finalMoveInGlobal.y;
+		float dz = finalMoveInGlobal.z;
+		if (dx != 0 || dy != 0 || dz != 0)
+		{
+			MovementManagerServer.Singleton.MoveMeServerRpc(dx, dy, dz);
+		}
 	}
+	
 	public float GetVerticalVelocity() {
 		return normalController.GetVerticalVelocity();
 	}

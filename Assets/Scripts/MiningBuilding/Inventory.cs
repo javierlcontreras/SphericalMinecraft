@@ -12,14 +12,14 @@ public class Inventory : MonoBehaviour
     public void DebugInit()
     {
         toolbarmanager = gameObject.transform.Find("UI/HUD/Toolbar").GetComponent<ToolbarManager>();
-        slots[0] = new InventorySlot(64, BlockTypeManager.Instance.GetByName("grass"));
-        slots[1] = new InventorySlot(64, BlockTypeManager.Instance.GetByName("dirt"));
-        slots[2] = new InventorySlot(64, BlockTypeManager.Instance.GetByName("sand"));
-        slots[3] = new InventorySlot(32, BlockTypeManager.Instance.GetByName("stone"));
+        slots[0] = new InventorySlot(64, BlockTypeManager.Singleton.GetByName("grass"));
+        slots[1] = new InventorySlot(64, BlockTypeManager.Singleton.GetByName("dirt"));
+        slots[2] = new InventorySlot(64, BlockTypeManager.Singleton.GetByName("sand"));
+        slots[3] = new InventorySlot(32, BlockTypeManager.Singleton.GetByName("stone"));
         //slots[4] = new InventorySlot(64, BlockTypeEnum.GetByName("cobblestone"));
         //slots[5] = new InventorySlot(64, BlockTypeEnum.GetByName("gravel"));
-        slots[4] = new InventorySlot(64, BlockTypeManager.Instance.GetByName("wood"));
-        slots[5] = new InventorySlot(64, BlockTypeManager.Instance.GetByName("leaves"));
+        slots[4] = new InventorySlot(64, BlockTypeManager.Singleton.GetByName("wood"));
+        slots[5] = new InventorySlot(64, BlockTypeManager.Singleton.GetByName("leaves"));
     }
 
     public InventorySlot GetSlot(int index) {

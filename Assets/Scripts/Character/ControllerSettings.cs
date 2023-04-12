@@ -27,6 +27,8 @@ public class ControllerSettings : MonoBehaviour {
 	public float jumpStrength;
 	public float jumpTimer;
 
+	public Vector3 initialPosition;
+	
 	private ChunkLoader chunkLoader;
 	public void Awake() {
 		chunkLoader = gameObject.GetComponent<ChunkLoader>();

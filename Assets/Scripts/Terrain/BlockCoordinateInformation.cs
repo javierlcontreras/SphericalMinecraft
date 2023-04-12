@@ -52,7 +52,7 @@ public class BlockCoordinateInformation
     {
         // TODO(jlcontreras): Reimplement this without actually creating a block would be nice
         Chunk chunk = planet.GetChunk(chunkCoord);
-        Block block = new Block(blockCoord, BlockTypeManager.Instance.GetByName("air"), chunk);
+        Block block = new Block(blockCoord, BlockTypeManager.Singleton.GetByName("air"), chunk);
         return block.GetBlockPosition();
     }
 
@@ -60,7 +60,7 @@ public class BlockCoordinateInformation
     {
         // TODO(jlcontreras): Reimplement this without actually creating a block would be nice
         Chunk chunk = planet.GetChunk(chunkCoord);
-        Block block = new Block(blockCoord, BlockTypeManager.Instance.GetByName("air"), chunk);
+        Block block = new Block(blockCoord, BlockTypeManager.Singleton.GetByName("air"), chunk);
         return block.GetBlockGlobalPosition();
     }
 
