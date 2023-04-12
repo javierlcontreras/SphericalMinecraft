@@ -55,7 +55,6 @@ class NormalMovementController {
         RaycastHit hit;
         if (Physics.Raycast(rayDown, out hit, settings.feetWidth, settings.groundedMask))
         {
-            Debug.Log("THIS IS GROUNDED!");
             return true;
         }
 		return false;

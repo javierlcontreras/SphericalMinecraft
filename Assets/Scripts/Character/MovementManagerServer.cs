@@ -22,7 +22,6 @@ public class MovementManagerServer : NetworkBehaviour
     public void MoveMeServerRpc(float dx, float dy, float dz, ServerRpcParams serverRpcParams = default)
     {
         ulong clientId = serverRpcParams.Receive.SenderClientId;
-        Debug.Log(clientId +" is trying to move!");
         if (NetworkManager.ConnectedClients.ContainsKey(clientId))
         {
         	NetworkClient client = NetworkManager.ConnectedClients[clientId];

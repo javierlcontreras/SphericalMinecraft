@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using Unity.Netcode;
 public class EscScreen : MonoBehaviour
 {
     GameObject pauseScreen;
@@ -48,6 +48,7 @@ public class EscScreen : MonoBehaviour
     public void OnClickSaveAndQuit() {
         SaveSystemManager save = GameObject.Find("SaveSystemManager").GetComponent<SaveSystemManager>();
         save.SaveGame();
+        NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
 }

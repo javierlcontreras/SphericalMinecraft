@@ -1,9 +1,22 @@
+using System.IO;
 using UnityEngine;
+using Unity.Netcode;
 
 [RequireComponent(typeof(PlayerDataPersistence)), RequireComponent(typeof(PlanetDataPersistence))]
 public class SaveSystemManager : MonoBehaviour {
-    public static string DATA_FOLDER_NAME = "GameData";
-   
+    private static string DATA_FOLDER_NAME = "GameData";
+    public static string DATA_FOLDER_PATH = Path.Combine(Application.dataPath, SaveSystemManager.DATA_FOLDER_NAME);
+    public static DirectoryInfo GetWorldFolderDirectory()
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo(DATA_FOLDER_PATH);
+        if (!directoryInfo.Exists)
+        {
+            directoryInfo.Create();
+        }
+
+        return directoryInfo;
+    }
+    
     private string worldName;
     private string userId;
     private PlayerDataPersistence playerDataPersistence;
@@ -18,7 +31,7 @@ public class SaveSystemManager : MonoBehaviour {
 
     public void LoadGame() {
         planetDataPersistence.LoadPlanet(worldName, "Earth");
-        planetDataPersistence.LoadPlanet(worldName, "Moon");
+        //planetDataPersistence.LoadPlanet(worldName, "Moon");
 
         playerDataPersistence.LoadPlayer(worldName, userId);
     }
@@ -44,8 +57,9 @@ public class SaveSystemManager : MonoBehaviour {
     }
 
 
-    public void Awake() {
-        DEBUG_START();
+
+    public void Start() {
+        //DEBUG_START();
         
         worldName = PlayerPrefs.GetString("worldName");
         userId = PlayerPrefs.GetString("userId");
@@ -54,6 +68,10 @@ public class SaveSystemManager : MonoBehaviour {
         playerDataPersistence = gameObject.GetComponent<PlayerDataPersistence>();
         
         bool newWorld = (PlayerPrefs.GetInt("newWorld") == 1);
+        if (PlayerPrefs.GetString("mode").Equals("host"))
+        {
+            NetworkManager.Singleton.StartHost();
+        }
         if (newWorld) {
             string seed = PlayerPrefs.GetString("seed");
             Random.InitState(seed.GetHashCode());
