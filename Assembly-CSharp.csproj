@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets/Scripts/Terrain/BlockCoordinateInformation.cs" />
-     <Compile Include="Assets/Scripts/OpeningMenu/OpeningMenuManager.cs" />
      <Compile Include="Assets/Scripts/Character/FirstPersonController.cs" />
      <Compile Include="Assets/Scripts/Terrain/PlanetMeshGenerator.cs" />
      <Compile Include="Assets/Scripts/ChunkLoader/ChunkLoader.cs" />
@@ -58,12 +57,12 @@
      <Compile Include="Assets/Scripts/CelestialMechanics/CelestialBody.cs" />
      <Compile Include="Assets/Scripts/CelestialMechanics/OrbitManager.cs" />
      <Compile Include="Assets/Scripts/SaveSystem/PlayerDataPersistence.cs" />
+     <Compile Include="Assets/Scripts/NetcodeConfigurations/NetworkManagerUI.cs" />
      <Compile Include="Assets/Scripts/Character/TangencialMovementController.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockType.cs" />
      <Compile Include="Assets/Scripts/HUD/ToolbarManager.cs" />
      <Compile Include="Assets/Scripts/Terrain/Chunk.cs" />
      <Compile Include="Assets/Scripts/Character/CameraController.cs" />
-     <Compile Include="Assets/NetworkManagerUI.cs" />
      <Compile Include="Assets/Scripts/Terrain/Biomes/BiomeManager.cs" />
      <Compile Include="Assets/Scripts/Character/MovementManagerServer.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockAdjacency.cs" />
@@ -79,13 +78,17 @@
      <Compile Include="Assets/Scripts/SaveSystem/PlanetDataPersistence.cs" />
      <Compile Include="Assets/Scripts/MiningBuilding/MineManager.cs" />
      <Compile Include="Assets/Scripts/Terrain/PlanetDataGenerator.cs" />
+     <Compile Include="Assets/Scripts/OpeningMenu/NewWorldScreenClickManager.cs" />
      <Compile Include="Assets/Scripts/NoiseGeneration/PerlinNoise.cs" />
      <Compile Include="Assets/Scripts/Terrain/TerrainGenerationConstants.cs" />
+     <Compile Include="Assets/Scripts/OpeningMenu/LoadWorldScreenClickManager.cs" />
      <Compile Include="Assets/Scripts/SaveSystem/DataType/PlanetData.cs" />
+     <Compile Include="Assets/Scripts/OpeningMenu/UsernameScreenManager.cs" />
      <Compile Include="Assets/Scripts/Terrain/PlanetTerrain.cs" />
-     <Compile Include="Assets/Scripts/Character/NormalMovementController.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockSideTriangle.cs" />
+     <Compile Include="Assets/Scripts/Character/NormalMovementController.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockSide.cs" />
+     <Compile Include="Assets/Scripts/OpeningMenu/IndexScreenClickManager.cs" />
      <Compile Include="Assets/Scripts/Terrain/Block.cs" />
      <Compile Include="Assets/Scripts/Terrain/ChunkDataGenerator.cs" />
      <Compile Include="Assets/Scripts/MiningBuilding/Inventory.cs" />
@@ -136,6 +139,7 @@
      <Folder Include="Assets/TextMesh Pro/Fonts" />
      <Folder Include="Assets/Scripts/NoiseGeneration" />
      <None Include="Assets/TextMesh Pro/Resources/LineBreaking Following Characters.txt" />
+     <Folder Include="Assets/Scripts/NetcodeConfigurations" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Masking.shader" />
      <Folder Include="Assets/Scripts/PauseScreen" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF Overlay.shader" />
