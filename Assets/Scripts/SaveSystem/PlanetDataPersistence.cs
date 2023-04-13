@@ -6,13 +6,15 @@ using UnityEngine;
 [RequireComponent(typeof(SaveSystemManager))]
 public class PlanetDataPersistence : MonoBehaviour {
     
-    public GameObject planetPrefab;
-    public GameObject moonPrefab;
+    [SerializeField] private GameObject planetPrefab;
+    [SerializeField] private GameObject moonPrefab;
+
+    [SerializeField] private GameObject celestialBodiesParent;
     
     public GameObject NewPlanet(string worldName, string planetName) {
         GameObject planet;
-        if (planetName == "Earth") planet = Instantiate(planetPrefab);
-        else planet = Instantiate(moonPrefab);
+        if (planetName == "Earth") planet = Instantiate(planetPrefab, celestialBodiesParent.transform);
+        else planet = Instantiate(moonPrefab, celestialBodiesParent.transform);
         planet.name = planetName;
     
         planet.GetComponent<PlanetTerrain>().InitTerrainSizes();
@@ -32,8 +34,8 @@ public class PlanetDataPersistence : MonoBehaviour {
         string json = fileManager.ReadFile(planetName);
         PlanetData data = JsonUtility.FromJson<PlanetData>(json);
         GameObject planet;
-        if (planetName == "Earth") planet = Instantiate(planetPrefab, data.position, data.rotation);
-        else planet = Instantiate(moonPrefab, data.position, data.rotation);
+        if (planetName == "Earth") planet = Instantiate(planetPrefab, data.position, data.rotation, celestialBodiesParent.transform);
+        else planet = Instantiate(moonPrefab, data.position, data.rotation, celestialBodiesParent.transform);
         planet.name = planetName;
         planet.GetComponent<CelestialBody>().SetVelocity(data.velocity);
         

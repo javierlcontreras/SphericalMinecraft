@@ -5,10 +5,10 @@ using UnityEngine;
 
 [RequireComponent(typeof(SaveSystemManager))]
 public class PlayerDataPersistence : MonoBehaviour {
-    public GameObject playerPrefab;
-    
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject playersParent;
     public GameObject NewPlayer(string worldName, string playerName) {
-        GameObject player = Instantiate(playerPrefab);
+        GameObject player = Instantiate(playerPrefab, playersParent.transform);
         player.name = playerName;
         return player;
     }
@@ -26,7 +26,7 @@ public class PlayerDataPersistence : MonoBehaviour {
         {
             string json = fileManager.ReadFile(playerName);
             PlayerData data = JsonUtility.FromJson<PlayerData>(json);
-            GameObject player = Instantiate(playerPrefab, data.position, data.rotation);
+            GameObject player = Instantiate(playerPrefab, data.position, data.rotation, playersParent.transform);
             player.GetComponent<FirstPersonController>().SetIsFlying(data.isFlying);
             player.GetComponent<FirstPersonController>().SetVerticalVelocity(data.verticalVelocity);
             player.name = playerName;

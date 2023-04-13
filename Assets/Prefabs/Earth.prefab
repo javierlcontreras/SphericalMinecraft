@@ -203,9 +203,17 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1280789418033084104}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1280789418103153572
@@ -233,7 +241,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1280789418103153572}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -244,7 +252,7 @@ Transform:
   - {fileID: 1280789419038826396}
   - {fileID: 1280789418033084105}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1280789418103153569
 MonoBehaviour:
@@ -273,9 +281,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bd6e72da8ef598f8bca054a1b76342e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunksPerSide: 4
+  chunksPerSide: 1
   chunkSize: 16
-  maxHeight: 128
+  maxHeight: 160
+  minHeight: 10
   surfaceTexturesMaterial: {fileID: 2100000, guid: 3d843c94aecc6b602a96dbfa936c791c, type: 2}
   heightMap: {fileID: 1280789419038826397}
   biomeManager: {fileID: 1280789418922911683}
@@ -410,7 +419,7 @@ GameObject:
   - component: {fileID: 1280789419038826396}
   - component: {fileID: 1280789419038826397}
   m_Layer: 0
-  m_Name: HeighMap
+  m_Name: HeightMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -459,7 +468,7 @@ MonoBehaviour:
   blocksSampled: 128
   debugInSphere: 1
   ultraFlat: 0
-  ultraFlatLevel: 0
+  ultraFlatLevel: 0.4
 --- !u!1 &1280789419118268551
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,9 +669,17 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1280789419175895586}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1280789419277586531

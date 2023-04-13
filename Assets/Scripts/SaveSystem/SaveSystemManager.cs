@@ -6,6 +6,7 @@ using Unity.Netcode;
 public class SaveSystemManager : MonoBehaviour {
     private static string DATA_FOLDER_NAME = "GameData";
     public static string DATA_FOLDER_PATH = Path.Combine(Application.dataPath, SaveSystemManager.DATA_FOLDER_NAME);
+    
     public static DirectoryInfo GetWorldFolderDirectory()
     {
         DirectoryInfo directoryInfo = new DirectoryInfo(DATA_FOLDER_PATH);
@@ -15,6 +16,11 @@ public class SaveSystemManager : MonoBehaviour {
         }
 
         return directoryInfo;
+    }
+    public static bool IsFolderAValidWorld(string folderName)
+    {
+        // TODO: unimplemented
+        return true;
     }
     
     private string worldName;
@@ -47,19 +53,22 @@ public class SaveSystemManager : MonoBehaviour {
             playerDataPersistence.SavePlayer(worldName, player);
         } 
     }
+    
 
+    
     private void DEBUG_START() {
         Debug.LogWarning("DEBUGGING TRICK. Must delete for prod. You are overwritting worldName and seed in PlayerPrefs for DEBUG.");
         PlayerPrefs.SetInt("newWorld", 1);
         PlayerPrefs.SetString("userId", "javierlcontreras");
         PlayerPrefs.SetString("worldName", "lala<3javier");
-        PlayerPrefs.SetString("seed", "Javier");   
+        PlayerPrefs.SetString("mode", "host");
+        PlayerPrefs.SetString("seed", "Javier");
     }
 
 
 
     public void Start() {
-        //DEBUG_START();
+        DEBUG_START();
         
         worldName = PlayerPrefs.GetString("worldName");
         userId = PlayerPrefs.GetString("userId");

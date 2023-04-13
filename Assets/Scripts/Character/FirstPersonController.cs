@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 
 [RequireComponent (typeof(ControllerSettings))]
-public class FirstPersonController : NetworkBehaviour
+public class FirstPersonController : MonoBehaviour
 {
 
 	private ControllerSettings settings;
@@ -16,7 +16,7 @@ public class FirstPersonController : NetworkBehaviour
 	private bool isFlying;
 
 	
-	public override void OnNetworkSpawn() {
+	public void Start() {
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;	
 		settings = GetComponent<ControllerSettings>();
@@ -32,7 +32,7 @@ public class FirstPersonController : NetworkBehaviour
 	
 	void FixedUpdate()
 	{
-		if (!IsOwner) return;
+		//if (!IsOwner) return;
 		
 		if (Input.GetKeyDown(KeyCode.C)) {
 			if (isFlying) {
@@ -92,7 +92,7 @@ public class FirstPersonController : NetworkBehaviour
 		float dz = finalMoveInGlobal.z;
 		if (dx != 0 || dy != 0 || dz != 0)
 		{
-			MovementManagerServer.Singleton.MoveMeServerRpc(dx, dy, dz);
+			MovementManagerServer.Singleton.MoveMe(dx, dy, dz, transform);
 		}
 	}
 	

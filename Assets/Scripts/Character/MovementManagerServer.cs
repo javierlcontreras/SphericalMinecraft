@@ -18,15 +18,18 @@ public class MovementManagerServer : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
-    public void MoveMeServerRpc(float dx, float dy, float dz, ServerRpcParams serverRpcParams = default)
+    // TODO: tag as [ServerRpc] and remember to add ServerRpc to name
+    public void MoveMe(float dx, float dy, float dz, Transform clientTransform) // ServerRpcParams serverRpcParams = default)
     {
+        clientTransform.Translate(new Vector3(dx,dy,dz));
+        /*
         ulong clientId = serverRpcParams.Receive.SenderClientId;
+        Debug.Log("client trying to move");
         if (NetworkManager.ConnectedClients.ContainsKey(clientId))
         {
         	NetworkClient client = NetworkManager.ConnectedClients[clientId];
         	client.PlayerObject.transform.Translate(new Vector3(dx, dy, dz));
-        }
+        }*/
     }
         
 }

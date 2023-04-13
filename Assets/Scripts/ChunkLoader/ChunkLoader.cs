@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 
-public class ChunkLoader : NetworkBehaviour {
+public class ChunkLoader : MonoBehaviour {
     public float radiusOfLoad;
     public float radiusOfSave;
     public bool dontRenderChunks = false;
@@ -11,7 +11,7 @@ public class ChunkLoader : NetworkBehaviour {
     
     private GameObject[] planets;
 
-    public override void OnNetworkSpawn() {
+    public void Start() {
         currentPosition = gameObject.transform;
         planets = GameObject.FindGameObjectsWithTag("Planet");
         InitChunkList();
