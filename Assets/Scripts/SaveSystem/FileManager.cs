@@ -15,6 +15,12 @@ public class FileManager {
         }
     }
 
+    public bool DoesFileExist(string fileName)
+    {
+        string filePath = Path.Combine(folderPath, fileName);
+        return File.Exists(fileName);
+    }
+    
     public void WriteFile(string data, string fileName) {
         string filePath = Path.Combine(folderPath, fileName);
         File.WriteAllText(filePath, data);

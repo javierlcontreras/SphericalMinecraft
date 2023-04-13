@@ -18,8 +18,18 @@ public class SingleplayerScreenClickManager : MonoBehaviour
     {
         DirectoryInfo directoryInfo = SaveSystemManager.GetWorldFolderDirectory();
         DirectoryInfo[] allWorldFiles = directoryInfo.GetDirectories();
-        int iter = 0;
-        float height = 0;
+        
+        int iter = allWorldFiles.Length;
+        RectTransform transformPrefabItem = worldListItem.GetComponent<RectTransform>();
+        float height = transformPrefabItem.rect.height;
+        
+        float width = worldListParent.GetComponent<RectTransform>().sizeDelta.x;
+        worldListParent.GetComponent<RectTransform>().sizeDelta = new Vector2(
+            width,
+            (iter * (1 + marginInWorldList) + marginInWorldList) * height
+            );
+        
+        iter = 0;
         foreach (DirectoryInfo worldFile in allWorldFiles)
         {
             GameObject listItem = Instantiate(worldListItem, worldListParent.transform);
@@ -31,13 +41,6 @@ public class SingleplayerScreenClickManager : MonoBehaviour
             
             iter++;
         }
-
-        float width = worldListItem.GetComponent<RectTransform>().sizeDelta.x;
-        /*worldListItem.GetComponent<RectTransform>().sizeDelta = new Vector2(
-            width,
-            (iter * (1 + marginInWorldList) + marginInWorldList) * height
-            );
-        */
     }
 
     public void SetUserId(string _userId)

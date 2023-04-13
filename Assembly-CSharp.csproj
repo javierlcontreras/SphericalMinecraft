@@ -109,10 +109,12 @@
      <None Include="Assets/Scripts/HUD/HUD.shader" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_Bitmap.shader" />
      <Folder Include="Assets/Scripts/MiningBuilding" />
+     <Folder Include="Assets/GameData/j6" />
      <Folder Include="Assets/Scripts/CelestialMechanics" />
      <Folder Include="Assets/Scripts/Character" />
      <Folder Include="Assets/Scripts/SaveSystem" />
      <Folder Include="Assets/TextMesh Pro/Resources/Fonts &amp; Materials" />
+     <Folder Include="Assets/GameData/j" />
      <Folder Include="Assets/Scripts/Terrain" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro_Mobile.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF SSD.shader" />
@@ -135,6 +137,8 @@
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile SSD.shader" />
      <None Include="Assets/TextMesh Pro/Resources/LineBreaking Leading Characters.txt" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc" />
+     <Folder Include="Assets/GameData/j4" />
+     <Folder Include="Assets/GameData/j3" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro_Surface.cginc" />
      <Folder Include="Assets/TextMesh Pro/Shaders" />
      <Folder Include="Assets/TextMesh Pro/Resources/Style Sheets" />
@@ -145,7 +149,9 @@
      <Folder Include="Assets/Scripts/NetcodeConfigurations" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Masking.shader" />
      <Folder Include="Assets/GameData/asd​/Players" />
+     <Folder Include="Assets/GameData/j2" />
      <Folder Include="Assets/GameData/asd​/Planets" />
+     <Folder Include="Assets/GameData/j5" />
      <Folder Include="Assets/Scripts/PauseScreen" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF Overlay.shader" />
      <Folder Include="Assets/Scenes/GameScene" />
