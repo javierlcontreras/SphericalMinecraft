@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 
 [RequireComponent (typeof(ControllerSettings))]
-public class FirstPersonController : MonoBehaviour
+public class FirstPersonController : NetworkBehaviour
 {
 
 	private ControllerSettings settings;
@@ -14,13 +15,12 @@ public class FirstPersonController : MonoBehaviour
 	
 	private Transform characterTransform;
 	private bool isFlying;
-
 	
-	public void Start() {
+	public void Init(ControllerSettings _settings)
+	{
+		settings = _settings;
 		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;	
-		settings = GetComponent<ControllerSettings>();
-
+		Cursor.visible = false;
 		tangencialController = new TangencialMovementController(settings.walkSpeed);
 		normalController = new NormalMovementController(settings);
 		cameraController = new CameraController(settings.CameraTransform);
@@ -30,10 +30,8 @@ public class FirstPersonController : MonoBehaviour
 		characterTransform.position = settings.initialPosition;
 	}
 	
-	void FixedUpdate()
+	public void MyFixedUpdate()
 	{
-		//if (!IsOwner) return;
-		
 		if (Input.GetKeyDown(KeyCode.C)) {
 			if (isFlying) {
 				normalController.SetVerticalVelocity(0);
@@ -92,7 +90,7 @@ public class FirstPersonController : MonoBehaviour
 		float dz = finalMoveInGlobal.z;
 		if (dx != 0 || dy != 0 || dz != 0)
 		{
-			MovementManagerServer.Singleton.MoveMe(dx, dy, dz, transform);
+			ServerMovement.Singleton.MoveMeServerRpc(dx, dy, dz);
 		}
 	}
 	

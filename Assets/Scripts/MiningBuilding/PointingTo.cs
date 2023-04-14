@@ -20,9 +20,10 @@ public class PointingTo : MonoBehaviour {
     
 	private ChunkLoader chunkLoader;
 	
-    void Start() {
-		chunkLoader = gameObject.GetComponent<ChunkLoader>();
-        settings = GetComponent<ControllerSettings>();
+    public void Init(ChunkLoader _chunkLoader, ControllerSettings _controllerSettings)
+    {
+        chunkLoader = _chunkLoader;
+        settings = _controllerSettings;
         wireframeGameObject = new GameObject("Pointing Wireframe", typeof(MeshFilter), typeof(MeshRenderer));
 
         mineManager = new MineManager();
@@ -138,7 +139,7 @@ public class PointingTo : MonoBehaviour {
         wireframeGameObject.SetActive(true);
     }
     
-    void FixedUpdate() {
+    public void MyFixedUpdate() {
         BlockCoordinateInformation blockPointedCoords = BlockPointingTo();
         WireFrame(blockPointedCoords);
         timeDelayActions += Time.fixedDeltaTime;

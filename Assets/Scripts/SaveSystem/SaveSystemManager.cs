@@ -31,15 +31,13 @@ public class SaveSystemManager : MonoBehaviour {
     public void NewGame() {
         planetDataPersistence.NewPlanet(worldName, "Earth");
         //planetDataPersistence.NewPlanet(worldName, "Moon");
-
-        playerDataPersistence.NewPlayer(worldName, userId);
+        //playerDataPersistence.NewPlayer(worldName, userId);
     }
 
     public void LoadGame() {
         planetDataPersistence.LoadPlanet(worldName, "Earth");
-        //planetDataPersistence.LoadPlanet(worldName, "Moon");
-
-        playerDataPersistence.LoadPlayer(worldName, userId);
+        // planetDataPersistence.LoadPlanet(worldName, "Moon");
+        // playerDataPersistence.LoadPlayer(worldName, userId);
     }
     
     public void SaveGame() {
@@ -68,26 +66,31 @@ public class SaveSystemManager : MonoBehaviour {
 
 
     public void Start() {
-        DEBUG_START();
-        
-        worldName = PlayerPrefs.GetString("worldName");
-        userId = PlayerPrefs.GetString("userId");
-        
         planetDataPersistence = gameObject.GetComponent<PlanetDataPersistence>();
         playerDataPersistence = gameObject.GetComponent<PlayerDataPersistence>();
         
-        bool newWorld = (PlayerPrefs.GetInt("newWorld") == 1);
-        if (PlayerPrefs.GetString("mode").Equals("host"))
+        string mode = PlayerPrefs.GetString("mode");
+        if (mode.Equals("host"))
         {
+            DEBUG_START();
+            worldName = PlayerPrefs.GetString("worldName");
+            userId = PlayerPrefs.GetString("userId");
+            bool newWorld = (PlayerPrefs.GetInt("newWorld") == 1);
+            if (newWorld) {
+                string seed = PlayerPrefs.GetString("seed");
+                Random.InitState(seed.GetHashCode());
+                NewGame();
+            }
+            else {
+                LoadGame();
+            }
+
+            Debug.Log("Started world as host");
             NetworkManager.Singleton.StartHost();
         }
-        if (newWorld) {
-            string seed = PlayerPrefs.GetString("seed");
-            Random.InitState(seed.GetHashCode());
-            NewGame();
-        }
-        else {
-            LoadGame();
+        else if (mode.Equals("client")) {
+            Debug.Log("Connected to world as client");
+            NetworkManager.Singleton.StartClient();
         }
     }
 

@@ -2,8 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 
-public class ChunkLoader : MonoBehaviour {
+public class ChunkLoader : NetworkBehaviour {
     public float radiusOfLoad;
     public float radiusOfSave;
     public bool dontRenderChunks = false;
@@ -11,9 +12,11 @@ public class ChunkLoader : MonoBehaviour {
     
     private GameObject[] planets;
 
-    public void Start() {
+    public void Init() {
         currentPosition = gameObject.transform;
+        
         planets = GameObject.FindGameObjectsWithTag("Planet");
+        
         InitChunkList();
     }
 
@@ -123,6 +126,8 @@ public class ChunkLoader : MonoBehaviour {
     }
     
     private void Update() {
+        if (!IsOwner) return;
+        
         if (coroutineFinished) {
             Comp comp = new Comp(this, planets);
             chunkList.Sort(comp);

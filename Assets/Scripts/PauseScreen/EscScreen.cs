@@ -5,28 +5,19 @@ using UnityEngine.SceneManagement;
 using Unity.Netcode;
 public class EscScreen : MonoBehaviour
 {
-    GameObject pauseScreen;
-    GameObject hudScreen;
-    GameObject player;
-    void Start()
-    {
-        player = gameObject;
-        pauseScreen = player.transform.Find("UI/PauseScreen").gameObject;
-        hudScreen = player.transform.Find("UI/HUD").gameObject;
-    }
+    [SerializeField] private GameObject pauseScreen;
+    [SerializeField] private GameObject hudScreen;
+    [SerializeField] private PointingTo _pointingTo;
 
-    void Update()
+    public void MyUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             bool active = pauseScreen.activeSelf;
             if (active) {
-                player.GetComponent<PointingTo>().enabled = true;
-                pauseScreen.SetActive(false);
-                Cursor.lockState = CursorLockMode.Locked;
-		        Cursor.visible = false;	
+                OnClickBackToGame();
             }
             else {
-                player.GetComponent<PointingTo>().enabled = false;
+                _pointingTo.enabled = false;
                 pauseScreen.SetActive(true);
                 Cursor.lockState = CursorLockMode.None;
 		        Cursor.visible = true;	
@@ -40,7 +31,7 @@ public class EscScreen : MonoBehaviour
 
     public void OnClickBackToGame() {
         pauseScreen.SetActive(false);
-        player.GetComponent<PointingTo>().enabled = true;
+        _pointingTo.enabled = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;	
     }

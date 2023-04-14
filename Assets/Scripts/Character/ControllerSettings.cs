@@ -1,7 +1,8 @@
+using Unity.Netcode;
 using UnityEngine;
 
 [RequireComponent (typeof(ChunkLoader))]
-public class ControllerSettings : MonoBehaviour {
+public class ControllerSettings : NetworkBehaviour {
     // public vars
 	public float mouseSensitivityX;
 	public float mouseSensitivityY;
@@ -30,14 +31,15 @@ public class ControllerSettings : MonoBehaviour {
 	public Vector3 initialPosition;
 	
 	private ChunkLoader chunkLoader;
-	public void Awake() {
-		chunkLoader = gameObject.GetComponent<ChunkLoader>();
+	public void Init(ChunkLoader _chunkLoader)
+	{
+		chunkLoader = _chunkLoader;
 	}
 
     public Quaternion RadialCharacterOrientation() {
         Vector3 globalForward = CharacterTransform.TransformDirection(Vector3.forward);
 		
-		CelestialBody currentPlanetBody = chunkLoader.GetCurrentPlanet().GetComponent<CelestialBody>();
+        CelestialBody currentPlanetBody = chunkLoader.GetCurrentPlanet().GetComponent<CelestialBody>();
         Vector3 properUp = (CharacterTransform.position - currentPlanetBody.GetPosition()).normalized;
         Vector3 properForward = Vector3.Cross(Vector3.Cross(properUp, globalForward), properUp);
         Quaternion playerOrientation = Quaternion.LookRotation(properForward, properUp);

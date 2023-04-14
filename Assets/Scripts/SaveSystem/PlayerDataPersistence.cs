@@ -1,6 +1,7 @@
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 [RequireComponent(typeof(SaveSystemManager))]
@@ -20,13 +21,12 @@ public class PlayerDataPersistence : MonoBehaviour {
         fileManager.WriteFile(playerDataJson, player.name);
     }
 
-    public GameObject LoadPlayer(string worldName, string playerName) {
+    public GameObject LoadPlayer(string worldName, string playerName, GameObject player) {
         FileManager fileManager = new FileManager(worldName, "Players");
         if (fileManager.DoesFileExist(playerName))
         {
             string json = fileManager.ReadFile(playerName);
             PlayerData data = JsonUtility.FromJson<PlayerData>(json);
-            GameObject player = Instantiate(playerPrefab, data.position, data.rotation, playersParent.transform);
             player.GetComponent<FirstPersonController>().SetIsFlying(data.isFlying);
             player.GetComponent<FirstPersonController>().SetVerticalVelocity(data.verticalVelocity);
             player.name = playerName;
