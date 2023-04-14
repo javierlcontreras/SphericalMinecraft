@@ -16,7 +16,10 @@ public class ChunkLoader : NetworkBehaviour {
         currentPosition = gameObject.transform;
         
         planets = GameObject.FindGameObjectsWithTag("Planet");
-        
+        if (planets.Length == 0)
+        {
+            Debug.LogWarning("Player is getting loaded before the planets! This should never happen");
+        }
         InitChunkList();
     }
 
@@ -125,9 +128,7 @@ public class ChunkLoader : NetworkBehaviour {
             chunkCoord.x, chunkCoord.y, chunkCoord.z);
     }
     
-    private void Update() {
-        if (!IsOwner) return;
-        
+    public void MyUpdate() {
         if (coroutineFinished) {
             Comp comp = new Comp(this, planets);
             chunkList.Sort(comp);

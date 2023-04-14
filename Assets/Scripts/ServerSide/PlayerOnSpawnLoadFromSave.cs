@@ -18,7 +18,6 @@ public class PlayerOnSpawnLoadFromSave : NetworkBehaviour
     [ClientRpc]
     public void InformEveryoneOfNameClientRpc(string playerName, ulong clientId, ClientRpcParams clientRpcParams = default)
     {
-        NetworkManager.ConnectedClients[clientId].PlayerObject.name = playerName;
+        transform.name = playerName;
     }
-    
 }

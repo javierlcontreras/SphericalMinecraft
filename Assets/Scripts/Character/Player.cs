@@ -37,6 +37,7 @@ public class Player : NetworkBehaviour
     public void Update()
     {
         if (!IsOwner) return;
+        _chunkLoader.MyUpdate();
         _escScreen.MyUpdate();
     }
 }

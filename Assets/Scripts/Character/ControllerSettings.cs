@@ -39,8 +39,13 @@ public class ControllerSettings : NetworkBehaviour {
     public Quaternion RadialCharacterOrientation() {
         Vector3 globalForward = CharacterTransform.TransformDirection(Vector3.forward);
 		
-        CelestialBody currentPlanetBody = chunkLoader.GetCurrentPlanet().GetComponent<CelestialBody>();
-        Vector3 properUp = (CharacterTransform.position - currentPlanetBody.GetPosition()).normalized;
+        GameObject currentPlanet = chunkLoader.GetCurrentPlanet();
+        Vector3 properUp = CharacterTransform.position.normalized;
+	    if (currentPlanet != null)
+	    {
+		    CelestialBody currentPlanetBody = currentPlanet.GetComponent<CelestialBody>();
+			properUp = (CharacterTransform.position - currentPlanetBody.GetPosition()).normalized;
+	    }
         Vector3 properForward = Vector3.Cross(Vector3.Cross(properUp, globalForward), properUp);
         Quaternion playerOrientation = Quaternion.LookRotation(properForward, properUp);
         

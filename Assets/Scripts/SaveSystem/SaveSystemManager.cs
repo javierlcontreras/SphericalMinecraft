@@ -89,9 +89,7 @@ public class SaveSystemManager : MonoBehaviour {
             NetworkManager.Singleton.StartHost();
         }
         else if (mode.Equals("client")) {
-            Debug.Log("Connected to world as client");
             NetworkManager.Singleton.StartClient();
         }
     }
-
 }

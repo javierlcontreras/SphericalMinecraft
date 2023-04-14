@@ -48,6 +48,7 @@
      <Compile Include="Assets/Scripts/Terrain/BlockCoordinateInformation.cs" />
      <Compile Include="Assets/Scripts/Character/FirstPersonController.cs" />
      <Compile Include="Assets/Scripts/Terrain/PlanetMeshGenerator.cs" />
+     <Compile Include="Assets/Scripts/ServerSide/PlayerOnSpawnLoadFromSave.cs" />
      <Compile Include="Assets/Scripts/ChunkLoader/ChunkLoader.cs" />
      <Compile Include="Assets/Scripts/SaveSystem/DataType/PlayerData.cs" />
      <Compile Include="Assets/Scripts/OpeningMenu/SingleplayerScreenClickManager.cs" />
@@ -65,7 +66,6 @@
      <Compile Include="Assets/Scripts/HUD/ToolbarManager.cs" />
      <Compile Include="Assets/Scripts/Terrain/Chunk.cs" />
      <Compile Include="Assets/Scripts/Character/CameraController.cs" />
-     <Compile Include="Assets/Scripts/NetcodeConfigurations/PlayerOnSpawnLoadFromSave.cs" />
      <Compile Include="Assets/Scripts/Terrain/Biomes/BiomeManager.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockAdjacency.cs" />
      <Compile Include="Assets/Scripts/NoiseGeneration/NoiseGeneratorSettings.cs" />
@@ -77,7 +77,6 @@
      <Compile Include="Assets/Scripts/OpeningMenu/MultiplayerScreenClickManager.cs" />
      <Compile Include="Assets/Scripts/Terrain/Biomes/Biome.cs" />
      <Compile Include="Assets/Scripts/Character/ControllerSettings.cs" />
-     <Compile Include="Assets/Scripts/Character/ServerMovement.cs" />
      <Compile Include="Assets/Scripts/MiningBuilding/BuildManager.cs" />
      <Compile Include="Assets/Scripts/SaveSystem/SaveSystemManager.cs" />
      <Compile Include="Assets/Scripts/SaveSystem/PlanetDataPersistence.cs" />
@@ -92,6 +91,7 @@
      <Compile Include="Assets/Scripts/Terrain/BlockSideTriangle.cs" />
      <Compile Include="Assets/Scripts/Character/NormalMovementController.cs" />
      <Compile Include="Assets/Scripts/Terrain/BlockSide.cs" />
+     <Compile Include="Assets/Scripts/ServerSide/ServerMovement.cs" />
      <Compile Include="Assets/Scripts/OpeningMenu/IndexScreenClickManager.cs" />
      <Compile Include="Assets/Scripts/Terrain/Block.cs" />
      <Compile Include="Assets/Scripts/Terrain/ChunkDataGenerator.cs" />
@@ -139,6 +139,7 @@
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile SSD.shader" />
      <None Include="Assets/TextMesh Pro/Resources/LineBreaking Leading Characters.txt" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc" />
+     <Folder Include="Assets/Scripts/ServerSide" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro_Surface.cginc" />
      <Folder Include="Assets/TextMesh Pro/Shaders" />
      <Folder Include="Assets/TextMesh Pro/Resources/Style Sheets" />

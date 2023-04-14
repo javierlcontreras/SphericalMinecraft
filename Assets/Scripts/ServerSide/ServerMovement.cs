@@ -29,11 +29,7 @@ public class ServerMovement : NetworkBehaviour
     [ClientRpc]
     public void ClientHasMovedClientRpc(float dx, float dy, float dz, ulong clientId, ClientRpcParams clientRpcParams = default)
     {
-        if (NetworkManager.ConnectedClients.ContainsKey(clientId))
-        {
-        	NetworkClient client = NetworkManager.ConnectedClients[clientId];
-            client.PlayerObject.transform.Translate(new Vector3(dx, dy, dz));
-        }
+        transform.Translate(new Vector3(dx, dy, dz));
     }
         
 }
