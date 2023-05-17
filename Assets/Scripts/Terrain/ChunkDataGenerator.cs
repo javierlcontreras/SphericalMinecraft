@@ -10,12 +10,12 @@ public class ChunkDataGenerator {
 
     public void CreateChunkData()
     {
-        //CreateCubeTestingData(10,0.8f);
-        CreateChunkTerrainData();
+        CreateWorldAsAEmptyCube(10,0.8f);
+        //CreateChunkTerrainData();
         //CreateChunkTestingData();
     }
 
-    public void CreateCubeTestingData(float radius, float thickness)
+    public void CreateWorldAsAEmptyCube(float radius, float thickness)
     {
         PlanetTerrain planet = chunk.GetPlanet();
         int maxNumSides = planet.NumBlocksAtHeightPerChunk(planet.GetChunkHeight()-1); 
@@ -57,7 +57,7 @@ public class ChunkDataGenerator {
                 for (int z = 0; z < numSides; z++)
                 {
                     BlockType type = BlockTypeManager.Singleton.GetByName("air");
-                    if (y < 14) type = BlockTypeManager.Singleton.GetByName("grass");
+                    if (y < 16) type = BlockTypeManager.Singleton.GetByName("grass");
                     Vector3Int inChunkIndex = new Vector3Int(x, y, z);
                     if (type.GetName() != "air") chunk.SetBlock(x, y, z, new Block(inChunkIndex, type, chunk), true);
                 }

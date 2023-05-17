@@ -1,9 +1,9 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CelestialBody))]
-public class PlanetTerrain : MonoBehaviour {
-
-    
+public class PlanetTerrain : MonoBehaviour
+{
+    private float cubeToSphereInterpolator = 0; // 1: cube, 0: sphere 
     public int chunksPerSide = 1;
     public int chunkSize = 16;
     public int maxHeight = 32;
@@ -93,9 +93,9 @@ public class PlanetTerrain : MonoBehaviour {
         
         float blockSize = 2f/numBlocks;
         Vector3 radius = normal*1 + x*xAxis*blockSize + z*zAxis*blockSize;
-        radius = radius.normalized;
-
-        return radius;
+        Vector3 radiusNormalized = radius.normalized; //* Mathf.Pow(3, 1f/2f);
+        
+        return cubeToSphereInterpolator*radius + (1 - cubeToSphereInterpolator)*radiusNormalized;
     }
 
     public Vector3 BaseVectorAtCenter(int side, int chunkX, int chunkZ) {
@@ -222,4 +222,21 @@ public class PlanetTerrain : MonoBehaviour {
     public void DestroyChunkMesh(GameObject mesh) {
         Destroy(mesh);
     }
+    
+    /*
+    // Only to show off
+    private float interpolationValue = 0;
+    private float interpolationVelocity = 1f;
+    public void Update()
+    {
+        if (Input.GetKey("f"))
+        {
+            Debug.Log("Trying to move " + interpolationValue);
+            interpolationValue += Time.deltaTime * interpolationVelocity;
+            cubeToSphereInterpolator = 0.5f + 0.5f*Mathf.Cos(interpolationValue);
+            planetDataGenerator.RegenerateAllChunks();
+            planetChunkLoader.RegenerateAllChunks();
+        }
+
+    }*/
 }

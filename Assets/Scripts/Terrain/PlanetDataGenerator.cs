@@ -16,17 +16,16 @@ public class PlanetDataGenerator {
         height = planet.GetChunkHeight();
     }
 
-    /*public void Generate() {
+    public void RegenerateAllChunks() {
         for (int side = 0; side < 6; side++) {
             for (int chunkX = 0; chunkX < chunksPerSide; chunkX++) {
                 for (int chunkZ = 0; chunkZ < chunksPerSide; chunkZ++) {
-
-                    GenerateChunk(side, chunkX, chunkZ);
+                    
+                    GenerateChunk(new Vector3Int(side, chunkX, chunkZ));
                 }
             }
         }
-        //AddTrees(planet);
-    }*/
+    }
 
     public void GenerateChunk(Vector3Int chunkCoord) {
         Chunk chunk = new Chunk(chunkCoord, planet);

@@ -17,6 +17,24 @@ public class PlanetChunkLoader {
         GenerateChunkMeshNow(sideCoord, xCoord, zCoord);
     }
 
+    public void RegenerateAllChunks()
+    {
+        int chunksPerSide = planet.GetChunksPerSide();
+        for (int side = 0; side < 6; side++)
+        {
+            for (int chunkX = 0; chunkX < chunksPerSide; chunkX++)
+            {
+                for (int chunkZ = 0; chunkZ < chunksPerSide; chunkZ++)
+                {
+                    if (currentChunksLoaded[side,chunkX,chunkZ] != null)
+                    {
+                        RegenerateChunkMesh(side, chunkX, chunkZ);
+                    }
+                }
+            }
+        }
+    }
+
     public void HideChunkMesh(int sideCoord, int xCoord, int zCoord) {
         GameObject oldMesh = currentChunksLoaded[sideCoord, xCoord, zCoord];
         if (oldMesh == null) return;
