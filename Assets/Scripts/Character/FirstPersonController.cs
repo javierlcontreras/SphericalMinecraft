@@ -12,7 +12,9 @@ public class FirstPersonController : NetworkBehaviour
 	private TangencialMovementController tangencialController;
 	private NormalMovementController normalController;
 	private CameraController cameraController;
-	
+
+	private NetworkVariable<Vector3> position = new NetworkVariable<Vector3>(Vector3.zero);
+	private NetworkVariable<Quaternion> rotation = new NetworkVariable<Quaternion>(Quaternion.identity);
 	private Transform characterTransform;
 	private bool isFlying;
 	
@@ -28,17 +30,20 @@ public class FirstPersonController : NetworkBehaviour
 		isFlying = false;
 
 		characterTransform.position = settings.initialPosition;
+		position.Value = settings.initialPosition;
 	}
 	
 	public void MyFixedUpdate()
 	{
+		transform.position = position.Value;
+		transform.rotation = rotation.Value;
 		if (Input.GetKeyDown(KeyCode.C)) {
 			if (isFlying) {
 				normalController.SetVerticalVelocity(0);
 			}
 			isFlying  = !isFlying ;
 		}
-		characterTransform.rotation = settings.RadialCharacterOrientation();
+		RotateMeServerRpc(settings.RadialCharacterOrientation());
 		//float scalingFactor = ScalePlayerWithHeight();
 		//characterTransform.localScale = settings.characterShape * scalingFactor;
 		float mouseX = Input.GetAxis("Mouse X");
@@ -90,8 +95,20 @@ public class FirstPersonController : NetworkBehaviour
 		float dz = finalMoveInGlobal.z;
 		if (dx != 0 || dy != 0 || dz != 0)
 		{
-			ServerMovement.Singleton.MoveMeServerRpc(dx, dy, dz);
+			MoveMeServerRpc(new Vector3(dx, dy, dz));
 		}
+	}
+	
+	[ServerRpc]
+	public void MoveMeServerRpc(Vector3 diff, ServerRpcParams serverRpcParams = default)
+	{
+		position.Value += diff;
+	}
+	
+	[ServerRpc]
+	public void RotateMeServerRpc(Quaternion newRotation, ServerRpcParams serverRpcParams = default)
+	{
+		rotation.Value = newRotation;
 	}
 	
 	public float GetVerticalVelocity() {

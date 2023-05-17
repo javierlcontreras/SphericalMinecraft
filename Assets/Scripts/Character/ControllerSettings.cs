@@ -40,12 +40,12 @@ public class ControllerSettings : NetworkBehaviour {
         Vector3 globalForward = CharacterTransform.TransformDirection(Vector3.forward);
 		
         GameObject currentPlanet = chunkLoader.GetCurrentPlanet();
-        Vector3 properUp = CharacterTransform.position.normalized;
+        Vector3 currentPlanetBodyPosition = Vector3.zero;
 	    if (currentPlanet != null)
 	    {
-		    CelestialBody currentPlanetBody = currentPlanet.GetComponent<CelestialBody>();
-			properUp = (CharacterTransform.position - currentPlanetBody.GetPosition()).normalized;
+		    currentPlanetBodyPosition = currentPlanet.GetComponent<CelestialBody>().GetPosition();
 	    }
+	    Vector3 properUp = (CharacterTransform.position - currentPlanetBodyPosition).normalized;
         Vector3 properForward = Vector3.Cross(Vector3.Cross(properUp, globalForward), properUp);
         Quaternion playerOrientation = Quaternion.LookRotation(properForward, properUp);
         

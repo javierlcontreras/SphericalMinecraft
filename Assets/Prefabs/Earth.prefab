@@ -252,7 +252,7 @@ Transform:
   - {fileID: 1280789419038826396}
   - {fileID: 1280789418033084105}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1280789418103153569
 MonoBehaviour:
@@ -283,8 +283,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chunksPerSide: 1
   chunkSize: 16
-  maxHeight: 160
-  minHeight: 10
+  maxHeight: 30
+  minHeight: 6
   surfaceTexturesMaterial: {fileID: 2100000, guid: 3d843c94aecc6b602a96dbfa936c791c, type: 2}
   heightMap: {fileID: 1280789419038826397}
   biomeManager: {fileID: 1280789418922911683}

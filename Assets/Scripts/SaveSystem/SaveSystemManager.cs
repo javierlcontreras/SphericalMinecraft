@@ -29,13 +29,13 @@ public class SaveSystemManager : MonoBehaviour {
     private PlanetDataPersistence planetDataPersistence;
 
     public void NewGame() {
-        planetDataPersistence.NewPlanet(worldName, "Earth");
+        //planetDataPersistence.NewPlanet(worldName, "Earth");
         //planetDataPersistence.NewPlanet(worldName, "Moon");
         //playerDataPersistence.NewPlayer(worldName, userId);
     }
 
     public void LoadGame() {
-        planetDataPersistence.LoadPlanet(worldName, "Earth");
+        //planetDataPersistence.LoadPlanet(worldName, "Earth");
         // planetDataPersistence.LoadPlanet(worldName, "Moon");
         // playerDataPersistence.LoadPlayer(worldName, userId);
     }
@@ -69,10 +69,12 @@ public class SaveSystemManager : MonoBehaviour {
         planetDataPersistence = gameObject.GetComponent<PlanetDataPersistence>();
         playerDataPersistence = gameObject.GetComponent<PlayerDataPersistence>();
         
+        if (Application.isEditor) 
+            DEBUG_START();
+        
         string mode = PlayerPrefs.GetString("mode");
         if (mode.Equals("host"))
         {
-            DEBUG_START();
             worldName = PlayerPrefs.GetString("worldName");
             userId = PlayerPrefs.GetString("userId");
             bool newWorld = (PlayerPrefs.GetInt("newWorld") == 1);
